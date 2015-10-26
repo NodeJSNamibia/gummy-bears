@@ -1,0 +1,1 @@
+#This file should contact contain the contact details of every member
