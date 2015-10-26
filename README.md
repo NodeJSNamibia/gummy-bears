@@ -1,2 +1,2 @@
-# gummy-bears
-Repo for the orientation app
+# OWA App
+Welcome to the Orientation Week App
