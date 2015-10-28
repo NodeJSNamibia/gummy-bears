@@ -3,14 +3,14 @@
 Count   Name                Email Address                   Phone Number
 =====   ====                =============                   ============
 
-1       Tuli Amakali        amakalituli7@gmail.com
-2       Lameck Amugongo     aggas.hughes@gmail.com          +264 814710142
-3       Daniel Cabrero      dgcabrero@polytechnic.edu.na
-4       Albertus Coetzee    albertuscoetzee@gmail.com
-5       Leroy Diocotlhe     diocotlhe@gmail.com
-6       Heinrich Alivilu    heinrich91@gmail.com            +264
-7       Wilhelmina Josua    wilhelmina0711@gmail.com
-8       Gervasius Ishuuwa   gishuuwa@gmail.com
+1       Tuli Amakali        amakalituli7@gmail.com          +264 816166221
+2       Heinrich Alivilu    heinrich91@gmail.com            +264 814710142
+3       Lameck Amugongo     aggas.hughes@gmail.com
+4       Daniel Cabrero      dgcabrero@polytechnic.edu.na
+5       Albertus Coetzee    coetzeealbertus@gmail.com       +264 812026180
+6       Leroy Diocotlhe     diocotlhe@gmail.com
+7       Gervasius Ishuuwa   gishuuwa@gmail.com
+8       Wilhelmina Josua    wilhelmina0711@gmail.com
 9       Herman Kandjimi     hkandjimi@polytechnic.edu.na
 10      Carlos Magalhaes    carlosreismagas@gmail.com       +264 816825599
 11      Ndinelago Nashandi  nnashandi@polytechnic.edu.na    +264 818678032
