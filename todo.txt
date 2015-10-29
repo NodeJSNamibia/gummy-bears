@@ -1,2 +1,2 @@
 # To do list
-# coming soon...
+Tutorial on Git & GitHub - Nov 19
