@@ -12,5 +12,8 @@ For every single feature being implemented, there should be a separate *feature*
 ## Access Control List
 to be discussed soon...
 
+## Virtual machines
+to be discussed
+
 ## Production System
 coming soon...

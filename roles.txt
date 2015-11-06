@@ -1,5 +1,5 @@
 1 - User Interface: Daniel & Heinrich
-2 - Mobile Application (Android): Leroy & Heinrich
+2 - Mobile Application (Android & iOS): Leroy & Heinrich
 3 - Database (Couchbase): Herman & José
 4 - Client-side app: Ndinelago & Gervasius
 5 - Server-side app: José & Ndinelago & Herman
