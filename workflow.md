@@ -7,6 +7,9 @@ The stage before the *master* branch, is the *develop* branch. It centralizes al
 
 For every single feature being implemented, there should be a separate *feature* branch. Just like an *issue* branch, a *feature* branch will focus on a specific functionality, implement it and test it. It is recommended that the keywords **feature** and **issue** be added to the names of the corresponding branch. Once the feature or the issue is complete it is merged into the *develop* branch through a **pull request**. Another team member will be granted special privilege to access the *develop* branch.
 
+## Commit Message
+Describe how to write commit messages
+
 ## Pull Request
 
 ## Access Control List
