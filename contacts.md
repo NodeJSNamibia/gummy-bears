@@ -3,7 +3,7 @@ Name & Surname | Email Address | Phone Number | gitub Username
 ---------------|---------------|--------------|---------------
 Tuli Amakali   | amakalituli7@gmail.com | +264 816166221 |
 Heinrich Alivilu | heinrich91@gmail.com | +264 814710142 |
-Lameck Amugongo | aggas.hughes@gmail.com | - |
+Lameck Amugongo | aggas.hughes@gmail.com | - | Mbangula
 Daniel Cabrero | dgcabrero@polytechnic.edu.na | |
 Albertus Coetzee | coetzeealbertus@gmail.com | +264 812026180 |
 Leroy Diocotlhe | diocotlhe@gmail.com | |
