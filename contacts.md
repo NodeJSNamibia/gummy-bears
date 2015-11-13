@@ -11,7 +11,7 @@ Gervasius Ishuuwa | gishuuwa@gmail.com | | siuslam
 Herman Kandjimi | hkandjimi@polytechnic.edu.na | |
 Carlos Magalhaes | carlosreismagas@gmail.com | +264 816825599 |
 Ndinelago Nashandi | nnashandi@polytechnic.edu.na | +264 818678032 | Nashandi
-Erastus Nathingo | erassywap@outlook.com | |erassyNathingo
+Erastus Nathingo | erassywap@outlook.com  | +264 817246654 |erassyNathingo
 Wilhelmina Onyothi | wilhelmina0711@gmail.com | | Onyothi
 José Quenum | jquenum@polytechnic.edu.na | +264 816635305 | joques
 Junias Uushona | ujunia@outlook.com | |
