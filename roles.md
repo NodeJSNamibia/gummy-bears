@@ -2,6 +2,7 @@
 
 1. User Interface
     - Daniel
+    - Wilhelmina
     - Heinrich
 2. Mobile Application (Android)
     - Leroy
