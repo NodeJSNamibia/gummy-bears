@@ -1,6 +1,6 @@
 # Team Roles
 
-#1. User Interface
+#1. UX/UX Team
     - Daniel
     - Wilhelmina
     - Heinrich
