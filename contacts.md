@@ -9,7 +9,7 @@ Albertus Coetzee | coetzeealbertus@gmail.com | +264 812026180 | | Mobile, Client
 Leroy Diocotlhe | diocotlhe@gmail.com | - | Ldiocotlhe | -
 Gervasius Ishuuwa | gishuuwa@gmail.com | - | siuslam | Mobile, Client-Side & Configuration (Sys Admin)
 Herman Kandjimi | hkandjimi@polytechnic.edu.na | - | - | Database & Server-Side
-Carlos Magalhaes | carlosreismagas@gmail.com | +264 816825599 | - |
+Carlos Magalhaes | carlosreismagas@gmail.com | +264 816825599 | - | -
 Ndinelago Nashandi | nnashandi@polytechnic.edu.na | +264 818678032 | Nashandi | Client-Side & Server-Side
 Erastus Nathingo | erassywap@outlook.com  | +264 817246654 |erassyNathingo | Mobile & Server-Side
 Wilhelmina Onyothi | wilhelmina0711@gmail.com | - | Onyothi | UX/UI
