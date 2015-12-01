@@ -1,4 +1,4 @@
-# Team Roles
+# TEAM ROLES
 
 #1. UX/UX Team
     - Daniel
@@ -25,14 +25,14 @@
     - Tuli
     - Bertie
     - Gervasius
-#5. Server-Side:
+#5. Server-Side
     - José
     - Ndinelago
     - Herman
     - Celleb
     - Bertie
     - Leo
-#6. Configuration (Sys Admin):
+#6. Configuration (Sys Admin)
     - Gervasius
     - Celleb
     - Heinrich
