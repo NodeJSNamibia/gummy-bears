@@ -2,7 +2,7 @@
 Name & Surname | Email Address | Phone Number | gitub Username | Team
 ---------------|---------------|--------------|---------------|---------------
 Tuli Amakali   | amakalituli7@gmail.com | +264 816166221 | - |
-Heinrich Aluvilu | heinrich91@gmail.com | +264 814710142 | mastermind64222-0 |
+Heinrich Aluvilu | heinrich91@gmail.com | +264 814710142 | mastermind64222-0 | UX/UI Team, Mobile & Configuration (Sys Admin)
 Lameck Amugongo | aggas.hughes@gmail.com | - | Mbangula |
 Daniel Cabrero | dgcabrero@polytechnic.edu.na | - | DGCabrero | UX/UI Team
 Albertus Coetzee | coetzeealbertus@gmail.com | +264 812026180 | |
