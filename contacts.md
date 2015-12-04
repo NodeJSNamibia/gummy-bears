@@ -17,4 +17,4 @@ José Quenum | jquenum@polytechnic.edu.na | +264 816635305 | joques | Database &
 Junias Uushona | ujunia@outlook.com | - | - | -
 Leonard Shivute | leonardshivute8@gmail.com | - | - | Mobile, Database & Server-Side
 Omagano Uushona | oumagano@gmail.com | - | Omagano | UX/UI & Mobile
-Jonas Tomanga | celleb@mrcelleb.com | 0813287027 | Celleb | Client-Side, Server-Side & Configuration (Sys Admin)
+Jonas Tomanga | tcelleb@gmail.com  | 0813287027 | Celleb | Client-Side, Server-Side & Configuration (Sys Admin)
