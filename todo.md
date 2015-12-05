@@ -1,3 +1,4 @@
 # To do list
 - [ ] Tutorial on Git & GitHub - Nov 19
-- [ ]  Tutorial on Material Design - Nov 21 @11:00 - Gervasius
+- [X] Tutorial on Material Design - Dec 2 @18:00 - Gervasius
+- [ ] Trello Tutorial - Dec 7 @18:00 - Heinrich

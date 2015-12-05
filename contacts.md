@@ -1,5 +1,5 @@
 # Contributor List
-Name & Surname | Email Address | Phone Number | gitub Username | Team
+Name & Surname | Email Address | Phone Number | gitub Username | Teams
 ---------------|---------------|--------------|---------------|---------------
 Tuli Amakali   | amakalituli7@gmail.com | +264 816166221 | - | UX/UI & Client-Side
 Heinrich Aluvilu | heinrich91@gmail.com | +264 814710142 | mastermind64222-0 | UX/UI, Mobile & Configuration (Sys Admin)
