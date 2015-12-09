@@ -5,9 +5,9 @@
     - Wilhelmina
     - Tuli
     - Omagano
-    - Heinrich
+    - Heinrich (Team Leader)
 #2. Mobile Application (Android & iOS)
-    - Gervasius
+    - Gervasius (Team Leader)
     - Erastus
     - Bertie
     - Leo
@@ -17,22 +17,22 @@
 #3. Database (Couchbase)
     - Leo
     - Herman
-    - José
+    - José (Team Leader)
     - Lameck
 #4. Client-Side
     - Ndinelago
     - Celleb
     - Tuli
-    - Bertie
+    - Bertie (Team Leader)
     - Gervasius
 #5. Server-Side
     - José
-    - Ndinelago
+    - Ndinelago (Team Leader)
     - Herman
     - Celleb
     - Bertie
     - Leo
 #6. Configuration (Sys Admin)
     - Gervasius
-    - Celleb
+    - Celleb (Team Leader)
     - Heinrich
