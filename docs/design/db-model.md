@@ -35,7 +35,7 @@ The "yearOfStudy" attribute can have one of the following values: "first", "seco
 
 ### Other Users
 There are two other types of users: *admin* and *maintainer*. We represent such users as follows:
-'''json
+```json
 {
     "username": "samjo",
     "firstName": "Samuel",
@@ -48,12 +48,12 @@ There are two other types of users: *admin* and *maintainer*. We represent such 
     },
     "profile": "admin"
 }
-'''
+```
 
 ### Faculty
 A faculty object
 
-'''json
+```json
 {
     "id": "fci",
     "name": "Faculty of Computing and Informatics",
@@ -63,9 +63,9 @@ A faculty object
     },
     "departments": [{},{}]
 }
-'''
+```
 
 Each *department* is represented as follows:
 
-'''json
-'''
+```json
+```
