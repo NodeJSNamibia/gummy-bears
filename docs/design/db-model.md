@@ -8,7 +8,7 @@ Introduce couchbase and discuss the database in general
 
 ### Students
 A student user will be modeled as follows:
-'''javascript
+```javascript
 {
     "studentNumber": 09873422344,
     "firstName": "Alex",
@@ -29,7 +29,7 @@ A student user will be modeled as follows:
     },
     programme: "80BHSE"
 }
-'''
+```
 
 The "yearOfStudy" attribute can have one of the following values: "first", "second", "third"
 
