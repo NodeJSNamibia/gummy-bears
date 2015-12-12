@@ -11,13 +11,13 @@ For every single feature being implemented, there should be a separate *feature*
 Describe how to write commit messages
 
 ## Pull Request
-coming soon...
+Need to elaborate on the notification to the develop and manager branch managers when they should pull from another branch.
 
 ## Access Control List
-to be discussed soon...
+Discuss the rules for the master and develop branches. For each feature branch, discuss the naming and the process for creating and managing the branch.
 
 ## Virtual machines
-to be discussed
+We will need about four VMs. One VM will contain our code base. This is where the gitolite server will be installed. The second VM will host the database server. Finally we will have two VMs for the production. Only one VM will be active at any point in time. But in order to minimize the time it takes to recover from the server failure, we will have another VM always ready to be fired up.
 
 ## Production System
 coming soon...
