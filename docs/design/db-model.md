@@ -8,7 +8,7 @@ Introduce couchbase and discuss the database in general
 
 ### Students
 A student user will be modeled as follows:
-'''json
+'''javascript
 {
     "studentNumber": 09873422344,
     "firstName": "Alex",
