@@ -20,7 +20,8 @@ The following objects will be discussed in our data model:
 
 ### Student Information
 
-A student user will be modeled as follows:
+A student information object can be represented as follows:
+
 ```json
 {
     "studentNumber": 09873422344,
@@ -40,14 +41,16 @@ A student user will be modeled as follows:
         "country": "Namibia",
         "telephone": "+264612079978"
     },
+    "courses": ["course1", "course2"],
     "programme": "80BHSE"
 }
 ```
+Most attributes in the object are self explanatory. A student can declare several email addresses and can be reached through any one of these email addresses. The **yearOfStudy** attribute can have one of the following values: *first*, *second*, *third* and *honours*. As for the **modeOfStudy** it can have two possible values *PM* and *FM*. Finally, the **programme** attribute holds the actual code of the programme within a faculty that a student is being enrolled for.
 
-The "yearOfStudy" attribute can have one of the following values: "first", "second", "third"
+### Technical Users
 
-### Other Users
-There are two other types of users: *admin* and *maintainer*. We represent such users as follows:
+Beside the students who represent the main users of the application, we consider another type of user: *technical user*. Such a user can fulfill two possible functions, populate the data needed for the application and taking corrective measures whenever some faulty component of the application is identified. A technical user object can be represented as exemplified below. Note that we use the **profile** attribute to distinguish between the *admin* profile and the *maintainer* profile.
+
 ```json
 {
     "username": "samjo",
@@ -65,7 +68,8 @@ There are two other types of users: *admin* and *maintainer*. We represent such 
 ```
 
 ### Faculty
-A faculty object
+
+Here we group together every information that belongs to the academic structure of the universtiy. Overall, a faculty object is represented as follows:
 
 ```json
 {
@@ -79,7 +83,7 @@ A faculty object
 }
 ```
 
-Each *department* is represented as follows:
+Each **department** is represented as follows:
 
 ```json
 {
@@ -93,7 +97,7 @@ Each *department* is represented as follows:
 }
 ```
 
-A *programme* is represented as follows:
+A **programme** is represented as follows:
 
 ```json
 {
@@ -103,7 +107,7 @@ A *programme* is represented as follows:
 }
 ```
 
-Each *course* within a programme is represented as follows:
+Each **course** within a programme is represented as follows:
 
 ```json
 {
@@ -118,14 +122,26 @@ Each *course* within a programme is represented as follows:
         "lastName": "Kourov"
     },
     "timetable": [{
-        "dayOfWeek": "Monday",
-        "time": "11:00-12:00",
-        "tag": "Theory"
-        }]
+            "dayOfWeek": "Monday",
+            "time": "11:00-12:00",
+            "mode": "FM",
+            "tag": "Theory"
+        },
+        {
+            "dayOfWeek": "Friday",
+            "time": "09:00-12:00",
+            "mode": "FM",
+            "tag": "Practicals"
+        }
+    ]
 }
 ```
 
+Given that some queries might want access to components within a faculty object, we will use indexes to support and make such accesses faster.
+
 ### Events
+
+A event organized during the orientation week can be represented as follows:
 
 ```json
 {
@@ -147,6 +163,8 @@ Each *course* within a programme is represented as follows:
 
 ### Quick Notifications
 
+All announcements and general news of the university to be passed down to students can be represented as follows:
+
 ```json
 {
     "id": "infoID",
@@ -155,8 +173,11 @@ Each *course* within a programme is represented as follows:
     "details": {}
 }
 ```
+Note that the **details** attribute is an object that allows to provide further information about the news being described.
 
 ### Login Records
+
+For statistics purposes we wish to record everytime a student logs into the application successfully.
 
 ```json
 {
@@ -168,6 +189,8 @@ Each *course* within a programme is represented as follows:
 ```
 
 ### Frequently Asked Questions
+
+In order to offer a place where students can find answers to usual questions, we compile such questions into the database. Each question is represented as follows:
 
 ```json
 {
