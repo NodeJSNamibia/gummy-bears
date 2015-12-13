@@ -1,8 +1,10 @@
 # Data Base Model
 
 ## Introduction
-Introduce couchbase and discuss the database in general
 
+This document discusses the *data model* of the **Orientation Week Application (o'week)**. Essentially, we provide a list of events organized during the orientation week to freshers within their first week at varsity. The data model comprises the *student information*, the *academic structure* of the institution and the *events* scheduled throughout the orientation week.
+
+The data model of this application will be implemented using [CouchBase](http://www.couchbase.com), a **NoSQL** document store.
 
 ## The Model
 
@@ -46,7 +48,8 @@ There are two other types of users: *admin* and *maintainer*. We represent such 
         "location": "location3",
         "door": "A5"
     },
-    "profile": "admin"
+    "profile": "admin",
+    "password": "@da33409DDff"
 }
 ```
 
