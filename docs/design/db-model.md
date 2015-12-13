@@ -4,11 +4,22 @@
 
 This document discusses the *data model* of the **Orientation Week Application (o'week)**. Essentially, we provide a list of events organized during the orientation week to freshers within their first week at varsity. The data model comprises the *student information*, the *academic structure* of the institution and the *events* scheduled throughout the orientation week.
 
-The data model of this application will be implemented using [CouchBase](http://www.couchbase.com), a **NoSQL** document store.
+The data model of this application will be implemented using [CouchBase](http://www.couchbase.com), a **NoSQL** document store. *CouchBase* offers a *distributed caching* system as well as the mechanichs of a *document store*.
 
 ## The Model
 
-### Students
+The following objects will be discussed in our data model:
+
+* Student information
+* Technical Users
+* Faculty information
+* Events
+* News and Notifications
+* Login Records
+* Frequently Asked Questions
+
+### Student Information
+
 A student user will be modeled as follows:
 ```json
 {
