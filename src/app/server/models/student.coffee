@@ -2,5 +2,5 @@
 
 
 exports.StudentModel = class StudentModel
-    constructor: () ->
+    constructor: (@dataManager) ->
         # create a student model

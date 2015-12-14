@@ -8,5 +8,5 @@ exports.StudentsController = class StudentsController
     constructor: (dataManager) ->
         @student = new StudentModel dataManager
 
-    createStudent: (callback) =>
+    createStudent: (studentData, callback) =>
         # will create a student

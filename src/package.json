@@ -71,6 +71,7 @@
     "bcrypt": "^0.8.5",
     "body-parser": "^1.14.1",
     "compression": "^1.6.0",
+    "couchbase": "^2.1.2",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "fs": "0.0.2",
