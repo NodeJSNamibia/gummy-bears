@@ -33,6 +33,11 @@ app.use(methodOverride())
 
 # define folder for static resources and how long they can be cached
 
+# instantiate data manager
+dataManager = new DataManager()
+
+require('app/server/routes/students')(app, dataManager)
+
 # define the security parameters for http2
 serverOptions =
     key: fs.readFileSync __dirname + '/../ssl/oweek.key'
