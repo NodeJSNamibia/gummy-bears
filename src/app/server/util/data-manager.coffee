@@ -17,5 +17,17 @@ exports.DataManager = class DataManager
             currentBucket = aBucket
         callback null, currentBucket
 
+    _saveStudent = (studentData, callback) ->
+        _getDataBucket.call @, 'students', (studentBucketError, studentBucket) =>
+            if studentBucketError?
+                callback studentBucketError, null
+            else
+                studentBucket.insert studentData.studentNumber, studentData, (saveStudentError, saveStudentResult) =>
+                    callback saveStudentError, saveStudentResult
+
     constructor: () ->
         @allBuckets = {}
+
+    saveStudent: (studentData, callback) =>
+        _saveStudent.call @, studentData, (saveError, saveResult) =>
+            callback saveError, saveResult
