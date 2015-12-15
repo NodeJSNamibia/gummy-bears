@@ -70,4 +70,4 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         portNumber = 5480
 
         server.listen portNumber, () ->
-            console.log "Welcome to orientationb week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env
+            console.log "Welcome to orientation week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env
