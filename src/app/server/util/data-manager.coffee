@@ -5,29 +5,37 @@ Couchbase = require 'couchbase'
 
 exports.DataManager = class DataManager
 
-    _getDefaultBucket = (callback) ->
-        _getDataBucket.call @, 'default', (bucketError, bucket) =>
-            callback bucketError, bucket
+    _dbManagerInstance = undefined
 
-    _getDataBucket = (bucketName, callback) ->
-        currentBucket = @allBuckets[bucketName]
-        if not currentBucket?
-            aBucket = new Couchbase.Cluster('couchbase://192.100.4.145').openBucket(bucketName)
-            @allBuckets[bucketName] = aBucket
-            currentBucket = aBucket
-        callback null, currentBucket
+    @getDBManagerInstance = (dbURL) ->
+        _dbManagerInstance ?= new _LocalDBManager
 
-    _saveStudent = (studentData, callback) ->
-        _getDataBucket.call @, 'students', (studentBucketError, studentBucket) =>
-            if studentBucketError?
-                callback studentBucketError, null
-            else
-                studentBucket.insert studentData.studentNumber, studentData, (saveStudentError, saveStudentResult) =>
-                    callback saveStudentError, saveStudentResult
+        class _LocalDBManager
 
-    constructor: () ->
-        @allBuckets = {}
+            _getDataBucket = (bucketName, callback) ->
+                currentBucket = @allBuckets[bucketName]
+                if not currentBucket?
+                    urlString = "couchbase://{@dbURL}"
+                    aBucket = new CouchBase.Cluster(urlString).openBucket(bucketName)
+                    @allBuckets[bucketName] = aBucket
+                    currentBucket = aBucket
+                callback null, currentBucket
 
-    saveStudent: (studentData, callback) =>
-        _saveStudent.call @, studentData, (saveError, saveResult) =>
-            callback saveError, saveResult
+            _getDefaultBucket = (callback) ->
+                _getDataBucket.call @, 'default', (defaultBucketError, defaultBucket) =>
+                    callback defaultBucketError, defaultBucket
+
+            _insertDocument = (bucketName, docuID, docuData, callback) ->
+                _getDataBucket.call @, bucketName, (bucketError, bucket) =>
+                    if bucketError?
+                        callback bucketError, null
+                    else
+                        bucket.insert docuID, docuData, (insertError, insertResult) =>
+                            callback insertError, insertResult
+
+            constructor: (@dbURL) ->
+                @allBuckets = {}
+
+            insertStudent: (studentData, callback) =>
+                _insertDocument.call @, 'students', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
+                    callback insertStudentError, insertStudentResult

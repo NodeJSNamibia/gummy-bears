@@ -2,11 +2,9 @@
 
 StudentsController = require('../controllers/students').StudentsController
 
-module.exports = (app, dataManager) ->
+module.exports = (app, configOptions) ->
     app.route('/students').post (request, response) ->
-        # creating a new student information
-        # this is still a work in progress
-        new StudentsController(dataManager).saveAllStudent (studentCreationError, studentCreationResult) =>
+        new StudentsController(configOptions.dbURL).insertAllStudents (studentCreationError, studentCreationResult) =>
             if studentCreationError?
                 response.json 500, {error: studentCreationError.message}
             else

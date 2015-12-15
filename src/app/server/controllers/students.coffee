@@ -11,8 +11,11 @@ exports.StudentsController = class StudentsController
         @student.saveStudent singleStudentData, (saveError, saveResult) =>
             callback saveError, saveResult
 
-    constructor: (dataManager) ->
-        @student = new StudentModel dataManager
+    constructor: (dbURL) ->
+        @student = new StudentModel dbURL
+
+    insertAllStudents: (callback) =>
+        callback null, null
 
     saveAllStudents: (callback) =>
         # will read student data from a file

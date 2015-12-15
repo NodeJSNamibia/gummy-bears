@@ -14,6 +14,7 @@ express        = require 'express'
 methodOverride = require 'method-override'
 morgan         = require 'morgan'
 fs             = require 'fs'
+session        = require 'express-session'
 
 # more parameters
 oneDay = 8640000
@@ -33,10 +34,11 @@ app.use(methodOverride())
 
 # define folder for static resources and how long they can be cached
 
-# instantiate data manager
-dataManager = new DataManager()
+# create configuration details in an object
+# configOptions =
+    # dbURL: "196.100.4.28"
 
-require('app/server/routes/students')(app, dataManager)
+require('app/server/routes/students')(app, configOptions)
 
 # define the security parameters for http2
 serverOptions =
