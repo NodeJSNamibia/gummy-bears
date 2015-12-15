@@ -15,6 +15,8 @@ methodOverride = require 'method-override'
 morgan         = require 'morgan'
 fs             = require 'fs'
 session        = require 'express-session'
+RedisStore     = require('connect-redis')(session)
+redisClient    = require('redis').createClient()
 
 # more parameters
 oneDay = 8640000
@@ -22,7 +24,15 @@ oneDay = 8640000
 
 # define session options
 owSessionOptions =
-    resave: true
+    resave: false
+    saveUninitialized: true
+    secret: 'abdsgfdeweqsdsfasdfgdfs'
+    store: new RedisStore({
+            client: redisClient
+        })
+    cookie: {
+        maxAge: new Date(Date.now() + oneDay)
+    }
 
 
 # create the express application
