@@ -1,16 +1,21 @@
 'use strict'
 
-DataManager = require('../util/data-manager').DataManager
+ConfigurationManager = require('../util/config-manager').ConfigurationManager
+DataManager          = require('../util/data-manager').DataManager
 
 exports.StudentModel = class StudentModel
     _saveStudent = (studentData, callback) ->
-        @dataManager.saveStudent studentData, (saveError, saveResult) =>
-            callback saveError, saveResult
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                dataManager = DataManager.getDBManagerInstance dbURL
+                dataManager.saveStudent studentData, (saveError, saveResult) =>
+                    callback saveError, saveResult
 
-    constructor: (dbURL) ->
-        @dataManager = DataManager.getDBManagerInstance dbURL
+    constructor: (@appEnv) ->
 
     saveStudent: (studentData, callback) =>
-        # need to address when to set the password
+        # validate and sanitize the student info
         _saveStudent.call @, studentData, (saveError, saveResult) =>
             callback saveError, saveResult

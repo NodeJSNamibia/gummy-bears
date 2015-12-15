@@ -25,3 +25,11 @@ exports.ConfigurationManager = class ConfigurationManager
                 else
                     @configs = configObject
                     callback null, null
+
+        getDBURL: (appEnv, callback) =>
+            dbURL = @configs?[appEnv]["dbURL"]
+            if not dbURL?
+                urlError = new Error "No DB URL configuration"
+                callback urlError, null
+            else
+                callback null, dbURL

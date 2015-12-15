@@ -1,8 +1,7 @@
 'use strict'
 
 # This class represents a students controller. It handles all requests related to students
-async = require 'async'
-
+async        = require 'async'
 StudentModel = require('../models/student').StudentModel
 
 exports.StudentsController = class StudentsController
@@ -11,8 +10,8 @@ exports.StudentsController = class StudentsController
         @student.saveStudent singleStudentData, (saveError, saveResult) =>
             callback saveError, saveResult
 
-    constructor: (dbURL) ->
-        @student = new StudentModel dbURL
+    constructor: (envVal) ->
+        @student = new StudentModel envVal
 
     insertAllStudents: (callback) =>
         callback null, null
