@@ -19,6 +19,12 @@ session        = require 'express-session'
 # more parameters
 oneDay = 8640000
 
+
+# define session options
+owSessionOptions =
+    resave: true
+
+
 # create the express application
 app = express()
 

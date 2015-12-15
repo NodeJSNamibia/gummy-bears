@@ -71,13 +71,16 @@
     "bcrypt": "^0.8.5",
     "body-parser": "^1.14.1",
     "compression": "^1.6.0",
+    "connect-redis": "^3.0.1",
     "couchbase": "^2.1.2",
+    "cson": "^3.0.2",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "express-session": "^1.12.1",
     "fs": "0.0.2",
     "http2": "^3.2.0",
     "method-override": "^2.3.5",
-    "morgan": "^1.6.1"
+    "morgan": "^1.6.1",
+    "redis": "^2.4.2"
   }
 }
