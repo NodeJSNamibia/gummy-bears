@@ -12,7 +12,7 @@ exports.ConfigurationManager = class ConfigurationManager
             @configs = undefined
 
         loadConfig: (callback) =>
-            configFilePath = __dirname + "/../public/config.cson"
+            configFilePath = __dirname + "/../../public/config.cson"
             parseOptions =
                 cson: true
                 json: true
