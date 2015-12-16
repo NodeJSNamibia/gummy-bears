@@ -1,0 +1,87 @@
+{
+  "name": "o'week",
+  "version": "0.0.1",
+  "description": "Full orientation week programme for NUST freshers",
+  "private": "true",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NodeJSNamibia/gummy-bears"
+  },
+  "scripts": {
+    "start": "coffee app-server.coffee"
+  },
+  "author": "NodeJSNamibia@gmail.com",
+  "contributors": [
+    {
+      "name": "Tuli Amakali",
+      "email": "amakalituli7@gmail.com"
+    },
+    {
+      "name": "Heinrich Aluvilu",
+      "email": "heinrich91@gmail.com"
+    },
+    {
+      "name": "Lameck Amugongo",
+      "email": "aggas.hughes@gmail.com"
+    },
+    {
+      "name": "Albertus Coetzee",
+      "email": "coetzeealbertus@gmail.com"
+    },
+    {
+      "name": "Gervasius Ishuuwa",
+      "email": "gishuuwa@gmail.com"
+    },
+    {
+      "name": "Herman Kandjimi",
+      "email": "hkandjimi@nust.na"
+    },
+    {
+      "name": "Ndinelago Nashandi",
+      "email": "nnashandi@nust.na"
+    },
+    {
+      "name": "Erastus Nathingo",
+      "email": "erassywap@outlook.com"
+    },
+    {
+      "name": "Wilhelmina Onyothi",
+      "email": "wilhelmina0711@gmail.com"
+    },
+    {
+      "name": "José Quenum",
+      "email": "jquenum@nust.na"
+    },
+    {
+      "name": "Leonard Shivute",
+      "email": "leonardshivute8@gmail.com"
+    },
+    {
+      "name": "Omagano Uushona",
+      "email": "oumagano@gmail.com"
+    },
+    {
+      "name": "Jonas Tomanga",
+      "email": "tcelleb@gmail.com"
+    }
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.5.0",
+    "bcrypt": "^0.8.5",
+    "body-parser": "^1.14.1",
+    "compression": "^1.6.0",
+    "connect-redis": "^3.0.1",
+    "couchbase": "^2.1.2",
+    "cson": "^3.0.2",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "express-session": "^1.12.1",
+    "fs": "0.0.2",
+    "http2": "^3.2.0",
+    "method-override": "^2.3.5",
+    "morgan": "^1.6.1",
+    "redis": "^2.4.2",
+    "validator": "^4.4.0"
+  }
+}

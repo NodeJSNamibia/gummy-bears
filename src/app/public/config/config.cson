@@ -1,0 +1,8 @@
+{
+    development:
+        dbURL: "196.168.10.26"
+    test:
+        dbURL: "196.168.10.26"
+    production:
+        dbURL: "196.168.10.26"
+}
