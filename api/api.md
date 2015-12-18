@@ -1,5 +1,5 @@
 <h1>API</h1>
-</h3>Native Login</h3>
+<h3>Native Login</h3>
 <h4>Client Request </h4>
 <p>
 Request Type: POST
