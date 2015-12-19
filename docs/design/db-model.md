@@ -28,7 +28,6 @@ A student information object can be represented as follows:
     "firstName": "Alex",
     "lastName": "Jones",
     "emailAddresses": ["alex.jones@gmail.com","ajones@nust.na"],
-    "gender": "Male",
     "title": "Mr",
     "nationality": "Namibian",
     "yearOfStudy": "first",
