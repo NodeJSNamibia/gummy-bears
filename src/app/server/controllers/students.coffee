@@ -45,9 +45,17 @@ exports.StudentsController = class StudentsController
                         # send a success response to the client
                         callback null, {}
 
+    _createPassword = (studentNumber, passwordData, callback) ->
+        @student.createPassword studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
+            callback createPasswordError, createPasswordResult
+
     constructor: (envVal) ->
         @student = new StudentModel envVal
 
     insertAllStudents: (callback) =>
         _insertAllStudents.call @, (insertAllError, insertAllResult) =>
             callback insertAllError, insertAllResult
+
+    createPassword: (studentNumber, passwordData, callback) =>
+        _createPassword.call @, studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
+            callback createPasswordError, createPasswordResult

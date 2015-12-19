@@ -25,13 +25,26 @@ exports.DataManager = class DataManager
                 _getDataBucket.call @, 'default', (defaultBucketError, defaultBucket) =>
                     callback defaultBucketError, defaultBucket
 
-            _insertDocument = (bucketName, docuID, docuData, callback) ->
+            _insertDocument = (bucketName, docID, docuData, callback) ->
                 _getDataBucket.call @, bucketName, (bucketError, bucket) =>
                     if bucketError?
                         callback bucketError, null
                     else
-                        bucket.insert docuID, docuData, (insertError, insertResult) =>
+                        bucket.insert docID, docuData, (insertError, insertResult) =>
                             callback insertError, insertResult
+
+            _updateDocument = (bucketName, docID, newData, callback) ->
+                _getDataBucket.call @, bucketName, (bucketError, bucket) =>
+                    if bucketError?
+                        callback bucketError, null
+                    else
+                        bucket.get docID, (docError, docData) =>
+                            if docError?
+                                callback docError, null
+                            else
+                                docData[entryKey] = entryValue for entryKey, entryValue of newData
+                                bucket.upsert docID, docData, (updateError, updateResult) =>
+                                    callback updateError, updateResult
 
             constructor: (@dbURL) ->
                 @allBuckets = {}
@@ -39,3 +52,7 @@ exports.DataManager = class DataManager
             insertStudent: (studentData, callback) =>
                 _insertDocument.call @, 'students', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
                     callback insertStudentError, insertStudentResult
+
+            updateStudent: (studentNumber, studentData, callback) =>
+                _updateDocument.call @, 'students', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
+                    callback updateStudentError, updateStudentResult

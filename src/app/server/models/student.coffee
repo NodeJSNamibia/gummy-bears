@@ -2,6 +2,7 @@
 
 ConfigurationManager = require('../util/config-manager').ConfigurationManager
 DataManager          = require('../util/data-manager').DataManager
+PasswordHandler      = require('../util/password-handler').PasswordHandler
 validator            = require('validator')
 async                = require 'async'
 
@@ -131,11 +132,35 @@ exports.StudentModel = class StudentModel
                         callback urlError, null
                     else
                         dataManager = DataManager.getDBManagerInstance dbURL
-                        dataManager.saveStudent studentInfo, (saveError, saveResult) =>
+                        dataManager.insertStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
+
+    _createPassword = (studentNumber, passwordData, callback) ->
+        _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                if passwordData.password isnt passwordData.confirmPassword
+                    unconfirmedPasswordError = new Error "Password and confirmation are distinct"
+                    callback unconfirmedPasswordError, null
+                else
+                    new PasswordHandler().hashPassword passwordData.password, (hashError, hashedPassword) =>
+                        if hashError?
+                            callback hashError, null
+                        else
+                            ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                                if urlError?
+                                    callback urlError, null
+                                else
+                                    DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {password: hashedPassword}, (updateError, updateResult) =>
+                                        callback updateError, updateResult
 
     constructor: (@appEnv) ->
 
     insertStudent: (studentData, callback) =>
         _insertStudent.call @, studentData, (saveError, saveResult) =>
             callback saveError, saveResult
+
+    createPassword: (studentNumber, passwordData, callback) =>
+        _createPassword.call @, studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
+            callback createPasswordError, createPasswordResult
