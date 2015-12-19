@@ -122,13 +122,15 @@ Each **course** within a programme is represented as follows:
             "dayOfWeek": "Monday",
             "time": "11:00-12:00",
             "mode": "FM",
-            "tag": "Theory"
+            "tag": "Theory",
+            "venue": "Auditorium 3"
         },
         {
             "dayOfWeek": "Friday",
             "time": "09:00-12:00",
             "mode": "FM",
-            "tag": "Practicals"
+            "tag": "Practicals",
+            "venue": "lab2"
         }
     ]
 }
