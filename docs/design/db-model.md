@@ -29,17 +29,14 @@ A student information object can be represented as follows:
     "lastName": "Jones",
     "emailAddresses": ["alex.jones@gmail.com","ajones@nust.na"],
     "gender": "Male",
+    "title": "Mr",
     "nationality": "Namibian",
     "yearOfStudy": "first",
     "modeOfStudy": "FM",
     "password": "@da33409DDff",
     "homeAddress": {
-        "street": "Storch",
-        "number": 4,
-        "city": "Windhoek",
-        "region": "Khomas",
-        "country": "Namibia",
-        "telephone": "+264612079978"
+        "address line 1": "4 Storch Street",
+        "address line 2": "Private Bag 12890"
     },
     "courses": ["course1", "course2"],
     "programme": "80BHSE"

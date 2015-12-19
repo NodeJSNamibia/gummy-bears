@@ -2,9 +2,15 @@
 
 ConfigurationManager = require('../util/config-manager').ConfigurationManager
 DataManager          = require('../util/data-manager').DataManager
+check                = require('validator').check
+sanitize             = require('validator').sanitize
 
 exports.StudentModel = class StudentModel
-    _saveStudent = (studentData, callback) ->
+    _cleanForInsertion = (studentData, callback) ->
+        callback null, null
+
+    _insertStudent = (studentData, callback) ->
+        # first validate and sanitize the object
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
                 callback urlError, null
@@ -15,7 +21,6 @@ exports.StudentModel = class StudentModel
 
     constructor: (@appEnv) ->
 
-    saveStudent: (studentData, callback) =>
-        # validate and sanitize the student info
-        _saveStudent.call @, studentData, (saveError, saveResult) =>
+    insertStudent: (studentData, callback) =>
+        _insertStudent.call @, studentData, (saveError, saveResult) =>
             callback saveError, saveResult

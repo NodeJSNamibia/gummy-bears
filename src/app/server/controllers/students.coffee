@@ -8,11 +8,31 @@ StudentInfoLoader = require('../util/student-info-loader').StudentInfoLoader
 exports.StudentsController = class StudentsController
 
     _insertSingleStudentIter = (singleStudentData, callback) ->
-        @student.saveStudent singleStudentData, (saveError, saveResult) =>
+        # create the proper object representing the student
+        studentEmails = []
+        studentEmails.push singleStudentData["Email 1"]
+        studentEmails.push singleStudentData["Email 2"]
+        studentInfo =
+            studentNumber: singleStudentData["Student Number"]
+            firstName: singleStudentData["First Name"]
+            lastName: singleStudentData["Last Name"]
+            gender: singleStudentData["Gender"]
+            emailAddresses: studentEmails
+            nationality: singleStudentData["Nationality"]
+            yearOfStudy: singleStudentData["Year Of Study"]
+            modeOfStudy: singleStudentData["Mode Of Study"]
+            programme: singleStudentData["Programme Code"]
+            homeAddress:
+                street: singleStudentData["Street Name"]
+                number: singleStudentData["Street Number"]
+                city: singleStudentData["City"]
+                region: singleStudentData["Region"]
+                country: singleStudentData["Country"]
+        @student.insertStudent studentInfo, (saveError, saveResult) =>
             callback saveError, saveResult
 
     _insertAllStudents = (callback) ->
-        # laod student information first
+        # load student information first
         StudentInfoLoader.getStudentInfoLoader().loadStudents (laodError, allStudents) =>
             if loadError?
                 callback loadError, null
@@ -29,27 +49,5 @@ exports.StudentsController = class StudentsController
         @student = new StudentModel envVal
 
     insertAllStudents: (callback) =>
-
-        # laod student information first
-        StudentInfoLoader.getStudentInfoLoader().loadStudents (laodError, allStudents) =>
-            if loadError?
-                callback loadError, null
-            else
-
-        callback null, null
-
-    saveAllStudents: (callback) =>
-        # will read student data from a file
-        # and then add those students one at a time
-        allStudents = []
-        async.each allStudents, @insertSingleStudentIter, (insertError) =>
-            if insertError?
-                console.log insertError
-                callback insertError, null
-            else
-                # Need to figure out what to send back to the client
-                callback null, {}
-
-    insertSingleStudentIter: (singleStudentData, callback) =>
-        _insertSingleStudentIter.call @, singleStudentData, (insertError, insertResult) =>
-            callback insertError
+        _insertAllStudents.call @, (insertAllError, insertAllResult) =>
+            callback insertAllError, insertAllResult
