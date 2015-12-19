@@ -2,27 +2,15 @@
 
 ConfigurationManager = require('../util/config-manager').ConfigurationManager
 DataManager          = require('../util/data-manager').DataManager
-validator                = require('validator')
+validator            = require('validator')
 async                = require 'async'
 
 exports.StudentModel = class StudentModel
 
-    "studentNumber": 09873422344,
-    "firstName": "Alex",
-    "lastName": "Jones",
-    "emailAddresses": ["alex.jones@gmail.com","ajones@nust.na"],
-    "gender": "Male",
-    "title": "Mr",
-    "nationality": "Namibian",
-    "yearOfStudy": "first",
-    "modeOfStudy": "FM",
-    "password": "@da33409DDff",
     "homeAddress": {
         "address line 1": "4 Storch Street",
         "address line 2": "Private Bag 12890"
     },
-    "courses": ["course1","course2"],
-    "programme": "80BHSE"
 
     _checkAndSanitizeStudentNumber = (studentNumber, callback) ->
         if not validator.isNumeric(studentNumber)
@@ -31,12 +19,12 @@ exports.StudentModel = class StudentModel
         else
             callback null, validator.toInt(studentNumber)
 
-    _checkAndSanitizeName = (name, errorMessage,  callback) ->
-        if not validator.isAlpha(name) or validator.isNull(name)
+    _checkAndSanitizeString = (strValue, errorMessage,  callback) ->
+        if not validator.isAlpha(strValue) or validator.isNull(strValue)
             invalidNameError = new Error errorMessage
             callback invalidNameError, null
         else
-            callback null, validator.trim(name)
+            callback null, validator.trim(strValue)
 
     _checkAndSanitizeTitle = (titleValue, callback) ->
         if not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
@@ -45,20 +33,86 @@ exports.StudentModel = class StudentModel
         else
             callback null, validator.trim(titleValue)
 
+    _checkAndSanitizeYearOfStudy = (yearOfStudy, callback) ->
+        if not (validator.isAlpha(yearOfStudy) and validator.isIn(yearOfStudy, ["first", "second", "third", "honours"]))
+            invalidYearOfStudyError = new Error "Invalid Year of study"
+            callback invalidYearOfStudyError, null
+        else
+            callback null, validator.trim(yearOfStudy)
+
+    _checkAndSanitizeModeOfStudy = (modeOfStudy, callback) ->
+        if not (validator.isAlpha(modeOfStudy) and validator.isIn(modeOfStudy, ["PM","FM"]))
+            invalidModeOfStudyError = new Error "Invalid Mode of study"
+            callback invalidModeOfStudyError, null
+        else
+            callback null, validator.trim(modeOfStudy)
+
+    _checkAndSanitizeEmailAddresses = (emailAddress1, emailAddress2, callback) ->
+        emailAddresses = []
+        error1Str = undefined
+        error2Str = undefined
+        emailError = undfefined
+        if emailAddress1?
+            if not validator.isEmail emailAddress1
+                error1Str = "Invalid First Email Address"
+            else
+                emailAddresses.push emailAddress1
+        if emailAddress2?
+            if not validator.isEmail emailAddress2
+                error2Str = "Invalid Second Email Address"
+            else
+                emailAddresses.push emailAddress2
+        if not error1Str? and not error2Str?
+            if emailAddresses.length is 0
+                emailError = new Error "No valid email address"
+                callback emailError, null
+            else
+                callback null, emailAddresses
+        else
+            errorStr = error1Str ? ""
+            if error2Str?
+                errorStr += " #{error2Str}"
+            emailError = new Error errorStr
+            callback emailError, null
+
     _checkAndSanitizeForInsertion = (studentData, callback) ->
         checkOptions = {}
+        # add student number for validation
         checkOptions["studentNumber"] = (partialCallback) =>
             _checkAndSanitizeStudentNumber.call @, studentData.studentNumber, (studentNumberError, studentNumber) =>
                 partialCallback studentNumberError, studentNumber
+        # add the student first name for validation
         checkOptions["firstName"] = (partialCallback) =>
-            _checkAndSanitizeName.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, firstName) =>
+            _checkAndSanitizeString.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, firstName) =>
                 partialCallback firstNameError, firstName
+        # add the student last name for validation
         checkOptions["lastName"] = (partialCallback) =>
-            _checkAndSanitizeName.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, lastName) =>
+            _checkAndSanitizeString.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, lastName) =>
                 partialCallback lastNameError, lastName
+        # add the student title for validation
         checkOptions["title"] = (partialCallback) =>
             _checkAndSanitizeTitle.call @, studentData.title, (titleError, title) =>
                 partialCallback titleError, title
+        # add the student nationality for validation
+        checkOptions["nationality"] = (partialCallback) =>
+            _checkAndSanitizeString.call @, studentData.nationality, "Invalid Nationality", (nationalityError, nationality) =>
+                partialCallback nationalityError, nationality
+        # add the student year of study for validation
+        checkOptions["yearOfStudy"] = (partialCallback) =>
+            _checkAndSanitizeYearOfStudy.call @, studentData.yearOfStudy, (yearOfStudyError, yearOfStudy) =>
+                callback yearOfStudyError, yearOfStudy
+        # add the student mode of study for validation
+        checkOptions["modeOfStudy"] = (partialCallback) =>
+            _checkAndSanitizeModeOfStudy.call @, studentData.modeOfStudy, (modeOfStudyError, modeOfStudy) =>
+                partialCallback modeOfStudyError, modeOfStudy
+        # add the student programme for validation
+        checkOptions["programme"] = (partialCallback) =>
+            _checkAndSanitizeString.call @, studentData.programme, "Invalid Programme Code", (programmeError, programme) =>
+                partialCallback programmeError, Programme
+        # add the student email addresses for validation
+        checkOptions["emailAddresses"] = (partialCallback) =>
+            _checkAndSanitizeEmailAddresses.call @, studentData.emailAddress1, studentData.emailAddress2, (emailError, emailAddresses) =>
+                partialCallback emailError, emailAddresses
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
 
@@ -67,12 +121,22 @@ exports.StudentModel = class StudentModel
             if checkError?
                 callback checkError, null
             else
+                homeAddress = {}
+                if studentData["address line 1"]?
+                    homeAddress[addressLine1] = studentData["address line 1"]
+                if studentData["address line 2"]?
+                    homeAddress[addressLine2] = studentData["address line 2"]
+                if studentData["address line 3"]?
+                    homeAddress[addressLine3] = studentData["address line 3"]
+                if studentData["address line 4"]?
+                    homeAddress[addressLine4] = studentData["address line 4"]
+                studentInfo["homeAddress"] = homeAddress
                 ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
                     if urlError?
                         callback urlError, null
                     else
                         dataManager = DataManager.getDBManagerInstance dbURL
-                        dataManager.saveStudent studentData, (saveError, saveResult) =>
+                        dataManager.saveStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
 
     constructor: (@appEnv) ->
