@@ -7,11 +7,6 @@ async                = require 'async'
 
 exports.StudentModel = class StudentModel
 
-    "homeAddress": {
-        "address line 1": "4 Storch Street",
-        "address line 2": "Private Bag 12890"
-    },
-
     _checkAndSanitizeStudentNumber = (studentNumber, callback) ->
         if not validator.isNumeric(studentNumber)
             invalidStudentNumberError = new Error "Invalid Student Number"
