@@ -49,6 +49,10 @@ exports.StudentsController = class StudentsController
         @student.createPassword studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
             callback createPasswordError, createPasswordResult
 
+    _updateCourses = (studentNumber, courseData, callback) ->
+        @student.updateCourses studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
+            callback courseUpdateError, courseUpdateResult
+
     constructor: (envVal) ->
         @student = new StudentModel envVal
 
@@ -59,3 +63,7 @@ exports.StudentsController = class StudentsController
     createPassword: (studentNumber, passwordData, callback) =>
         _createPassword.call @, studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
             callback createPasswordError, createPasswordResult
+
+    updateCourses: (studentNumber, courseData, callback) =>
+        _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
+            callback courseUpdateError, courseUpdateResult

@@ -3,17 +3,26 @@
 StudentsController = require('../controllers/students').StudentsController
 
 module.exports = (app) ->
-    # will have to decide whether a controller should be created each time
+    # might need a pool of student controllers.
+    # Will use a pool manager to grab one
+    studentsController = new studentsController app.settings.env
     app.route('/api/students').post (request, response) ->
-        new StudentsController(app.settings.env).insertAllStudents (studentCreationError, studentCreationResult) =>
+        studentsController.insertAllStudents (studentCreationError, studentCreationResult) =>
             if studentCreationError?
                 response.json 500, {error: studentCreationError.message}
             else
                 response.json studentCreationResult
 
     app.route('/api/students/password/:id').put (request, response) ->
-        new StudentsController(app.settings.env).createPassword request.params.id, request.body, (passwordCreationError, passwordCreationResult) =>
+        studentsController.createPassword request.params.id, request.body, (passwordCreationError, passwordCreationResult) =>
             if passwordCreationError?
                 response.json 500, {error: passwordCreationError.message}
             else
                 response.json passwordCreationResult
+
+    app.route('/api/students/courses/:id').put (request, response) ->
+        studentsController.updateCourses request.params.id, request.body, (courseUpdateError, courseUpdateResult) =>
+            if courseUpdateError?
+                response.json 500, {error: courseUpdateError.message}
+            else
+                response.json courseUpdateResult

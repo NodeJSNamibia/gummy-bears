@@ -43,6 +43,10 @@ exports.StudentModel = class StudentModel
         else
             callback null, validator.trim(modeOfStudy)
 
+    _checkAndSanitizeCourses = (courses, callback) ->
+        # will use a regex to represent the array
+        callback null, courses
+
     _checkAndSanitizeEmailAddresses = (emailAddress1, emailAddress2, callback) ->
         emailAddresses = []
         error1Str = undefined
@@ -155,6 +159,19 @@ exports.StudentModel = class StudentModel
                                     DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {password: hashedPassword}, (updateError, updateResult) =>
                                         callback updateError, updateResult
 
+    _updateCourses = (studentNumber, courseData, callback) ->
+        _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                _checkAndSanitizeCourses.call @, courseData.courses, (courseError, validCourses) =>
+                    ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                        if urlError?
+                            callback urlError, null
+                        else
+                            DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {courses: validCoursess}, (updateError, updateResult) =>
+                                callback updateError, updateResult
+
     constructor: (@appEnv) ->
 
     insertStudent: (studentData, callback) =>
@@ -164,3 +181,7 @@ exports.StudentModel = class StudentModel
     createPassword: (studentNumber, passwordData, callback) =>
         _createPassword.call @, studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
             callback createPasswordError, createPasswordResult
+
+    updateCourses: (studentNumber, courseData, callback) =>
+        _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
+            callback courseUpdateError, courseUpdateResult
