@@ -7,6 +7,10 @@ StudentInfoLoader = require('../util/student-info-loader').StudentInfoLoader
 
 exports.StudentsController = class StudentsController
 
+    _authenticate = (authenticationData, callback) ->
+        @student.authenticate authenticationData, (authenticationError, authenticationResult) =>
+            callback authenticationError, authenticationResult
+
     _insertSingleStudentIter = (singleStudentData, callback) ->
         # create the proper object representing the student
         studentEmails = []
@@ -67,3 +71,7 @@ exports.StudentsController = class StudentsController
     updateCourses: (studentNumber, courseData, callback) =>
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
+
+    authenticate: (authenticationData, callback) =>
+        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
+            callback authenticationError, authenticationResult
