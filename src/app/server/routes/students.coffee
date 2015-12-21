@@ -26,3 +26,10 @@ module.exports = (app) ->
                 response.json 500, {error: courseUpdateError.message}
             else
                 response.json courseUpdateResult
+
+    app.route('/api/students/authenticate').post (request, response) ->
+        studentsController.authenticate request.body, (authenticationError, authenticationResult) =>
+            if authenticationError?
+                response.json 500, {error: authenticationError.message}
+            else
+                response.json authenticationResult
