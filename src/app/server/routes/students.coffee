@@ -5,7 +5,7 @@ StudentsController = require('../controllers/students').StudentsController
 module.exports = (app) ->
     # might need a pool of student controllers.
     # Will use a pool manager to grab one
-    studentsController = new studentsController app.settings.env
+    studentsController = new StudentsController app.settings.env
     app.route('/api/students').post (request, response) ->
         studentsController.insertAllStudents (studentCreationError, studentCreationResult) =>
             if studentCreationError?
