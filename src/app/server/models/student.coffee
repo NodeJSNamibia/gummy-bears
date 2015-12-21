@@ -116,6 +116,30 @@ exports.StudentModel = class StudentModel
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
 
+    _authenticate = (authenticationData, callback) ->
+        _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                    if urlError?
+                        callback urlError, null
+                    else
+                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findStudentError, studentDoc) =>
+                            if findStudentError?
+                                callback findStudentError, null
+                            else
+                                new PasswordHandler().verifyPassword authenticationData.password, studentDoc.password, (verifyError, verificationResult) =>
+                                    if verifyError?
+                                        callback verifyError, null
+                                    else
+                                        if verificationResult
+                                            # will send the proper object after authentication
+                                            callback null, {}
+                                        else
+                                            authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
+                                            callback authenticationError, null
+
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>
             if checkError?
@@ -185,3 +209,7 @@ exports.StudentModel = class StudentModel
     updateCourses: (studentNumber, courseData, callback) =>
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
+
+    authenticate: (authenticationData, callback) =>
+        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
+            callback authenticationError, authenticationResult

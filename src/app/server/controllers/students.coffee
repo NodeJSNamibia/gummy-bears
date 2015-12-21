@@ -9,7 +9,11 @@ exports.StudentsController = class StudentsController
 
     _authenticate = (authenticationData, callback) ->
         @student.authenticate authenticationData, (authenticationError, authenticationResult) =>
-            callback authenticationError, authenticationResult
+            if authenticationError?
+                callback authenticationError, null
+            else
+                # trigger login record
+                callback null, authenticationResult
 
     _insertSingleStudentIter = (singleStudentData, callback) ->
         # create the proper object representing the student
