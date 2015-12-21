@@ -5,7 +5,7 @@ StudentsController = require('../controllers/students').StudentsController
 module.exports = (app) ->
     # might need a pool of student controllers.
     # Will use a pool manager to grab one
-    studentsController = new studentsController app.settings.env
+    studentsController = new StudentsController app.settings.env
     app.route('/api/students').post (request, response) ->
         studentsController.insertAllStudents (studentCreationError, studentCreationResult) =>
             if studentCreationError?
@@ -26,3 +26,10 @@ module.exports = (app) ->
                 response.json 500, {error: courseUpdateError.message}
             else
                 response.json courseUpdateResult
+
+    app.route('/api/students/authenticate').post (request, response) ->
+        studentsController.authenticate request.body, (authenticationError, authenticationResult) =>
+            if authenticationError?
+                response.json 500, {error: authenticationError.message}
+            else
+                response.json authenticationResult

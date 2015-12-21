@@ -3,9 +3,7 @@
 bcrypt = require 'bcrypt'
 
 exports.PasswordHandler = class PasswordHandler
-    constructor: ->
-
-    hashPassword: (clearText, callback) =>
+    _hashPassword = (clearPasswordText, callback) ->
         bcrypt.genSalt 9, (saltError, saltValue) =>
             if saltError?
                 callback saltError, null
@@ -16,3 +14,17 @@ exports.PasswordHandler = class PasswordHandler
                         callback hashPasswordError, null
                     else
                         callback null, hashedPassword
+
+    _verifyPassword = (clearPasswordText, hashedPassword, callback) ->
+        bcrypt.compare clearPasswordText, hashedPassword, (compareError, compareResult) =>
+            callback compareError, compareResult
+
+    constructor: ->
+
+    hashPassword: (clearText, callback) =>
+        _hashPassword.call @, clearText, (hashError, hashedPassword) =>
+            callback hashError, hashedPassword
+
+    verifyPassword: (clearPasswordText, hashedPassword, callback) =>
+        _verifyPassword.call @, clearPasswordText, hashedPassword, (verifyError, verifyResult) =>
+            callback verifyError, verifyResult

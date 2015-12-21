@@ -12,6 +12,14 @@ exports.DataManager = class DataManager
 
         class _LocalDBManager
 
+            _findDocument = (bucketName, docID, callback) ->
+                _getDataBucket.call @, bucketName, (bucketError, bucket) =>
+                    if bucketError?
+                        callback bucketError, null
+                    else
+                        bucket.get docID, (docError, docData) =>
+                            callback docError, docData
+
             _getDataBucket = (bucketName, callback) ->
                 currentBucket = @allBuckets[bucketName]
                 if not currentBucket?
@@ -56,3 +64,7 @@ exports.DataManager = class DataManager
             updateStudent: (studentNumber, studentData, callback) =>
                 _updateDocument.call @, 'students', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
                     callback updateStudentError, updateStudentResult
+
+            findStudent: (studentNumber, callback) =>
+                _findDocument.call @, 'students', studentNumber, (findStudentError, studentDoc) =>
+                    callback findStudentError, studentDoc

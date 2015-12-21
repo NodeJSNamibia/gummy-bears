@@ -69,5 +69,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         server = http2.createServer serverOptions, app
         portNumber = 5480
 
+        io = require('socket.io').listen server
+
         server.listen portNumber, () ->
             console.log "Welcome to orientation week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env
