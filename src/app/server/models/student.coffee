@@ -196,6 +196,18 @@ exports.StudentModel = class StudentModel
                             DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {courses: validCoursess}, (updateError, updateResult) =>
                                 callback updateError, updateResult
 
+    _findOne = (studentNumber, callback) ->
+        _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                    if urlError?
+                        callback urlError, null
+                    else
+                        DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, (findError, findResult) =>
+                            callback findError, findResult
+
     constructor: (@appEnv) ->
 
     insertStudent: (studentData, callback) =>
@@ -213,3 +225,7 @@ exports.StudentModel = class StudentModel
     authenticate: (authenticationData, callback) =>
         _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
+
+    findOne: (studentNumber, callback) =>
+        _findOne.call @, studentNumber, (findError, studentDetails) =>
+            callback findError, studentDetails

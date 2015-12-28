@@ -61,6 +61,10 @@ exports.StudentsController = class StudentsController
         @student.updateCourses studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
+    _showStudent = (studentNumber, callback) ->
+        @student.findOne studentNumber, (findError, studentDetails) =>
+            callback findError, studentDetails
+
     constructor: (envVal) ->
         @student = new StudentModel envVal
 
@@ -79,3 +83,7 @@ exports.StudentsController = class StudentsController
     authenticate: (authenticationData, callback) =>
         _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
+
+    showStudent: (studentNumber, callback) =>
+        _showStudent.call @, studentNumber, (showStudentError, studentDetails) =>
+            callback showStudentError, studentDetails
