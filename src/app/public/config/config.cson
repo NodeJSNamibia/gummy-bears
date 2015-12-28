@@ -1,8 +1,14 @@
 {
     development:
         dbURL: "196.168.10.26"
+        sslKey: "oweek-dev.key"
+        sskCert: "oweek-dev.crt"
     test:
         dbURL: "196.168.10.26"
+        sslKey: "oweek-test.key"
+        sskCert: "oweek-test.crt"
     production:
         dbURL: "196.168.10.26"
+        sslKey: "oweek-prod.key"
+        sskCert: "oweek-prod.crt"
 }
