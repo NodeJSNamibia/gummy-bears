@@ -88,3 +88,7 @@ exports.DataManager = class DataManager
             findAllStudents: (callback) =>
                 _findAllStudents.call @, (findAllError, allStudents) =>
                     callback findAllError, allStudents
+
+            insertLoginRecord: (recordID, studentLR, callback) =>
+                _insertDocument.call @, 'login-records', recordID, studentLR, (insertLoginRecordError, insertLoginRecordResult) =>
+                    callback insertLoginRecordError, insertLoginRecordResult

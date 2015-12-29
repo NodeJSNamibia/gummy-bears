@@ -12,7 +12,6 @@ exports.StudentsController = class StudentsController
             if authenticationError?
                 callback authenticationError, null
             else
-                # trigger login record
                 callback null, authenticationResult
 
     _insertSingleStudentIter = (singleStudentData, callback) ->

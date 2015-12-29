@@ -1,10 +1,11 @@
 'use strict'
 
-ConfigurationManager = require('../util/config-manager').ConfigurationManager
-DataManager          = require('../util/data-manager').DataManager
-PasswordHandler      = require('../util/password-handler').PasswordHandler
-validator            = require('validator')
-async                = require 'async'
+LoginRecordsController = require('../controllers/login-records').LoginRecordsController
+ConfigurationManager   = require('../util/config-manager').ConfigurationManager
+DataManager            = require('../util/data-manager').DataManager
+PasswordHandler        = require('../util/password-handler').PasswordHandler
+validator              = require('validator')
+async                  = require 'async'
 
 exports.StudentModel = class StudentModel
 
@@ -133,13 +134,17 @@ exports.StudentModel = class StudentModel
                                     if verifyError?
                                         callback verifyError, null
                                     else
-                                        if verificationResult
-                                            # will send the proper object after authentication
-                                            callback null, {}
-                                        else
+                                        if not verificationResult
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
-
+                                        else
+                                            new LoginRecordsController(@appEnv).save validStudentNumber, (saveLoginRecordError, saveLoginRecordResult) =>
+                                                if saveLoginRecordError?
+                                                    callback saveLoginRecordError, null
+                                                else
+                                                    # will send the proper object after authentication
+                                                    callback null, {}
+    
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>
             if checkError?
