@@ -34,9 +34,16 @@ module.exports = (app) ->
             else
                 response.json authenticationResult
 
+    app.route('/api/students').get (request, response) ->
+        studentsController.getAllStudents (getAllStudentsError, allStudents) =>
+            if getAllStudentsError?
+                response.json 500, {error: getAllStudentsError.message}
+            else
+                response.json allStudents
+
     app.route('/api/students/:id').get (request, response) ->
-        studentsController.showStudent request.params.id, (showStudentError, studentDetails) =>
-            if showStudentError?
-                response.json 500, {error: showStudentError.message}
+        studentsController.getStudent request.params.id, (getStudentError, studentDetails) =>
+            if getStudentError?
+                response.json 500, {error: getStudentError.message}
             else
                 response.json studentDetails

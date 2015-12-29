@@ -205,8 +205,16 @@ exports.StudentModel = class StudentModel
                     if urlError?
                         callback urlError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, (findError, findResult) =>
+                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
                             callback findError, findResult
+
+    _findAll = (callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findAllStudents (findAllError, allStudents) =>
+                    callback findAllError, allStudents
 
     constructor: (@appEnv) ->
 
@@ -229,3 +237,7 @@ exports.StudentModel = class StudentModel
     findOne: (studentNumber, callback) =>
         _findOne.call @, studentNumber, (findError, studentDetails) =>
             callback findError, studentDetails
+
+    findAll: (callback) =>
+        _findAll.call @, (findAllError, allStudents) =>
+            callback findAllError, allStudents
