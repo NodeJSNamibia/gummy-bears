@@ -37,3 +37,41 @@ faculty = 'Student Faculty', 'programme' = 'Student Programme'
 }
 </code>
 </pre>
+<h3>Request for Events</h3>
+<pre>
+  <p>
+    Request url:
+  <p>
+</pre>
+<h4>Server Response</h4>
+<pre>
+  <p>
+    response = [{"id": "evt01",
+    "description": "event description",
+    "date": "12/12/2015",
+    "start": "11:00",
+    "ends": "13:00",
+    "location": "location3",
+    "faculty": "fci",
+    "organizer": {
+        "firstName": "Tellus",
+        "lastName": "Normand",
+        "title": "Dr",
+        "emailAddress": "telNormand@gmail.com"
+    },
+    {"id": "evt02",
+    "description": "event description",
+    "date": "12/12/2015",
+    "start": "11:00",
+    "ends": "13:00",
+    "location": "location3",
+    "faculty": "fci",
+    "organizer": {
+        "firstName": "Tellus",
+        "lastName": "Normand",
+        "title": "Dr",
+        "emailAddress": "telNormand@gmail.com"
+    }
+    ]
+  </p>
+</pre>
