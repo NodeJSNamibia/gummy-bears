@@ -19,6 +19,7 @@ RedisStore     = require('connect-redis')(session)
 redisClient    = require('redis').createClient()
 
 ConfigurationManager = require('app/server/util/config-manager').ConfigurationManager
+PoolManager          = require('app/server/util/pool-manager').PoolManager
 
 ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult) =>
     if loadError?
@@ -56,6 +57,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
 
         # define folder for static resources and how long they can be cached
 
+        PoolManager.getPoolManagerInstance().setExecutionEnvironment app.settings.env
         require('app/server/routes/students')(app)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>

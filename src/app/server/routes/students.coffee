@@ -1,49 +1,94 @@
 'use strict'
 
-StudentsController = require('../controllers/students').StudentsController
+# this file contains all the routes related to student resource
+
+PoolManager = require('../util/pool-manager').PoolManager
 
 module.exports = (app) ->
-    # might need a pool of student controllers.
-    # Will use a pool manager to grab one
-    studentsController = new StudentsController app.settings.env
+
+    # grab an instance of the pool manager
+    poolManager = PoolManager.getPoolManagerInstance()
+
+    # load all students
     app.route('/api/students').post (request, response) ->
-        studentsController.insertAllStudents (studentCreationError, studentCreationResult) =>
-            if studentCreationError?
-                response.json 500, {error: studentCreationError.message}
+        poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+            if controllerInstanceError?
+                response.json 500, {error: controllerInstanceError.message}
+            else if not controllerInstance?
+                # add to the queue
             else
-                response.json studentCreationResult
+                controllerInstance.insertAllStudents (studentCreationError, studentCreationResult) =>
+                    if studentCreationError?
+                        response.json 500, {error: studentCreationError.message}
+                    else
+                        response.json 201, studentCreationResult
 
+    # create a pasword for the student
     app.route('/api/students/password/:id').put (request, response) ->
-        studentsController.createPassword request.params.id, request.body, (passwordCreationError, passwordCreationResult) =>
-            if passwordCreationError?
-                response.json 500, {error: passwordCreationError.message}
+        poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+            if controllerInstanceError?
+                response.json 500, {error: controllerInstanceError.message}
+            else if not controllerInstance?
+                # add to the queue
             else
-                response.json passwordCreationResult
+                controllerInstance.createPassword request.params.id, request.body, (passwordCreationError, passwordCreationResult) =>
+                    if passwordCreationError?
+                        response.json 500, {error: passwordCreationError.message}
+                    else
+                        response.json 200, passwordCreationResult
 
+    # add the courses the student registered for
     app.route('/api/students/courses/:id').put (request, response) ->
-        studentsController.updateCourses request.params.id, request.body, (courseUpdateError, courseUpdateResult) =>
-            if courseUpdateError?
-                response.json 500, {error: courseUpdateError.message}
+        poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+            if controllerInstanceError?
+                response.json 500, {error: controllerInstanceError.message}
+            else if not controllerInstance?
+                # add to the queue
             else
-                response.json courseUpdateResult
+                controllerInstance.updateCourses request.params.id, request.body, (courseUpdateError, courseUpdateResult) =>
+                    if courseUpdateError?
+                        response.json 500, {error: courseUpdateError.message}
+                    else
+                        response.json courseUpdateResult
 
+    # default student authentication
     app.route('/api/students/authenticate').post (request, response) ->
-        studentsController.authenticate request.body, (authenticationError, authenticationResult) =>
-            if authenticationError?
-                response.json 500, {error: authenticationError.message}
+        poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+            if controllerInstanceError?
+                response.json 500, {error: controllerInstanceError.message}
+            else if not controllerInstance?
+                # add to the queue
             else
-                response.json authenticationResult
+                controllerInstance.authenticate request.body, (authenticationError, authenticationResult) =>
+                    if authenticationError?
+                        response.json 500, {error: authenticationError.message}
+                    else
+                        response.json authenticationResult
 
+    # get the list of students
     app.route('/api/students').get (request, response) ->
-        studentsController.getAllStudents (getAllStudentsError, allStudents) =>
-            if getAllStudentsError?
-                response.json 500, {error: getAllStudentsError.message}
+        poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+            if controllerInstanceError?
+                response.json 500, {error: controllerInstanceError.message}
+            else if not controllerInstance?
+                # add to the queue
             else
-                response.json allStudents
+                controllerInstance.getAllStudents (getAllStudentsError, allStudents) =>
+                    if getAllStudentsError?
+                        response.json 500, {error: getAllStudentsError.message}
+                    else
+                        response.json 200, allStudents
 
+    # get a specific student with her student number as an id
     app.route('/api/students/:id').get (request, response) ->
-        studentsController.getStudent request.params.id, (getStudentError, studentDetails) =>
-            if getStudentError?
-                response.json 500, {error: getStudentError.message}
+        poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+            if controllerInstanceError?
+                response.json 500, {error: controllerInstanceError.message}
+            else if not controllerInstance?
+                # add to the queue
             else
-                response.json studentDetails
+                controllerInstance.getStudent request.params.id, (getStudentError, studentDetails) =>
+                    if getStudentError?
+                        response.json 500, {error: getStudentError.message}
+                    else
+                        response.json 200, studentDetails
