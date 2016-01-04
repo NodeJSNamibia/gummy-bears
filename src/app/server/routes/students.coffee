@@ -17,7 +17,7 @@ module.exports = (app) ->
             else if not controllerInstance?
                 # add to the queue
             else
-                controllerInstance.insertAllStudents (studentCreationError, studentCreationResult) =>
+                controllerInstance.insertAllStudents poolManager, (studentCreationError, studentCreationResult) =>
                     if studentCreationError?
                         response.json 500, {error: studentCreationError.message}
                     else
@@ -31,7 +31,7 @@ module.exports = (app) ->
             else if not controllerInstance?
                 # add to the queue
             else
-                controllerInstance.createPassword request.params.id, request.body, (passwordCreationError, passwordCreationResult) =>
+                controllerInstance.createPassword request.params.id, request.body, poolManager, (passwordCreationError, passwordCreationResult) =>
                     if passwordCreationError?
                         response.json 500, {error: passwordCreationError.message}
                     else
@@ -45,7 +45,7 @@ module.exports = (app) ->
             else if not controllerInstance?
                 # add to the queue
             else
-                controllerInstance.updateCourses request.params.id, request.body, (courseUpdateError, courseUpdateResult) =>
+                controllerInstance.updateCourses request.params.id, request.body, poolManager, (courseUpdateError, courseUpdateResult) =>
                     if courseUpdateError?
                         response.json 500, {error: courseUpdateError.message}
                     else
@@ -59,7 +59,7 @@ module.exports = (app) ->
             else if not controllerInstance?
                 # add to the queue
             else
-                controllerInstance.authenticate request.body, (authenticationError, authenticationResult) =>
+                controllerInstance.authenticate request.body, poolManager, (authenticationError, authenticationResult) =>
                     if authenticationError?
                         response.json 500, {error: authenticationError.message}
                     else
@@ -73,7 +73,7 @@ module.exports = (app) ->
             else if not controllerInstance?
                 # add to the queue
             else
-                controllerInstance.getAllStudents (getAllStudentsError, allStudents) =>
+                controllerInstance.getAllStudents poolManager, (getAllStudentsError, allStudents) =>
                     if getAllStudentsError?
                         response.json 500, {error: getAllStudentsError.message}
                     else
@@ -87,7 +87,7 @@ module.exports = (app) ->
             else if not controllerInstance?
                 # add to the queue
             else
-                controllerInstance.getStudent request.params.id, (getStudentError, studentDetails) =>
+                controllerInstance.getStudent request.params.id, poolManager, (getStudentError, studentDetails) =>
                     if getStudentError?
                         response.json 500, {error: getStudentError.message}
                     else
