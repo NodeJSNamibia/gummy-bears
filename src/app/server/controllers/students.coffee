@@ -12,7 +12,7 @@ exports.StudentsController = class StudentsController
             callback releaseError, releaseResult
 
     _authenticate = (authenticationData, poolManager, callback) ->
-        @student.authenticate authenticationData, (authenticationError, authenticationResult) =>
+        @student.authenticate authenticationData, poolManager, (authenticationError, authenticationResult) =>
             _release.call @, poolManager, @, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null

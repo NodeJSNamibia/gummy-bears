@@ -117,7 +117,7 @@ exports.StudentModel = class StudentModel
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
 
-    _authenticate = (authenticationData, callback) ->
+    _authenticate = (authenticationData, poolManager, callback) ->
         _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
                 callback studentNumberError, null
@@ -138,13 +138,19 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
-                                            new LoginRecordsController(@appEnv).save validStudentNumber, (saveLoginRecordError, saveLoginRecordResult) =>
-                                                if saveLoginRecordError?
-                                                    callback saveLoginRecordError, null
+                                            poolManager.acquire 'login-records', (controllerInstanceError, controllerInstance) =>
+                                                if controllerInstanceError?
+                                                    callback controllerInstanceError, null
+                                                else if not controllerInstance?
+                                                    # add to the queue
                                                 else
-                                                    # will send the proper object after authentication
-                                                    callback null, {}
-    
+                                                    controllerInstance.save validStudentNumber, poolManager, (saveLoginRecordError, saveLoginRecordResult) =>
+                                                        if saveLoginRecordError?
+                                                            callback saveLoginRecordError, null
+                                                        else
+                                                            # will send the proper object after authentication
+                                                            callback null, {}
+
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>
             if checkError?
@@ -235,8 +241,8 @@ exports.StudentModel = class StudentModel
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
-    authenticate: (authenticationData, callback) =>
-        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, poolManager, callback) =>
+        _authenticate.call @, authenticationData, poolManager, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
 
     findOne: (studentNumber, callback) =>
