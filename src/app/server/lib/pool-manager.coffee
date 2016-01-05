@@ -34,7 +34,7 @@ exports.PoolManager = class PoolManager
                 else
                     callback null, null
 
-        _release = (controllerFamilyName, controllerRef, callback) ->
+        _release = (controllerFamilyName, controllerRef, queueManager, callback) ->
             controllerContainer = @pool[controllerFamilyName]
             if not controllerContainer?
                 unknownControllerFamilyError = new Error "Unknown controller for #{controllerFamilyName}"
@@ -42,6 +42,7 @@ exports.PoolManager = class PoolManager
             else
                 availableControllers = controllerContainer.available
                 availableControllers.push controllerRef
+                queueManager.notify controllerFamilyName
                 callback null, null
 
         constructor: ->
@@ -66,6 +67,6 @@ exports.PoolManager = class PoolManager
             _acquire.call @, controllerFamilyName, (controllerInstanceError, controllerInstance) =>
                 callback controllerInstanceError, controllerInstance
 
-        release: (controllerFamilyName, controllerRef, callback) =>
+        release: (controllerFamilyName, controllerRef, queueManager, callback) =>
             _release.call @, controllerFamilyName, controllerRef, (releaseError, releaseResult) =>
                 callback releaseError, releaseResult

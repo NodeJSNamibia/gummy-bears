@@ -8,9 +8,9 @@ AbstractController = require('./abstract-controller').AbstractController
 
 exports.StudentsController = class StudentsController extends AbstractController
 
-    _authenticate = (authenticationData, poolManager, callback) ->
-        @student.authenticate authenticationData, poolManager, (authenticationError, authenticationResult) =>
-            @release poolManager, (releaseError, releaseResult) =>
+    _authenticate = (authenticationData, poolManager, queueManager, callback) ->
+        @student.authenticate authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
+            @release poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -40,11 +40,11 @@ exports.StudentsController = class StudentsController extends AbstractController
         @student.insertStudent studentInfo, (saveError, saveResult) =>
             callback saveError, saveResult
 
-    _insertAllStudents = (poolManager, callback) ->
+    _insertAllStudents = (poolManager, queueManager, callback) ->
         # load student information first
         StudentInfoLoader.getStudentInfoLoader().loadStudents (laodError, allStudents) =>
             if loadError?
-                @release poolManager, (releaseError, releaseResult) =>
+                @release poolManager, queueManager, (releaseError, releaseResult) =>
                     if releaseError?
                         callback releaseError, null
                     else
@@ -53,45 +53,45 @@ exports.StudentsController = class StudentsController extends AbstractController
                 async.each allStudents, @_insertSingleStudentIter, (insertError) =>
                     if insertError?
                         console.log insertError
-                        @release poolManager, (releaseError, releaseResult) =>
+                        @release poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
                                 callback insertError, null
                     else
-                        @release poolManager, (releaseError, releaseResult) =>
+                        @release poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
                                 callback null, {}
 
-    _createPassword = (studentNumber, passwordData, poolManager, callback) ->
+    _createPassword = (studentNumber, passwordData, poolManager, queueManager, callback) ->
         @student.createPassword studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
-            @release poolManager, (releaseError, releaseResult) =>
+            @release poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
                     callback createPasswordError, createPasswordResult
 
-    _updateCourses = (studentNumber, courseData, poolManager, callback) ->
+    _updateCourses = (studentNumber, courseData, poolManager, queueManager, callback) ->
         @student.updateCourses studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
-            @release poolManager, (releaseError, releaseResult) =>
+            @release poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
                     callback courseUpdateError, courseUpdateResult
 
-    _getStudent = (studentNumber, poolManager, callback) ->
+    _getStudent = (studentNumber, poolManager, queueManager, callback) ->
         @student.findOne studentNumber, (findError, studentDetails) =>
-            @release poolManager, (releaseError, releaseResult) =>
+            @release poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
                     callback findError, studentDetails
 
-    _getAllStudents = (poolManager, callback) ->
+    _getAllStudents = (poolManager, queueManager, callback) ->
         @student.findAll (findError, allStudents) =>
-            @release poolManager, (releaseError, releaseResult) =>
+            @release poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -100,26 +100,26 @@ exports.StudentsController = class StudentsController extends AbstractController
     constructor: (envVal) ->
         @student = new StudentModel envVal
 
-    insertAllStudents: (poolManager, callback) =>
-        _insertAllStudents.call @, poolManager, (insertAllError, insertAllResult) =>
+    insertAllStudents: (poolManager, queueManager, callback) =>
+        _insertAllStudents.call @, poolManager, queueManager, (insertAllError, insertAllResult) =>
             callback insertAllError, insertAllResult
 
-    createPassword: (studentNumber, passwordData, poolManager, callback) =>
+    createPassword: (studentNumber, passwordData, poolManager, queueManager, callback) =>
         _createPassword.call @, studentNumber, passwordData, poolManager, (createPasswordError, createPasswordResult) =>
             callback createPasswordError, createPasswordResult
 
-    updateCourses: (studentNumber, courseData, poolManager, callback) =>
-        _updateCourses.call @, studentNumber, courseData, poolManager, (courseUpdateError, courseUpdateResult) =>
+    updateCourses: (studentNumber, courseData, poolManager, queueManager, callback) =>
+        _updateCourses.call @, studentNumber, courseData, poolManager, queueManager, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
-    authenticate: (authenticationData, poolManager, callback) =>
-        _authenticate.call @, authenticationData, poolManager, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, poolManager, queueManager, callback) =>
+        _authenticate.call @, authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
 
-    getStudent: (studentNumber, poolManager, callback) =>
-        _getStudent.call @, studentNumber, poolManager, (getStudentError, studentDetails) =>
+    getStudent: (studentNumber, poolManager, queueManager, callback) =>
+        _getStudent.call @, studentNumber, poolManager, queueManager, (getStudentError, studentDetails) =>
             callback getStudentError, studentDetails
 
-    getAllStudents: (poolManager, callback) =>
-        _getAllStudents.call @, poolManager, (getAllStudentsError, allStudents) =>
+    getAllStudents: (poolManager, queueManager, callback) =>
+        _getAllStudents.call @, poolManager, queueManager, (getAllStudentsError, allStudents) =>
             callback getAllStudentsError, allStudents

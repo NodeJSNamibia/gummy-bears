@@ -20,8 +20,16 @@ exports.QueueManager = class QueueManager
                 newWorkerFamily = [requestObject]
                 @workers[controllerFamilyName] = newWorkerFamily
 
+        _notify = (controllerFamilyName) ->
+            workerFamily = @workers[controllerFamilyName]
+            if workerFamily? and workerFamily.length > 0
+                # execute the metod
+
         constructor: ->
             @workers = {}
 
         enqueueRequest: (controllerFamilyName, requestObject) =>
             _enqueueRequest.call @, controllerFamilyName, requestObject
+
+        notify: (controllerFamilyName) =>
+            _notify.call @, controllerFamilyName

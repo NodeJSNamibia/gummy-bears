@@ -117,7 +117,7 @@ exports.StudentModel = class StudentModel
             callback checkError, studentInfo
 
     # carry the queue manager along
-    _authenticate = (authenticationData, poolManager, callback) ->
+    _authenticate = (authenticationData, poolManager, queueManager, callback) ->
         _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
                 callback studentNumberError, null
@@ -138,6 +138,7 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
+                                            # maybe need a different way of recording the login
                                             poolManager.acquire 'login-records', (controllerInstanceError, controllerInstance) =>
                                                 if controllerInstanceError?
                                                     callback controllerInstanceError, null
@@ -241,8 +242,8 @@ exports.StudentModel = class StudentModel
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
-    authenticate: (authenticationData, poolManager, callback) =>
-        _authenticate.call @, authenticationData, poolManager, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, poolManager, queueManager, callback) =>
+        _authenticate.call @, authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
 
     findOne: (studentNumber, callback) =>

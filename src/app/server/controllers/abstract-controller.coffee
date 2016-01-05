@@ -3,10 +3,10 @@
 # This is an abstract controller class
 
 exports.AbstractController = class AbstractController
-    _release = (poolManager, callback) ->
-        poolManager.release 'students', @, (releaseError, releaseResult) =>
+    _release = (poolManager, queueManager, callback) ->
+        poolManager.release 'students', @, queueManager, (releaseError, releaseResult) =>
             callback releaseError, releaseResult
 
-    release: (poolManager, callback) =>
-        _release.call @, poolManager, (releaseError, releaseResult) =>
+    release: (poolManager, queueManager, callback) =>
+        _release.call @, poolManager, queueManager, (releaseError, releaseResult) =>
             callback releaseError, releaseResult

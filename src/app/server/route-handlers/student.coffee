@@ -20,7 +20,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', authenticationRequestObject
                 else
-                    controllerInstance.authenticate request.body, @poolManager, (authenticationError, authenticationResult) =>
+                    controllerInstance.authenticate request.body, @poolManager, queueManager, (authenticationError, authenticationResult) =>
                         if authenticationError?
                             response.json 500, {error: authenticationError.message}
                         else
@@ -36,7 +36,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', createPasswordRequestObject
                 else
-                    controllerInstance.createPassword request.params.id, request.body, @poolManager, (passwordCreationError, passwordCreationResult) =>
+                    controllerInstance.createPassword request.params.id, request.body, @poolManager, queueManager, (passwordCreationError, passwordCreationResult) =>
                         if passwordCreationError?
                             response.json 500, {error: passwordCreationError.message}
                         else
@@ -52,7 +52,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', getAllStudentsRequestObject
                 else
-                    controllerInstance.getAllStudents @poolManager, (getAllStudentsError, allStudents) =>
+                    controllerInstance.getAllStudents @poolManager, queueManager, (getAllStudentsError, allStudents) =>
                         if getAllStudentsError?
                             response.json 500, {error: getAllStudentsError.message}
                         else
@@ -68,7 +68,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', getStudentRequestObject
                 else
-                    controllerInstance.getStudent request.params.id, @poolManager, (getStudentError, studentDetails) =>
+                    controllerInstance.getStudent request.params.id, @poolManager, queueManager, (getStudentError, studentDetails) =>
                         if getStudentError?
                             response.json 500, {error: getStudentError.message}
                         else
@@ -84,7 +84,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', insertAllStudentsRequestObject
                 else
-                    controllerInstance.insertAllStudents @poolManager, (studentCreationError, studentCreationResult) =>
+                    controllerInstance.insertAllStudents @poolManager, queueManager, (studentCreationError, studentCreationResult) =>
                         if studentCreationError?
                             response.json 500, {error: studentCreationError.message}
                         else
@@ -100,7 +100,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', updateCoursesRequestObject
                 else
-                    controllerInstance.updateCourses request.params.id, request.body, @poolManager, (courseUpdateError, courseUpdateResult) =>
+                    controllerInstance.updateCourses request.params.id, request.body, @poolManager, queueManager, (courseUpdateError, courseUpdateResult) =>
                         if courseUpdateError?
                             response.json 500, {error: courseUpdateError.message}
                         else
