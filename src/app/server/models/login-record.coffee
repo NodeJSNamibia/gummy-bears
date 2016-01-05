@@ -2,8 +2,8 @@
 
 # This class represents a login record model
 
-ConfigurationManager = require('../util/config-manager').ConfigurationManager
-DataManager          = require('../util/data-manager').DataManager
+ConfigurationManager = require('../lib/config-manager').ConfigurationManager
+DataManager          = require('../lib/data-manager').DataManager
 uuid                 = require 'uuid4'
 moment               = require 'moment'
 

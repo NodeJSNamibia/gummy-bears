@@ -1,8 +1,8 @@
 'use strict'
 
 LoginRecordsController = require('../controllers/login-records').LoginRecordsController
-ConfigurationManager   = require('../util/config-manager').ConfigurationManager
-DataManager            = require('../util/data-manager').DataManager
+ConfigurationManager   = require('../lib/config-manager').ConfigurationManager
+DataManager            = require('../lib/data-manager').DataManager
 PasswordHandler        = require('../util/password-handler').PasswordHandler
 validator              = require('validator')
 async                  = require 'async'

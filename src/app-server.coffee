@@ -18,8 +18,8 @@ session        = require 'express-session'
 RedisStore     = require('connect-redis')(session)
 redisClient    = require('redis').createClient()
 
-ConfigurationManager = require('app/server/util/config-manager').ConfigurationManager
-PoolManager          = require('app/server/util/pool-manager').PoolManager
+ConfigurationManager = require('app/server/lib/config-manager').ConfigurationManager
+PoolManager          = require('app/server/lib/pool-manager').PoolManager
 
 ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult) =>
     if loadError?

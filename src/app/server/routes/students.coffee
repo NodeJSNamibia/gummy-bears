@@ -2,7 +2,7 @@
 
 # this file contains all the routes related to student resource
 
-PoolManager = require('../util/pool-manager').PoolManager
+PoolManager = require('../lib/pool-manager').PoolManager
 
 module.exports = (app) ->
 

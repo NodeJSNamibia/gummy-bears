@@ -1,6 +1,7 @@
 'use strict'
 
 cson = require 'cson'
+
 exports.ConfigurationManager = class ConfigurationManager
     _managerInstance = undefined
 

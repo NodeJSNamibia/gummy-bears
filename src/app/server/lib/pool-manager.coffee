@@ -2,7 +2,7 @@
 
 # This class defines a pool manager for controllers
 
-ControllerFactory = require('./controller-factory').ControllerFactory
+ControllerFactory = require('../util/controller-factory').ControllerFactory
 
 exports.PoolManager = class PoolManager
 
