@@ -15,7 +15,10 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
-                    # add to the queue
+                    authenticationRequestObject =
+                        methodName: 'authenticate'
+                        arguments: [queueManager, request, response]
+                    queueManager.enqueueRequest 'students', authenticationRequestObject
                 else
                     controllerInstance.authenticate request.body, @poolManager, (authenticationError, authenticationResult) =>
                         if authenticationError?
@@ -28,7 +31,10 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
-                    # add to the queue
+                    createPasswordRequestObject =
+                        methodName: 'createPassword'
+                        arguments: [queueManager, request, response]
+                    queueManager.enqueueRequest 'students', createPasswordRequestObject
                 else
                     controllerInstance.createPassword request.params.id, request.body, @poolManager, (passwordCreationError, passwordCreationResult) =>
                         if passwordCreationError?
@@ -41,7 +47,10 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
-                    # add to the queue
+                    getAllStudentsRequestObject =
+                        methodName: 'getAllStudents'
+                        arguments: [queueManager, request, response]
+                    queueManager.enqueueRequest 'students', getAllStudentsRequestObject
                 else
                     controllerInstance.getAllStudents @poolManager, (getAllStudentsError, allStudents) =>
                         if getAllStudentsError?
@@ -54,7 +63,10 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
-                    # add to the queue
+                    getStudentRequestObject =
+                        methodName: 'getStudent'
+                        arguments: [queueManager, request, response]
+                    queueManager.enqueueRequest 'students', getStudentRequestObject
                 else
                     controllerInstance.getStudent request.params.id, @poolManager, (getStudentError, studentDetails) =>
                         if getStudentError?
@@ -67,7 +79,10 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
-                    # add to the queue
+                    insertAllStudentsRequestObject =
+                        methodName: 'insertAllStudents'
+                        arguments: [queueManager, request, response]
+                    queueManager.enqueueRequest 'students', insertAllStudentsRequestObject
                 else
                     controllerInstance.insertAllStudents @poolManager, (studentCreationError, studentCreationResult) =>
                         if studentCreationError?
@@ -80,7 +95,10 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
-                    # add to the queue
+                    updateCoursesRequestObject =
+                        methodName: 'updateCourses'
+                        arguments: [queueManager, request, response]
+                    queueManager.enqueueRequest 'students', updateCoursesRequestObject
                 else
                     controllerInstance.updateCourses request.params.id, request.body, @poolManager, (courseUpdateError, courseUpdateResult) =>
                         if courseUpdateError?
