@@ -1,19 +1,16 @@
 'use strict'
 
 # This class represents a students controller. It handles all requests related to students
-async             = require 'async'
-StudentModel      = require('../models/student').StudentModel
-StudentInfoLoader = require('../util/student-info-loader').StudentInfoLoader
+async              = require 'async'
+StudentModel       = require('../models/student').StudentModel
+StudentInfoLoader  = require('../util/student-info-loader').StudentInfoLoader
+AbstractController = require('./abstract-controller').AbstractController
 
-exports.StudentsController = class StudentsController
-
-    _release = (poolManager, controllerRef, callback) ->
-        poolManager.release 'students', controllerRef, (releaseError, releaseResult) =>
-            callback releaseError, releaseResult
+exports.StudentsController = class StudentsController extends AbstractController
 
     _authenticate = (authenticationData, poolManager, callback) ->
         @student.authenticate authenticationData, poolManager, (authenticationError, authenticationResult) =>
-            _release.call @, poolManager, @, (releaseError, releaseResult) =>
+            @release poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -47,7 +44,7 @@ exports.StudentsController = class StudentsController
         # load student information first
         StudentInfoLoader.getStudentInfoLoader().loadStudents (laodError, allStudents) =>
             if loadError?
-                _release.call @, poolManager, @, (releaseError, releaseResult) =>
+                @release poolManager, (releaseError, releaseResult) =>
                     if releaseError?
                         callback releaseError, null
                     else
@@ -56,13 +53,13 @@ exports.StudentsController = class StudentsController
                 async.each allStudents, @_insertSingleStudentIter, (insertError) =>
                     if insertError?
                         console.log insertError
-                        _release.call @, poolManager, @, (releaseError, releaseResult) =>
+                        @release poolManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
                                 callback insertError, null
                     else
-                        _release.call @, poolManager, @, (releaseError, releaseResult) =>
+                        @release poolManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
@@ -70,7 +67,7 @@ exports.StudentsController = class StudentsController
 
     _createPassword = (studentNumber, passwordData, poolManager, callback) ->
         @student.createPassword studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
-            _release.call @, poolManager, @, (releaseError, releaseResult) =>
+            @release poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -78,7 +75,7 @@ exports.StudentsController = class StudentsController
 
     _updateCourses = (studentNumber, courseData, poolManager, callback) ->
         @student.updateCourses studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
-            _release.call @, poolManager, @, (releaseError, releaseResult) =>
+            @release poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -86,7 +83,7 @@ exports.StudentsController = class StudentsController
 
     _getStudent = (studentNumber, poolManager, callback) ->
         @student.findOne studentNumber, (findError, studentDetails) =>
-            _release.call @, poolManager, @, (releaseError, releaseResult) =>
+            @release poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -94,7 +91,7 @@ exports.StudentsController = class StudentsController
 
     _getAllStudents = (poolManager, callback) ->
         @student.findAll (findError, allStudents) =>
-            _release.call @, poolManager, @, (releaseError, releaseResult) =>
+            @release poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else

@@ -2,16 +2,14 @@
 
 # This class represents a login records controller
 
-LoginRecordModel = require('../models/login-record').LoginRecordModel
+LoginRecordModel   = require('../models/login-record').LoginRecordModel
+AbstractController = require('./abstract-controller').AbstractController
 
-exports.LoginRecordsController = class LoginRecordsController
-    _release = (poolManager, controllerRef, callback) ->
-        poolManager.release 'students', controllerRef, (releaseError, releaseResult) =>
-            callback releaseError, releaseResult
+exports.LoginRecordsController = class LoginRecordsController extends AbstractController
 
     _save = (studentNumber, poolManager, callback) ->
         @loginRecord.save studentNumber, (saveLRError, saveLRResult) =>
-            _release.call @, poolManager, @, (releaseError, releaseResult) =>
+            @release poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
