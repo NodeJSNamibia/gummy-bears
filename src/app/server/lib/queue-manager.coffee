@@ -11,5 +11,17 @@ exports.QueueManager = class QueueManager
         _qmInstance ?= new _LocalQueueManager()
 
     class _LocalQueueManager
+
+        _enqueueRequest = (controllerFamilyName, requestObject) ->
+            workerFamily = @workers[controllerFamilyName]
+            if workerFamily?
+                workerFamily.push requestObject
+            else
+                newWorkerFamily = [requestObject]
+                @workers[controllerFamilyName] = newWorkerFamily
+
         constructor: ->
             @workers = {}
+
+        enqueueRequest: (controllerFamilyName, requestObject) =>
+            _enqueueRequest.call @, controllerFamilyName, requestObject
