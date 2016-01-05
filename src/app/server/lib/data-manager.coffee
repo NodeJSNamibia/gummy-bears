@@ -7,7 +7,7 @@ exports.DataManager = class DataManager
 
     _dbManagerInstance = undefined
 
-    @getDBManagerInstance = (dbURL) ->
+    @getDBManagerInstance: (dbURL) ->
         _dbManagerInstance ?= new _LocalDBManager
 
         class _LocalDBManager

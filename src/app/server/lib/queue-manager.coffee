@@ -12,4 +12,4 @@ exports.QueueManager = class QueueManager
 
     class _LocalQueueManager
         constructor: ->
-            @workers = []
+            @workers = {}

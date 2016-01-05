@@ -8,7 +8,7 @@ exports.PoolManager = class PoolManager
 
     _pmInstance = undefined
 
-    @getPoolManagerInstance = ->
+    @getPoolManagerInstance: ->
         _pmInstance ?= new _LocalPoolManager
 
     class _LocalPoolManager

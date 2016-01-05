@@ -5,7 +5,7 @@ cson = require 'cson'
 exports.ConfigurationManager = class ConfigurationManager
     _managerInstance = undefined
 
-    @getConfigurationManager: () ->
+    @getConfigurationManager: ->
         _managerInstance ?= new _LocalConfigurationManager
 
     class _LocalConfigurationManager
