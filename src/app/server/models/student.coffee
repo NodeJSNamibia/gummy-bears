@@ -1,11 +1,10 @@
 'use strict'
 
-LoginRecordsController = require('../controllers/login-records').LoginRecordsController
-ConfigurationManager   = require('../lib/config-manager').ConfigurationManager
-DataManager            = require('../lib/data-manager').DataManager
-PasswordHandler        = require('../util/password-handler').PasswordHandler
-validator              = require('validator')
-async                  = require 'async'
+ConfigurationManager = require('../lib/config-manager').ConfigurationManager
+DataManager          = require('../lib/data-manager').DataManager
+PasswordHandler      = require('../util/password-handler').PasswordHandler
+validator            = require('validator')
+async                = require 'async'
 
 exports.StudentModel = class StudentModel
 
@@ -117,6 +116,7 @@ exports.StudentModel = class StudentModel
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
 
+    # carry the queue manager along
     _authenticate = (authenticationData, poolManager, callback) ->
         _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
