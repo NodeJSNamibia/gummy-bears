@@ -23,7 +23,6 @@ exports.QueueManager = class QueueManager
         _notify = (controllerFamilyName) ->
             workerFamily = @workers[controllerFamilyName]
             if workerFamily? and workerFamily.length > 0
-                # execute the metod
 
         constructor: ->
             @workers = {}

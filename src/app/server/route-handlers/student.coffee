@@ -1,7 +1,5 @@
 'use strict'
 
-PoolManager = require('../lib/pool-manager').PoolManager
-
 exports.StudentRequestHandler = class StudentRequestHandler
     _srhInstance = undefined
 
@@ -10,8 +8,8 @@ exports.StudentRequestHandler = class StudentRequestHandler
 
     class _LocalStudentRequestHandler
 
-        _authenticate = (queueManager, request, response) ->
-            @poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+        _authenticate = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -20,14 +18,14 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', authenticationRequestObject
                 else
-                    controllerInstance.authenticate request.body, @poolManager, queueManager, (authenticationError, authenticationResult) =>
+                    controllerInstance.authenticate request.body, poolManager, queueManager, (authenticationError, authenticationResult) =>
                         if authenticationError?
                             response.json 500, {error: authenticationError.message}
                         else
                             response.json authenticationResult
 
-        _createPassword = (queueManager, request, response) ->
-            @poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+        _createPassword = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -36,14 +34,14 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', createPasswordRequestObject
                 else
-                    controllerInstance.createPassword request.params.id, request.body, @poolManager, queueManager, (passwordCreationError, passwordCreationResult) =>
+                    controllerInstance.createPassword request.params.id, request.body, poolManager, queueManager, (passwordCreationError, passwordCreationResult) =>
                         if passwordCreationError?
                             response.json 500, {error: passwordCreationError.message}
                         else
                             response.json 200, passwordCreationResult
 
-        _getAllStudents = (queueManager, request, response) ->
-            @poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+        _getAllStudents = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -52,14 +50,14 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', getAllStudentsRequestObject
                 else
-                    controllerInstance.getAllStudents @poolManager, queueManager, (getAllStudentsError, allStudents) =>
+                    controllerInstance.getAllStudents poolManager, queueManager, (getAllStudentsError, allStudents) =>
                         if getAllStudentsError?
                             response.json 500, {error: getAllStudentsError.message}
                         else
                             response.json 200, allStudents
 
-        _getStudent = (queueManager, request, response) ->
-            @poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+        _getStudent = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -68,14 +66,14 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', getStudentRequestObject
                 else
-                    controllerInstance.getStudent request.params.id, @poolManager, queueManager, (getStudentError, studentDetails) =>
+                    controllerInstance.getStudent request.params.id, poolManager, queueManager, (getStudentError, studentDetails) =>
                         if getStudentError?
                             response.json 500, {error: getStudentError.message}
                         else
                             response.json 200, studentDetails
 
-        _insertAllStudents = (queueManager, request, response) ->
-            @poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+        _insertAllStudents = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -84,14 +82,14 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', insertAllStudentsRequestObject
                 else
-                    controllerInstance.insertAllStudents @poolManager, queueManager, (studentCreationError, studentCreationResult) =>
+                    controllerInstance.insertAllStudents poolManager, queueManager, (studentCreationError, studentCreationResult) =>
                         if studentCreationError?
                             response.json 500, {error: studentCreationError.message}
                         else
                             response.json 201, studentCreationResult
 
-        _updateCourses = (queueManager, request, response) ->
-            @poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
+        _updateCourses = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'students', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -100,29 +98,28 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, request, response]
                     queueManager.enqueueRequest 'students', updateCoursesRequestObject
                 else
-                    controllerInstance.updateCourses request.params.id, request.body, @poolManager, queueManager, (courseUpdateError, courseUpdateResult) =>
+                    controllerInstance.updateCourses request.params.id, request.body, poolManager, queueManager, (courseUpdateError, courseUpdateResult) =>
                         if courseUpdateError?
                             response.json 500, {error: courseUpdateError.message}
                         else
                             response.json courseUpdateResult
 
         constructor: ->
-            @poolManager = PoolManager.getPoolManagerInstance()
 
-        insertAllStudents: (queueManager, request, response) =>
-            _insertAllStudents.call @, queueManager, request, response
+        insertAllStudents: (queueManager, poolManager, request, response) =>
+            _insertAllStudents.call @, queueManager, poolManager, request, response
 
-        createPassword: (queueManager, request, response) =>
-            _createPassword.call @, queueManager, request, response
+        createPassword: (queueManager, poolManager, request, response) =>
+            _createPassword.call @, queueManager, poolManager, request, response
 
-        updateCourses: (queueManager, request, response) =>
-            _updateCourses.call @, queueManager, request, response
+        updateCourses: (queueManager, poolManager, request, response) =>
+            _updateCourses.call @, queueManager, poolManager, request, response
 
-        authenticate: (queueManager, request, response) =>
-            _authenticate.call @, queueManager, request, response
+        authenticate: (queueManager, poolManager, request, response) =>
+            _authenticate.call @, queueManager, poolManager, request, response
 
-        getAllStudents: (queueManager, request, response) =>
-            _getAllStudents.call @, queueManager, request, response
+        getAllStudents: (queueManager, poolManager, request, response) =>
+            _getAllStudents.call @, queueManager, poolManager, request, response
 
-        getStudent: (queueManager, request, response) =>
-            _getStudent.call @, queueManager, request, response
+        getStudent: (queueManager, poolManager,  request, response) =>
+            _getStudent.call @, queueManager, poolManager, request, response

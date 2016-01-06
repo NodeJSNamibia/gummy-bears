@@ -20,6 +20,7 @@ redisClient    = require('redis').createClient()
 
 ConfigurationManager = require('app/server/lib/config-manager').ConfigurationManager
 PoolManager          = require('app/server/lib/pool-manager').PoolManager
+QueueManager         = require('app/server/lib/queue-manager').QueueManager
 
 ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult) =>
     if loadError?
@@ -54,11 +55,16 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         app.use(bodyParser.urlencoded({extended: false}))
         app.use(bodyParser.json())
         app.use(methodOverride())
+        # connect session data to express
 
         # define folder for static resources and how long they can be cached
 
-        PoolManager.getPoolManagerInstance().setExecutionEnvironment app.settings.env
-        require('app/server/routes/students')(app)
+        poolManager = PoolManager.getPoolManagerInstance()
+        queueManager = QueueManager.getQueueManagerInstance()
+
+        poolManager.setExecutionEnvironment app.settings.env
+
+        require('app/server/routes/students')(app, poolManager, queueManager)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?
