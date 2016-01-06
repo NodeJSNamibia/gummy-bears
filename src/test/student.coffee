@@ -15,3 +15,7 @@ describe 'Students Controller', ->
             should.exist(createPasswordError)
             done()
         
+   it 'should not create a passwords without a student number',(done)=>
+        StudentRequestHandler('test').createPassword{0,{password:"Oweek",confirmPassword:"Oweek"},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
+            should.exist(createPasswordError)
+            done()
