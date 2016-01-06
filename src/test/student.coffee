@@ -23,3 +23,9 @@ describe 'Students Controller', ->
         StudentRequestHandler('test').createPassword{200513133},{password:"Oweek",confirmPassword:"orWeek"},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
             should.exist(createPasswordError)
             done()
+    it 'should correctly create the password with the right inputs',(done)=>
+        StudentRequestHandler('test').createPassword{200513133},{password:"Oweek",confirmPassword:"OWeek"},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
+            should.exist(authenticationResult)
+            done()      
+            
+            
