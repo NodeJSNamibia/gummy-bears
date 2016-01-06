@@ -10,3 +10,8 @@ describe 'Students Controller', ->
             should.not.exist(authenticationError)
             # more comparisons
             done()
+    it 'should not create blank passwords',(done)=>
+        StudentRequestHandler('test').createPassword{200513133,{password:" ",confirmPassword:" "},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
+            should.exist(createPasswordError)
+            done()
+        
