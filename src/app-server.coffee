@@ -64,7 +64,6 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
 
         poolManager = PoolManager.getPoolManagerInstance evtEmitter
         queueManager = QueueManager.getQueueManagerInstance evtEmitter
-
         poolManager.setExecutionEnvironment app.settings.env
 
         require('app/server/routes/students')(app, poolManager, queueManager)
