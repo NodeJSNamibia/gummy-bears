@@ -17,6 +17,7 @@ fs             = require 'fs'
 session        = require 'express-session'
 RedisStore     = require('connect-redis')(session)
 redisClient    = require('redis').createClient()
+EventEmitter = require('events').EventEmitter
 
 ConfigurationManager = require('app/server/lib/config-manager').ConfigurationManager
 PoolManager          = require('app/server/lib/pool-manager').PoolManager
@@ -59,8 +60,10 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
 
         # define folder for static resources and how long they can be cached
 
-        poolManager = PoolManager.getPoolManagerInstance()
-        queueManager = QueueManager.getQueueManagerInstance()
+        evtEmitter = new EventEmitter
+
+        poolManager = PoolManager.getPoolManagerInstance evtEmitter
+        queueManager = QueueManager.getQueueManagerInstance evtEmitter
 
         poolManager.setExecutionEnvironment app.settings.env
 

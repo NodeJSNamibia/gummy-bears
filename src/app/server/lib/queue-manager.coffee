@@ -3,12 +3,14 @@
 # this class manages a queue where requests are stored in case an
 # instance of the expected controller is not available
 
+StudentRequestHandler = require('../route-handlers/student').StudentRequestHandler
+
 exports.QueueManager = class QueueManager
 
     _qmInstance = undefined
 
-    @getQueueManagerInstance: ->
-        _qmInstance ?= new _LocalQueueManager()
+    @getQueueManagerInstance: (evtEmitter) ->
+        _qmInstance ?= new _LocalQueueManager evtEmitter
 
     class _LocalQueueManager
 
@@ -20,15 +22,24 @@ exports.QueueManager = class QueueManager
                 newWorkerFamily = [requestObject]
                 @workers[controllerFamilyName] = newWorkerFamily
 
-        _notify = (controllerFamilyName) ->
+        _executeStudentRequest = (currentRequestObject) ->
+            studentRequestHandler = StudentRequestHandler.getRequestHandler()
+            studentRequestHandler[currentRequestObject.methodName].apply studentRequestHandler, currentRequestObject.arguments
+
+        _handleNotification = (controllerFamilyName) ->
             workerFamily = @workers[controllerFamilyName]
             if workerFamily? and workerFamily.length > 0
+                currentRequestObject = workerFamily.splice 0, 1
+                switch controllerFamilyName
+                  when "students" then _executeStudentRequest.call @, currentRequestObject
+                  when "login-records" then _executeLoginRecordRequest.call @, currentRequestObject
 
-        constructor: ->
+        constructor: (@evtEmitter) ->
             @workers = {}
+            @evtEmitter.on 'notify_available', @handleNotification
 
         enqueueRequest: (controllerFamilyName, requestObject) =>
             _enqueueRequest.call @, controllerFamilyName, requestObject
 
-        notify: (controllerFamilyName) =>
-            _notify.call @, controllerFamilyName
+        handleNotification: (controllerFamilyName) =>
+            _handleNotification.call @, controllerFamilyName

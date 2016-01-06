@@ -8,8 +8,8 @@ exports.PoolManager = class PoolManager
 
     _pmInstance = undefined
 
-    @getPoolManagerInstance: ->
-        _pmInstance ?= new _LocalPoolManager
+    @getPoolManagerInstance: (evtEmitter) ->
+        _pmInstance ?= new _LocalPoolManager evtEmitter
 
     class _LocalPoolManager
         MAX_SIZE = 100
@@ -42,10 +42,10 @@ exports.PoolManager = class PoolManager
             else
                 availableControllers = controllerContainer.available
                 availableControllers.push controllerRef
-                queueManager.notify controllerFamilyName
+                @evtEmitter.emit 'notify_available', controllerFamilyName
                 callback null, null
 
-        constructor: ->
+        constructor: (@evtEmitter) ->
             @loadControllerContainers()
 
         loadControllerContainers: =>
