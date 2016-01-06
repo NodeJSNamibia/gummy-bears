@@ -1,6 +1,6 @@
 'use strict'
 
-StudentsController = require('../app/server/controllers/students').StudentsController
+StudentRequestHandler = require('../app/server/route-handlers/students').StudentRequestHandler
 
 should = require 'should'
 
