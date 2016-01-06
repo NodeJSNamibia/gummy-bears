@@ -3,7 +3,8 @@
 # this class manages a queue where requests are stored in case an
 # instance of the expected controller is not available
 
-StudentRequestHandler = require('../route-handlers/student').StudentRequestHandler
+StudentRequestHandler     = require('../route-handlers/student').StudentRequestHandler
+LoginRecordRequestHandler = require('../route-handlers/login-record').LoginRecordRequestHandler
 
 exports.QueueManager = class QueueManager
 
@@ -22,9 +23,13 @@ exports.QueueManager = class QueueManager
                 newWorkerFamily = [requestObject]
                 @workers[controllerFamilyName] = newWorkerFamily
 
-        _executeStudentRequest = (currentRequestObject) ->
+        _executeStudentRequest = (currentStudentRequestObject) ->
             studentRequestHandler = StudentRequestHandler.getRequestHandler()
-            studentRequestHandler[currentRequestObject.methodName].apply studentRequestHandler, currentRequestObject.arguments
+            studentRequestHandler[currentStudentRequestObject.methodName].apply studentRequestHandler, currentStudentRequestObject.arguments
+
+        _executeLoginRecordRequest = (currentLRRequestObject) ->
+            loginRecordRequestHandler  = LoginRecordRequestHandler.getRequestHandler()
+            loginRecordRequestHandler[currentLRRequestObject.methodName].apply loginRecordRequestHandler, currentLRRequestObject.arguments
 
         _handleNotification = (controllerFamilyName) ->
             workerFamily = @workers[controllerFamilyName]

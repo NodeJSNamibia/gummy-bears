@@ -138,19 +138,7 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
-                                            # maybe need a different way of recording the login
-                                            poolManager.acquire 'login-records', (controllerInstanceError, controllerInstance) =>
-                                                if controllerInstanceError?
-                                                    callback controllerInstanceError, null
-                                                else if not controllerInstance?
-                                                    # add to the queue
-                                                else
-                                                    controllerInstance.save validStudentNumber, poolManager, (saveLoginRecordError, saveLoginRecordResult) =>
-                                                        if saveLoginRecordError?
-                                                            callback saveLoginRecordError, null
-                                                        else
-                                                            # will send the proper object after authentication
-                                                            callback null, {}
+                                            callback null, {}
 
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>

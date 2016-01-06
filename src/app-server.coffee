@@ -67,6 +67,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         poolManager.setExecutionEnvironment app.settings.env
 
         require('app/server/routes/students')(app, poolManager, queueManager)
+        require('app/server/routes/login-records')(app, poolManager, queueManager)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?

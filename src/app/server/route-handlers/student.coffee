@@ -22,6 +22,8 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         if authenticationError?
                             response.json 500, {error: authenticationError.message}
                         else
+                            # will store the request session data
+                            response.redirect '/api/login-records/'
                             response.json authenticationResult
 
         _createPassword = (queueManager, poolManager, request, response) ->
