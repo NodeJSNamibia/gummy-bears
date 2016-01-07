@@ -13,7 +13,7 @@ exports.DataManager = class DataManager
         class _LocalDBManager
 
             _findAllStudents = (callback) ->
-                _getDataBucket.call @, 'students', (bucketError, bucket) =>
+                _getDataBucket.call @, 'student', (bucketError, bucket) =>
                     if bucketError?
                         callback bucketError, null
                     else
@@ -74,15 +74,15 @@ exports.DataManager = class DataManager
                 @studentView = 'students'
 
             insertStudent: (studentData, callback) =>
-                _insertDocument.call @, 'students', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
+                _insertDocument.call @, 'student', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
                     callback insertStudentError, insertStudentResult
 
             updateStudent: (studentNumber, studentData, callback) =>
-                _updateDocument.call @, 'students', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
+                _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
                     callback updateStudentError, updateStudentResult
 
             findStudent: (studentNumber, callback) =>
-                _findDocument.call @, 'students', studentNumber, (findStudentError, studentDoc) =>
+                _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
                     callback findStudentError, studentDoc
 
             findAllStudents: (callback) =>
@@ -90,5 +90,5 @@ exports.DataManager = class DataManager
                     callback findAllError, allStudents
 
             insertLoginRecord: (recordID, studentLR, callback) =>
-                _insertDocument.call @, 'login-records', recordID, studentLR, (insertLoginRecordError, insertLoginRecordResult) =>
+                _insertDocument.call @, 'login-record', recordID, studentLR, (insertLoginRecordError, insertLoginRecordResult) =>
                     callback insertLoginRecordError, insertLoginRecordResult
