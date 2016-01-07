@@ -15,7 +15,7 @@ exports.LoginRecordRequestHandler = class LoginRecordRequestHandler
                 else if not controllerInstance?
                     saveLRRequestObject =
                         methodName: 'save'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', updateCoursesRequestObject
                 else
                     controllerInstance.save request.params.id, poolManager, (saveLoginRecordError, saveLoginRecordResult) =>

@@ -15,7 +15,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 else if not controllerInstance?
                     authenticationRequestObject =
                         methodName: 'authenticate'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', authenticationRequestObject
                 else
                     controllerInstance.authenticate request.body, poolManager, queueManager, (authenticationError, authenticationResult) =>
@@ -33,7 +33,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 else if not controllerInstance?
                     createPasswordRequestObject =
                         methodName: 'createPassword'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', createPasswordRequestObject
                 else
                     controllerInstance.createPassword request.params.id, request.body, poolManager, queueManager, (passwordCreationError, passwordCreationResult) =>
@@ -49,7 +49,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 else if not controllerInstance?
                     getAllStudentsRequestObject =
                         methodName: 'getAllStudents'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', getAllStudentsRequestObject
                 else
                     controllerInstance.getAllStudents poolManager, queueManager, (getAllStudentsError, allStudents) =>
@@ -65,7 +65,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 else if not controllerInstance?
                     getStudentRequestObject =
                         methodName: 'getStudent'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', getStudentRequestObject
                 else
                     controllerInstance.getStudent request.params.id, poolManager, queueManager, (getStudentError, studentDetails) =>
@@ -81,7 +81,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 else if not controllerInstance?
                     insertAllStudentsRequestObject =
                         methodName: 'insertAllStudents'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', insertAllStudentsRequestObject
                 else
                     controllerInstance.insertAllStudents poolManager, queueManager, (studentCreationError, studentCreationResult) =>
@@ -97,7 +97,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                 else if not controllerInstance?
                     updateCoursesRequestObject =
                         methodName: 'updateCourses'
-                        arguments: [queueManager, request, response]
+                        arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', updateCoursesRequestObject
                 else
                     controllerInstance.updateCourses request.params.id, request.body, poolManager, queueManager, (courseUpdateError, courseUpdateResult) =>
