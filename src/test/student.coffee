@@ -16,10 +16,28 @@ describe 'Students Controller', ->
 
     describe 'student password creation',  ->
         it 'should not create empty passwords', (done) =>
-            studentRequestHandler.createPassword queueManager, poolManager, {}, {}, (createPasswordError, createPasswordResult) =>
+            request =
+                params:
+                    id: 200530303
+                body:
+                    password: ""
+                    confirmPassword: ""
+            response =
+                statusCode: ""
+                body: {}
+                json: (options) ->
+                    args = [].slice.call arguments
+                    if args.length > 1
+                        if typeof args[0] is 'number'
+                            @statusCode = args[0]
+                        @body = args[1]
+                    else
+                        @statusCode = 200
+                        @body = args[0]
+            studentRequestHandler.createPassword queueManager, poolManager, request, response, (createPasswordError, createPasswordResult) =>
                 should.exist createPasswordError
                 done()
-        
+
     #     it 'should not create blank passwords', (done) =>
     #         StudentRequestHandler('test').createPassword{200513133},{password:" ",confirmPassword:" "},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
     #             should.exist(createPasswordError)
