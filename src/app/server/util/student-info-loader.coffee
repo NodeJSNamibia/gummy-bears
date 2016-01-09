@@ -9,12 +9,12 @@ exports.StudentInfoLoader = class StudentInfoLoader
     @getStudentInfoLoader = ->
         _loaderInstance ?= new _LocalStudentInfoLoader
 
-        class _LocalStudentInfoLoader
-            constructor: ->
+    class _LocalStudentInfoLoader
+        constructor: ->
 
-            loadStudents: (callback) =>
-                convConfig =
-                    input: __dirname + '/../../../opt/students.xls'
-                    output: null
-                    sheet: "Sheet 1"
-                xlsxj convConfig, callback
+        loadStudents: (callback) =>
+            convConfig =
+                input: __dirname + '/../../../opt/students.xls'
+                output: null
+                sheet: "Sheet 1"
+            xlsxj convConfig, callback
