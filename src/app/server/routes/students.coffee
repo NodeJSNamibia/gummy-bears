@@ -1,35 +1,32 @@
 'use strict'
 
-StudentsController = require('../controllers/students').StudentsController
+# this file contains all the routes related to student resource
 
-module.exports = (app) ->
-    # might need a pool of student controllers.
-    # Will use a pool manager to grab one
-    studentsController = new StudentsController app.settings.env
+StudentRequestHandler = require('../route-handlers/student').StudentRequestHandler
+
+module.exports = (app, poolManager, queueManager) ->
+    studentRequestHandler = StudentRequestHandler.getRequestHandler()
+
+    # load all students
     app.route('/api/students').post (request, response) ->
-        studentsController.insertAllStudents (studentCreationError, studentCreationResult) =>
-            if studentCreationError?
-                response.json 500, {error: studentCreationError.message}
-            else
-                response.json studentCreationResult
+        studentRequestHandler.insertAllStudents queueManager, poolManager, request, response
 
+    # create a pasword for the student
     app.route('/api/students/password/:id').put (request, response) ->
-        studentsController.createPassword request.params.id, request.body, (passwordCreationError, passwordCreationResult) =>
-            if passwordCreationError?
-                response.json 500, {error: passwordCreationError.message}
-            else
-                response.json passwordCreationResult
+        studentRequestHandler.createPassword queueManager, poolManager, request, response
 
+    # add the courses the student registered for
     app.route('/api/students/courses/:id').put (request, response) ->
-        studentsController.updateCourses request.params.id, request.body, (courseUpdateError, courseUpdateResult) =>
-            if courseUpdateError?
-                response.json 500, {error: courseUpdateError.message}
-            else
-                response.json courseUpdateResult
+        studentRequestHandler.updateCourses queueManager, poolManager, request, response
 
+    # default student authentication
     app.route('/api/students/authenticate').post (request, response) ->
-        studentsController.authenticate request.body, (authenticationError, authenticationResult) =>
-            if authenticationError?
-                response.json 500, {error: authenticationError.message}
-            else
-                response.json authenticationResult
+        studentRequestHandler.authenticate queueManager, poolManager, request, response
+
+    # get the list of students
+    app.route('/api/students').get (request, response) ->
+        studentRequestHandler.getAllStudents queueManager, poolManager, request, response
+
+    # get a specific student with her student number as an id
+    app.route('/api/students/:id').get (request, response) ->
+        studentRequestHandler.getStudent queueManager, poolManager, request, response

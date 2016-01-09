@@ -7,10 +7,24 @@ exports.DataManager = class DataManager
 
     _dbManagerInstance = undefined
 
-    @getDBManagerInstance = (dbURL) ->
+    @getDBManagerInstance: (dbURL) ->
         _dbManagerInstance ?= new _LocalDBManager
 
         class _LocalDBManager
+
+            _findAllStudents = (callback) ->
+                _getDataBucket.call @, 'student', (bucketError, bucket) =>
+                    if bucketError?
+                        callback bucketError, null
+                    else
+                        ViewQuery = Couchbase.ViewQuery
+                        allStudentsQuery = ViewQuery.from @studentDesignDoc, @studentView
+                        bucket.query allStudentsQuery, (multiStudentError, studentCol) =>
+                            if multiStudentError?
+                                callback multiStudentError, null
+                            else
+                                allStudents = (curStudent.value for curStudent in studentCol)
+                                callback null, allStudents
 
             _findDocument = (bucketName, docID, callback) ->
                 _getDataBucket.call @, bucketName, (bucketError, bucket) =>
@@ -23,7 +37,7 @@ exports.DataManager = class DataManager
             _getDataBucket = (bucketName, callback) ->
                 currentBucket = @allBuckets[bucketName]
                 if not currentBucket?
-                    urlString = "couchbase://{@dbURL}"
+                    urlString = "couchbase://" + "#{@dbURL}"
                     aBucket = new CouchBase.Cluster(urlString).openBucket(bucketName)
                     @allBuckets[bucketName] = aBucket
                     currentBucket = aBucket
@@ -56,15 +70,25 @@ exports.DataManager = class DataManager
 
             constructor: (@dbURL) ->
                 @allBuckets = {}
+                @studentDesignDoc = 'students_dd'
+                @studentView = 'students'
 
             insertStudent: (studentData, callback) =>
-                _insertDocument.call @, 'students', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
+                _insertDocument.call @, 'student', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
                     callback insertStudentError, insertStudentResult
 
             updateStudent: (studentNumber, studentData, callback) =>
-                _updateDocument.call @, 'students', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
+                _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
                     callback updateStudentError, updateStudentResult
 
             findStudent: (studentNumber, callback) =>
-                _findDocument.call @, 'students', studentNumber, (findStudentError, studentDoc) =>
+                _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
                     callback findStudentError, studentDoc
+
+            findAllStudents: (callback) =>
+                _findAllStudents.call @, (findAllError, allStudents) =>
+                    callback findAllError, allStudents
+
+            insertLoginRecord: (recordID, studentLR, callback) =>
+                _insertDocument.call @, 'login-record', recordID, studentLR, (insertLoginRecordError, insertLoginRecordResult) =>
+                    callback insertLoginRecordError, insertLoginRecordResult

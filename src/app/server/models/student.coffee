@@ -1,7 +1,7 @@
 'use strict'
 
-ConfigurationManager = require('../util/config-manager').ConfigurationManager
-DataManager          = require('../util/data-manager').DataManager
+ConfigurationManager = require('../lib/config-manager').ConfigurationManager
+DataManager          = require('../lib/data-manager').DataManager
 PasswordHandler      = require('../util/password-handler').PasswordHandler
 validator            = require('validator')
 async                = require 'async'
@@ -116,7 +116,8 @@ exports.StudentModel = class StudentModel
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
 
-    _authenticate = (authenticationData, callback) ->
+    # carry the queue manager along
+    _authenticate = (authenticationData, poolManager, queueManager, callback) ->
         _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
                 callback studentNumberError, null
@@ -133,12 +134,11 @@ exports.StudentModel = class StudentModel
                                     if verifyError?
                                         callback verifyError, null
                                     else
-                                        if verificationResult
-                                            # will send the proper object after authentication
-                                            callback null, {}
-                                        else
+                                        if not verificationResult
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
+                                        else
+                                            callback null, {}
 
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>
@@ -196,6 +196,26 @@ exports.StudentModel = class StudentModel
                             DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {courses: validCoursess}, (updateError, updateResult) =>
                                 callback updateError, updateResult
 
+    _findOne = (studentNumber, callback) ->
+        _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                    if urlError?
+                        callback urlError, null
+                    else
+                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
+                            callback findError, findResult
+
+    _findAll = (callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findAllStudents (findAllError, allStudents) =>
+                    callback findAllError, allStudents
+
     constructor: (@appEnv) ->
 
     insertStudent: (studentData, callback) =>
@@ -210,6 +230,14 @@ exports.StudentModel = class StudentModel
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
-    authenticate: (authenticationData, callback) =>
-        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, poolManager, queueManager, callback) =>
+        _authenticate.call @, authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
+
+    findOne: (studentNumber, callback) =>
+        _findOne.call @, studentNumber, (findError, studentDetails) =>
+            callback findError, studentDetails
+
+    findAll: (callback) =>
+        _findAll.call @, (findAllError, allStudents) =>
+            callback findAllError, allStudents

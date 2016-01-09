@@ -17,8 +17,11 @@ fs             = require 'fs'
 session        = require 'express-session'
 RedisStore     = require('connect-redis')(session)
 redisClient    = require('redis').createClient()
+EventEmitter = require('events').EventEmitter
 
-ConfigurationManager = require('app/server/util/config-manager').ConfigurationManager
+ConfigurationManager = require('app/server/lib/config-manager').ConfigurationManager
+PoolManager          = require('app/server/lib/pool-manager').PoolManager
+QueueManager         = require('app/server/lib/queue-manager').QueueManager
 
 ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult) =>
     if loadError?
@@ -53,23 +56,37 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         app.use(bodyParser.urlencoded({extended: false}))
         app.use(bodyParser.json())
         app.use(methodOverride())
+        # connect session data to express
 
         # define folder for static resources and how long they can be cached
 
-        require('app/server/routes/students')(app)
+        evtEmitter = new EventEmitter
 
-        # define the security parameters for http2
-        serverOptions =
-            key: fs.readFileSync __dirname + '/../ssl/oweek.key'
-            cert: fs.readFileSync __dirname + '/../ssl/oweek.crt'
-            requestCert: true
-            passphrase: 'first oweek at nust'
+        poolManager = PoolManager.getPoolManagerInstance evtEmitter
+        queueManager = QueueManager.getQueueManagerInstance evtEmitter
+        poolManager.setExecutionEnvironment app.settings.env
 
-        # create the http2 server and connect it to the express server
-        server = http2.createServer serverOptions, app
-        portNumber = 5480
+        require('app/server/routes/students')(app, poolManager, queueManager)
+        require('app/server/routes/login-records')(app, poolManager, queueManager)
 
-        io = require('socket.io').listen server
+        ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
+            if sslFileNameError?
+                console.log "There was an error loading the ssl key or cetrtificate..."
+                console.log sslFileNameError.message
+            else
+                # define the security parameters for http2
+                securityKeyFileName =
+                serverOptions =
+                    key: fs.readFileSync __dirname + '/../ssl/' + sslFileNames[0]
+                    cert: fs.readFileSync __dirname + '/../ssl/' + sslFileNames[1]
+                    requestCert: true
+                    passphrase: 'first oweek at nust'
 
-        server.listen portNumber, () ->
-            console.log "Welcome to orientation week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env
+                # create the http2 server and connect it to the express server
+                server = http2.createServer serverOptions, app
+                portNumber = 5480
+
+                io = require('socket.io').listen server
+
+                server.listen portNumber, () ->
+                    console.log "Welcome to orientation week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env
