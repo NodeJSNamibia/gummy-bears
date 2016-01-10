@@ -73,14 +73,6 @@ exports.DataManager = class DataManager
             @studentDesignDoc = 'students_dd'
             @studentView = 'students'
 
-        insertStudent: (studentData, callback) =>
-            _insertDocument.call @, 'student', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
-                callback insertStudentError, insertStudentResult
-
-        updateStudent: (studentNumber, studentData, callback) =>
-            _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
-                    callback updateStudentError, updateStudentResult
-
         findStudent: (studentNumber, callback) =>
             _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
                 callback findStudentError, studentDoc
@@ -89,6 +81,18 @@ exports.DataManager = class DataManager
             _findAllStudents.call @, (findAllError, allStudents) =>
                 callback findAllError, allStudents
 
+        insertFaculty: (facultyId, facultyData, callback) =>
+            _insertDocument.call @, 'faculty', facultyId, facultyData, (insertFacultyError, insertFacultyResult) =>
+                callback insertFacultyError, insertFacultyResult
+
         insertLoginRecord: (recordID, studentLR, callback) =>
             _insertDocument.call @, 'login-record', recordID, studentLR, (insertLoginRecordError, insertLoginRecordResult) =>
                 callback insertLoginRecordError, insertLoginRecordResult
+
+        insertStudent: (studentData, callback) =>
+            _insertDocument.call @, 'student', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
+                callback insertStudentError, insertStudentResult
+
+        updateStudent: (studentNumber, studentData, callback) =>
+            _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
+                    callback updateStudentError, updateStudentResult

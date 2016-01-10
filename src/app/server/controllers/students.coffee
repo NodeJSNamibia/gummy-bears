@@ -42,7 +42,7 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _insertAllStudents = (poolManager, queueManager, callback) ->
         # load student information first
-        StudentInfoLoader.getStudentInfoLoader().loadStudents (laodError, allStudents) =>
+        StudentInfoLoader.getStudentInfoLoader().loadStudents (loadError, allStudents) =>
             if loadError?
                 @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                     if releaseError?

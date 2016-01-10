@@ -11,8 +11,8 @@ exports.AcademicStructureLoader = class AcademicStructureLoader
         constructor: ->
 
         loadStructure: (callback) =>
-            configObj =
+            facConfigObj =
                 input: __dirname + '/../../../var/faculties.xls'
                 output: null
                 sheet: "Sheet 1"
-            xlsxj configObj, callback
+            xlsxj facConfigObj, callback
