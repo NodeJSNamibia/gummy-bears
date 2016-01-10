@@ -5,7 +5,7 @@
  */
 
 (function () {
-    var days = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var wdays = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
     var date = new Date();
     var month = date.getMonth();
     var year = date.getFullYear();
@@ -15,12 +15,21 @@
     }();
     var app = angular.module('oweek', ['ngMaterial']);
 
-    app.controller('calendar', function () {
+    app.controller('Calendar', function () {
 	this.days = function () {
-	    days = [];
-	    for (var i = 1)
+	    last_day = moment().endOf('month').date();
+	    var days = [];
+	    var i;
+	    for (i = 0; i <= running_day; i++) {
+		days.push(" ");
+
+	    }
+	    for (var j = 1; j <= last_day; j++) {
+		days.push(j);
+	    }
+	    return days;
 	}();
     });
 
 
-});
+})();
