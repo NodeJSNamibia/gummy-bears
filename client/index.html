@@ -1,7 +1,7 @@
 <html lang="en" >
     <head>
 	<!-- Angular Material style sheet -->
-	<title>NUST O-WEEK</title>
+	<title>NUST O'WEEK</title>
 	<link rel="stylesheet" href="css/angular-material.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 	<!-- Angular Material requires Angular.js Libraries -->
@@ -12,25 +12,49 @@
 
 	<!-- Angular Material Library -->
 	<script src="js/angular-material.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     </head>
     <body ng-app="oweek" ng-cloak>
-	<div ng-cloak>
+	<header layout="column" ng-cloak>
 	    <md-content>
-		<md-toolbar>
+		<md-toolbar class="md-tall">
+
 		    <div class="md-toolbar-tools">
 			<img src="img/logofinalV7.png" alt="NUST ORIENTATION WEEK APPLICATION" id="logo"/>
 			<span flex></span>
 			<md-button class="md-raised" aria-label="Login" a href="login.html">
 			    Login
 			</md-button>
-			<md-button class="md-fab md-mini" aria-label="Favorite">
-			    <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
-			</md-button>
+		    </div>
+		    <div class="md-toolbar-tools">
+			<h1>NUST O'WEEK</h1>
+			<span flex></span>
+			<nav>
+			    <a href="Home">Home</a> |
+			    <a href="events">Events</a> |
+			    <a href="campus">Campus</a> |
+			    <a href="faculties">Faculties</a> |
+			    <a href="Gallery">Gallery</a> |
+			    <a href="faqs">FAQs</a>
+			</nav>
 		    </div>
 		</md-toolbar>
-
 	    </md-content>
+	</header>
+	<section id="video-section">
+	    <div layout="row" layout-align="center center">
+		<md-content layout-padding >
+		    <video width="860" height="" >
+			<source  src="https://r2---sn-hujo5-xgne.googlevideo.com/videoplayback?clen=27956425&sparams=clen%2Cdur%2Cgcr%2Cgir%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Ckeepalive%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Crequiressl%2Csource%2Cupn%2Cexpire&initcwndbps=407500&fexp=9406985%2C9416126%2C9420452%2C9422596%2C9423662&ipbits=0&lmt=1445682717513615&dur=366.824&gcr=na&source=youtube&requiressl=yes&key=yt6&signature=52D2FC752DEBCF26F87827AB19A1EE1A47A13FB1.2D73E65701D580C389E74E05C89F61D7BEDAD6D2&gir=yes&mime=video%2Fmp4&itag=135&sver=3&expire=1452448041&upn=MK-PzQXwOXQ&ms=au&mv=m&mt=1452426378&pl=17&ip=105.232.56.65&keepalive=yes&id=o-AHGqSGu62IOctSHeLZNbvcoTPTqyMhonJfMBVpdiqZ4V&mn=sn-hujo5-xgne&mm=31&cpn=LL1LXEuk8UtGc5EA&alr=yes&ratebypass=yes&c=WEB&cver=html5&rn=27&rbuf=126500"/>
+		    </video>
+		</md-content>
+	    </div>
+	</section>
+	<section id="calendar-section">
+	    <div layout="row" layout-align="center center">
+		<md-grid-list md-cols-sm="7"
 	</div>
-	<script src="js/app.js"></script>
-    </body>
+    </section>
+    <script src="js/app.js"></script>
+</body>
 </html>
