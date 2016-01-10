@@ -4,6 +4,8 @@
 	<title>NUST O'WEEK</title>
 	<link rel="stylesheet" href="css/angular-material.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+
 	<!-- Angular Material requires Angular.js Libraries -->
 	<script src="js/angular.min.js"></script>
 	<script src="js/angular-animate.min.js"></script>
@@ -24,6 +26,7 @@
 			<img src="img/logofinalV7.png" alt="NUST ORIENTATION WEEK APPLICATION" id="logo"/>
 			<span flex></span>
 			<md-button class="md-raised" aria-label="Login">
+			    <i class="fa fa-lock"></i>
 			    Login
 			</md-button>
 		    </div>
@@ -52,10 +55,26 @@
 	    </div>
 	</section>
 	<section id="calendar-section">
-	    <div  ng-controller="Calendar as month" flex ng-cloak>
-		<md-grid-list md-cols-sm="7" md-cols-md="7" md-cols-gt-md="6"
+	    <div  ng-controller="Calendar as month" ng-cloak>
+		<md-toolbar class="tall">
+		    <div class="md-toolbar-tools">
+			<md-button class="md-icon-button" aria-label="Previous">
+			    <md-icon><i class="fa fa-chevron-left fa-2x"></i> </md-icon>
+			</md-button>
+			<span flex></span>
+			<h1>{{month.month_name + " " + month.year}}</h1>
+			<span flex></span>
+			<md-button class="md-icon-button" aria-label="Next">
+			    <md-icon><i class="fa fa-chevron-right fa-2x"></i> </md-icon>
+			</md-button>
+		    </div>
+		</md-toolbar>
+		<md-grid-list md-cols-sm="7" md-cols-md="7" md-cols="7" md-cols-gt-md="7"
 			      md-row-height-gt-md="1:1" md-row-height="4:3"
 			      md-gutter="8px" md-gutter-gt-sm="4px">
+		    <md-grid-tile ng-repeat="weekday in month.wdays">
+			<h2>{{weekday}}</h2>
+		    </md-grid-tile>
 		    <md-grid-tile ng-repeat="day in month.days track by $index">
 			<h3>{{day}}</h3>
 			<md-grid-tile-footer>
