@@ -1,6 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change $scope license header, choose License Headers in Project Properties.
+ * To change $scope template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
@@ -11,30 +11,38 @@
     var year = date.getFullYear();
     ndate = new Date(year, month, 1, 0, 0, 0, 0);
     var running_day = ndate.getDay();
-    var app = angular.module('oweek', ['ngMaterial']);
+    var app = angular.module('oweek', ['ngMaterial', 'ngRoute'])
+	    .config(['$routeProvider', function ($routeProvider) {
+		    $routerProvider.when("/login", {
+			templateUrl: "partials/login.html",
+			controller: "LoginController"
+		    });
+		}
+	    ]
+		    );
 
-    app.controller('Calendar', function () {
-	this.wdays = wdays;
-	this.year = year;
-	this.month_name = moment(ndate).format("MMMM");
-	this.days = fillDays();
-	this.next = function () {
+    app.controller('Calendar', function ($scope) {
+	$scope.wdays = wdays;
+	$scope.year = year;
+	$scope.month_name = moment(ndate).format("MMMM");
+	$scope.days = fillDays();
+	$scope.next = function () {
 	    monthAdd(1);
-	    this.year = year;
+	    $scope.year = year;
 	    ndate = new Date(year, month, 1, 0, 0, 0, 0);
 	    running_day = ndate.getDay();
-	    this.month_name = moment(ndate).format("MMMM");
-	    this.days = fillDays();
+	    $scope.month_name = moment(ndate).format("MMMM");
+	    $scope.days = fillDays();
 
 	};
 
-	this.previous = function () {
+	$scope.previous = function () {
 	    monthAdd(-1);
-	    this.year = year;
+	    $scope.year = year;
 	    ndate = new Date(year, month, 1, 0, 0, 0, 0);
 	    running_day = ndate.getDay();
-	    this.month_name = moment(ndate).format("MMMM");
-	    this.days = fillDays();
+	    $scope.month_name = moment(ndate).format("MMMM");
+	    $scope.days = fillDays();
 
 	};
     });
