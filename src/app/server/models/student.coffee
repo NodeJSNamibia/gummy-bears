@@ -48,6 +48,7 @@ exports.StudentModel = class StudentModel
         callback null, courses
 
     _checkAndSanitizeEmailAddresses = (emailAddress1, emailAddress2, callback) ->
+        # maybe should try with an async forEach
         emailAddresses = []
         error1Str = undefined
         error2Str = undefined
