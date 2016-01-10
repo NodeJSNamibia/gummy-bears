@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_event"
+            android:icon="@drawable/ic_event_note"
+            android:title="Events" />
+        <item
+            android:id="@+id/nav_timetable"
+            android:icon="@drawable/ic_view_module"
+            android:title="My Timetable" />
+        <item
+            android:id="@+id/nav_course"
+            android:icon="@drawable/ic_description"
+            android:title="My Courses" />
+    </group>
+
+    <item android:title="More">
+        <menu>
+            <item
+                android:id="@+id/nav_map"
+                android:icon="@drawable/ic_action_map"
+                android:title="Campus map" />
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_account_circle"
+                android:title="Sign out" />
+        </menu>
+    </item>
+
+</menu>

@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
 
             alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent i = new Intent(getApplicationContext(), LandingPage.class);
                     startActivity(i);
                 }
             });
