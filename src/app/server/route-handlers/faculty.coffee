@@ -23,7 +23,7 @@ exports.FacultyRequestHandler = class FacultyRequestHandler
                             response.json 500, {error: academicStructureCreationError.message}
                         else
                             response.json 201, academicStructureCreationResult
-
+        
         constructor: ->
 
         insertAcademicStructure: (queueManager, poolManager, request, response) =>

@@ -9,7 +9,7 @@ exports.LoginRecordsController = class LoginRecordsController extends AbstractCo
 
     _save = (studentNumber, poolManager, callback) ->
         @loginRecord.save studentNumber, (saveLRError, saveLRResult) =>
-            @release poolManager, (releaseError, releaseResult) =>
+            @release 'loginRecords', poolManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else

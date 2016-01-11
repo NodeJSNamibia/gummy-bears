@@ -46,19 +46,20 @@ exports.PoolManager = class PoolManager
                 callback null, null
 
         constructor: (@evtEmitter) ->
-            @loadControllerContainers()
+            @pool = @loadControllerContainers()
 
         loadControllerContainers: =>
-            @pool = {
-                "students": {
-                    "available": [],
-                    "count": 0
-                },
-                "login-records": {
-                    "available": [],
-                    "count": 0
-                }
-            }
+            pool =
+                students:
+                    available: []
+                    count: 0
+                loginRecords:
+                    available: []
+                    count: 0
+                faculties:
+                    available: []
+                    count: 0
+            return pool
 
         setExecutionEnvironment: (envVal) =>
             @appEnv = envVal
