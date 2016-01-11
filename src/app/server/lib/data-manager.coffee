@@ -26,6 +26,20 @@ exports.DataManager = class DataManager
                             allStudents = (curStudent.value for curStudent in studentCol)
                             callback null, allStudents
 
+        _findAllFaculties = (callback) ->
+            _getDataBucket.call @, 'faculty', (bucketError, bucket) =>
+                if bucketError?
+                    callback bucketError, null
+                else
+                    ViewQuery = Couchbase.ViewQuery
+                    allFacultiesQuery = ViewQuery.from @facultyDesignDoc, @facultyView
+                    bucket.query allFacultiesQuery, (multiFacultyError, facultyCol) =>
+                        if multiFacultyError?
+                            callback multiFacultyError, null
+                        else
+                            allFaculties = (curFaculty.value for curFaculty in facultyCol)
+                            callback null, allFaculties
+
         _findDocument = (bucketName, docID, callback) ->
             _getDataBucket.call @, bucketName, (bucketError, bucket) =>
                 if bucketError?
@@ -33,6 +47,32 @@ exports.DataManager = class DataManager
                 else
                     bucket.get docID, (docError, docData) =>
                         callback docError, docData
+
+        _findAllFacultyByProgrammeCode = (programmeCode, callback) ->
+            _findAllFaculties.call @, (allFacultiesError, allFaculties) =>
+                if allFacultiesError?
+                    callback allFacultiesError, null
+                else
+                    facultyName = undefined
+                    for curFaculty in allFaculties
+                        curDepartments = curFaculty.departments
+                        for curDepartment in curStudent
+                            curProgrammes = curDepartment.programmes
+                            for curProgramme in curProgrammes
+                                if curProgramme is programmeCode
+                                    facultyName = curFaculty.name
+                                    breakDeptLoop = true
+                                    break
+                            if breakDeptLoop
+                                breakFacLoop = true
+                                break
+                        if breakFacLoop = true
+                            break
+                    if not facultyName?
+                        unknownProgrammeError = new Error "Programme #{programmeCode} does not belong to an existing faculty"
+                        callback unknownProgrammeError, null
+                    else
+                        callback null, facultyName
 
         _getDataBucket = (bucketName, callback) ->
             currentBucket = @allBuckets[bucketName]
@@ -80,6 +120,14 @@ exports.DataManager = class DataManager
         findAllStudents: (callback) =>
             _findAllStudents.call @, (findAllError, allStudents) =>
                 callback findAllError, allStudents
+
+        findAllFaculties: (callback) =>
+            _findAllFaculties.call @, (findAllError, allFaculties) =>
+                callback findAllError, allFaculties
+
+        findFacultyByProgrammeCode: (programmeCode, callback) =>
+            _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, facultyName) =>
+                callback facultyNameError, facultyName
 
         insertFaculty: (facultyId, facultyData, callback) =>
             _insertDocument.call @, 'faculty', facultyId, facultyData, (insertFacultyError, insertFacultyResult) =>
