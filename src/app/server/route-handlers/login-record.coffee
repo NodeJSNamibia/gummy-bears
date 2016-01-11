@@ -9,7 +9,7 @@ exports.LoginRecordRequestHandler = class LoginRecordRequestHandler
     class _LocalLoginRecordRequestHandler
 
         _save = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'login-records', (controllerInstanceError, controllerInstance) =>
+            poolManager.acquire 'loginRecords', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     callback controllerInstanceError, null
                 else if not controllerInstance?

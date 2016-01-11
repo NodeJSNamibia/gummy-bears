@@ -15,7 +15,7 @@ exports.ControllerFactory = class ControllerFactory
         _createControllerInstance = (controllerFamilyName, appEnv, callback) ->
             switch controllerFamilyName
                 when "students" then _createStudentsController.call @, appEnv, callback
-                when "login-records" then _createLoginRecordsController.call @, appEnv, callback
+                when "loginRecords" then _createLoginRecordsController.call @, appEnv, callback
 
         _createStudentsController = (appEnv, callback) ->
             studentsController = new StudentsController appEnv
