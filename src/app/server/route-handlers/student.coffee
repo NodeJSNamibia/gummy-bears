@@ -22,6 +22,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         if authenticationError?
                             response.json 500, {error: authenticationError.message}
                         else
+                            request.session.student = authenticationResult
                             response.json 200, authenticationResult
 
         _createPassword = (queueManager, poolManager, request, response) ->
