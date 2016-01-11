@@ -7,7 +7,14 @@ and open the template in the editor.
     Created on : 09-Jan-2016, 20:35:59
     Author     : Celleb
 */
-/* line 11, ../scss/style.scss */
+/* line 40, ../scss/style.scss */
 #logo {
-  height: 65px;
+  height: 3.25em;
+}
+
+/* line 48, ../scss/style.scss */
+#loginContainer {
+  width: 100%;
+  max-width: 48em;
+  margin: auto;
 }

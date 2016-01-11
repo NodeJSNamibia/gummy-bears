@@ -1,38 +1,34 @@
 
 
-<script src="js/loginControllers.js"></script>
 
-<div ng-controller='submitCtrl'>
-    <!-- Student Number Textfield.. Only numeric characters allowed -->
-    <form>
-	<div class="mdl-textfield mdl-js-textfield">
-	    <!-- must contain exactly 9 numeric characters -->
-	    <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" ng-model="studentNum">
-	    <label class="mdl-textfield__label">Student Number...</label>
-	    <span class="mdl-textfield__error">Not a valid Student Number</span>
-	</div>
-    </form>
 
-    <!-- Password Textfield.. All characters allowed -->
-    <form>
-	<div class="mdl-textfield mdl-js-textfield">
-	    <!--  must contain 6 or more characters that are of at least one number, and one uppercase and lowercase letter -->
-	    <input class="mdl-textfield__input" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" ng-model="password">
-	    <label class="mdl-textfield__label">Password...</label>
-	    <span class="mdl-textfield__error">Not a valid password</span>
-	</div>
-    </form>
+<div ng-controller="loginController" layout-fill flex layout-align="center center"  ng-cloak id="loginContainer">
+    <br/>
+    <md-content layout-padding>
+	<h3 >Student login</h3>
+	<form name="login">
+	    <md-input-container class="md-block">
+		<md-icon><i class="fa fa-user fa-2x"></i></md-icon>
+		<input type="text" name="studentNumber" ng-model="user.number" ng-minlength="7"ng- maxlength="9"
+		       required ng-required="true" placeholder="Student Number"/>
 
-    <!-- Submit button -->
-    <button  class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click = 'go()'>
-	Submit
-    </button>
+	    </md-input-container >
+	    <md-input-container class="md-block">
+		<md-icon>
+		    <i class="fa fa-key fa-2x"></i>
+		</md-icon>
+		<input type="password" name="studentPassword" ng-model="user.pin" ng-minlength="5"
+		       required ng-required="true" placeholder="Pin"/>
+	    </md-input-container>
+	    <div>
+		<center>
+		    <md-button class="md-raised" aria-label="Login">
+			<i class="fa fa-lock"></i>
+			Login
+		    </md-button>
+		</center>
+	    </div>
+	</form>
+    </md-content>
 
-    <!-- input readouts for test purposes -->
-    <br>
-    {{stNum}}
-    <br>
-    {{psw}}
-    <br>
-    {{authData}}
 </div>
