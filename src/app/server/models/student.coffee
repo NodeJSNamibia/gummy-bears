@@ -23,7 +23,7 @@ exports.StudentModel = class StudentModel
             callback null, validator.trim(strValue)
 
     _checkAndSanitizeTitle = (titleValue, callback) ->
-        if not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
+        if validator.isNull(titleValue) or not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
             invalidTitleError = new Error "Invalid Title"
             callback invalidTitleError, null
         else
