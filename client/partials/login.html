@@ -1,43 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>NUST O-WEEK</title>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
-    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <!-- login methods -->
-    <script src="js/loginControllers.js"></script>
+<script src="js/loginControllers.js"></script>
 
-</head>
-<body>
-<div ng-app="login" ng-controller='submitCtrl'>
+<div ng-controller='submitCtrl'>
     <!-- Student Number Textfield.. Only numeric characters allowed -->
     <form>
-        <div class="mdl-textfield mdl-js-textfield">
-            <!-- must contain exactly 9 numeric characters -->
-            <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" ng-model="studentNum">
-            <label class="mdl-textfield__label">Student Number...</label>
-            <span class="mdl-textfield__error">Not a valid Student Number</span>
-        </div>
+	<div class="mdl-textfield mdl-js-textfield">
+	    <!-- must contain exactly 9 numeric characters -->
+	    <input class="mdl-textfield__input" type="text" pattern="[0-9]{9}" ng-model="studentNum">
+	    <label class="mdl-textfield__label">Student Number...</label>
+	    <span class="mdl-textfield__error">Not a valid Student Number</span>
+	</div>
     </form>
 
     <!-- Password Textfield.. All characters allowed -->
     <form>
-        <div class="mdl-textfield mdl-js-textfield">
-            <!--  must contain 6 or more characters that are of at least one number, and one uppercase and lowercase letter -->
-            <input class="mdl-textfield__input" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" ng-model="password">
-            <label class="mdl-textfield__label">Password...</label>
-            <span class="mdl-textfield__error">Not a valid password</span>
-        </div>
+	<div class="mdl-textfield mdl-js-textfield">
+	    <!--  must contain 6 or more characters that are of at least one number, and one uppercase and lowercase letter -->
+	    <input class="mdl-textfield__input" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" ng-model="password">
+	    <label class="mdl-textfield__label">Password...</label>
+	    <span class="mdl-textfield__error">Not a valid password</span>
+	</div>
     </form>
 
     <!-- Submit button -->
     <button  class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" ng-click = 'go()'>
-        Submit
+	Submit
     </button>
 
     <!-- input readouts for test purposes -->
@@ -47,8 +35,4 @@
     {{psw}}
     <br>
     {{authData}}
-
 </div>
-</body>
-
-</html>

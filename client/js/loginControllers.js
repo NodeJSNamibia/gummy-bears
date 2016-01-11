@@ -1,22 +1,22 @@
-var app = angular.module('login', []);
 
-app.controller ('submitCtrl', function($scope) {
 
-  $scope.go = function() {
-      $scope.psw = $scope.password;
-      $scope.stNum = $scope.studentNum;
+app.controller('submitCtrl', function ($scope) {
 
-      $scope.authData = $scope.stNum + ":" +$scope.psw;
+    $scope.go = function () {
+	$scope.psw = $scope.password;
+	$scope.stNum = $scope.studentNum;
 
-      $http.post(url, $scope.authData)
-          .then(
-              function(response){
-                  // success callback
-              },
-              function(response){
-                  // failure callback
-              }
-          );
- }
+	$scope.authData = $scope.stNum + ":" + $scope.psw;
+
+	$http.post(url, $scope.authData)
+		.then(
+			function (response) {
+			    // success callback
+			},
+			function (response) {
+			    // failure callback
+			}
+		);
+    }
 
 });
