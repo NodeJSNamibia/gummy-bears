@@ -90,6 +90,22 @@ exports.FacultiesController = class FacultiesController extends AbstractControll
                 curProgramme.courses[programmeDesc["Course Code"]] = extractResult
                 callback null, curProgramme
 
+    _getAllFaculties = (poolManager, queueManager, callback) ->
+        @faculty.findAll (findError, allFaculties) =>
+            @release 'faculties', poolManager, queueManager, (releaseError, releaseResult) =>
+                if releaseError?
+                    callback releaseError, null
+                else
+                    callback findError, allFaculties
+
+    _getFaculty = (facultyId, poolManager, queueManager, callback) ->
+        @faculty.findOne facultyId, (findError, facultyDetails) =>
+            @release 'faculties', poolManager, queueManager, (releaseError, releaseResult) =>
+                if releaseError?
+                    callback releaseError, null
+                else
+                    callback findError, facultyDetails
+
     _handleSingleFaculty = (facultyId, facultyDesc, callback) ->
         @faculty.insertFaculty facultyId, facultyDesc, (insertError, insertResult) =>
             callback insertError, insertResult
@@ -138,3 +154,11 @@ exports.FacultiesController = class FacultiesController extends AbstractControll
     insertAcademicStructure: (poolManager, queueManager, callback) =>
         _insertAcademicStructure.call @, poolManager, queueManager, (insertAllError, insertAllResult) =>
             callback insertAllError, insertAllResult
+
+    getAllFaculties: (poolManager, queueManager, callback) =>
+        _getAllFaculties.call @, poolManager, queueManager, (allFacultiesError, allFaculties) =>
+            callback allFacultiesError, allFaculties
+
+    getFaculty: (facultyId, poolManager, queueManager, callback) =>
+        _getFaculty.call @, facultyId, poolManager, queueManager, (facultyError, facultyDetails) =>
+            callback facultyError, facultyDetails
