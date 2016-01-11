@@ -8,6 +8,22 @@ exports.FacultyRequestHandler = class FacultyRequestHandler
 
     class _LocalFacultyRequestHandler
 
+        _getAllFaculties = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'faculties', (controllerInstanceError, controllerInstance) =>
+                if controllerInstanceError?
+                    response.json 500, {error: controllerInstanceError.message}
+                else if not controllerInstance?
+                    getAllFacultiesRequestObject =
+                        methodName: 'getAllFaculties'
+                        arguments: [queueManager, poolManager, request, response]
+                    queueManager.enqueueRequest 'faculties', getAllFacultiesRequestObject
+                else
+                    controllerInstance.getAllFaculties poolManager, queueManager, (getAllFacultiesError, allFaculties) =>
+                        if getAllFacultiesError?
+                            response.json 500, {error: getAllFacultiesError.message}
+                        else
+                            response.json 200, allFaculties
+
         _insertAcademicStructure = (queueManager, poolManager, request, response) ->
             poolManager.acquire 'faculties', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
@@ -23,8 +39,11 @@ exports.FacultyRequestHandler = class FacultyRequestHandler
                             response.json 500, {error: academicStructureCreationError.message}
                         else
                             response.json 201, academicStructureCreationResult
-        
+
         constructor: ->
 
         insertAcademicStructure: (queueManager, poolManager, request, response) =>
             _insertAcademicStructure.call @, queueManager, poolManager, request, response
+
+        getAllFaculties: (queueManager, poolManager, request, response) =>
+            _getAllFaculties.call @, queueManager, poolManager, request, response

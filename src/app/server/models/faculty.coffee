@@ -226,6 +226,14 @@ exports.FacultyModel = class FacultyModel
             emptyWordError = new Error emptyWordErrorStr
             callback emptyWordError, null
 
+    _findAll = (callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findAllFaculties (findAllError, allFaculties) =>
+                    callback findAllError, allFaculties
+
     _insertFaculty = (facultyId, facultyData, callback) ->
         _checkAndSanitizeFacultyID.call @, facultyId, (facultyIdError, validFacultyID) =>
             if facultyIdError?
@@ -248,3 +256,7 @@ exports.FacultyModel = class FacultyModel
     insertFaculty: (facultyId, facultyData, callback) =>
         _insertFaculty.call @, facultyId, facultyData, (insertError, insertResult) =>
             callback insertError, insertResult
+
+    findAll: (callback) =>
+        _findAll.call @, (findAllError, allStudents) =>
+            callback findAllError, allStudents
