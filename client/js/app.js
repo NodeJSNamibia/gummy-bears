@@ -27,9 +27,9 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 
 // API Service
 
-app.factory('Api', ['$http', function ($http) {
+app.service('Api', ['$http', "$location", function ($http, $location) {
 
-	user = {
+	var user = {
 	    authenticated: false,
 	    details: {},
 	    authenticate: function (studentNumber, studentPin) {
@@ -41,12 +41,12 @@ app.factory('Api', ['$http', function ($http) {
 		});
 	    }
 	};
-	userTest = {
+	var userTest = {
 	    authenticated: false,
 	    details: {},
 	    authenticate: function (studentNumber, studentPin) {
 		if (studentNumber === "201019593", studentPin === "34341") {
-		    user.details = {
+		    userTest.details = {
 			name: "Field",
 			surname: "Marshal",
 			student_number: "201019593",
@@ -54,14 +54,14 @@ app.factory('Api', ['$http', function ($http) {
 			programme: "Beng Mechanical Engineering",
 			dept: "Department of Mechanical Engineering"
 		    };
-		    user.authenticated = true;
-		    window.location = "user";
+		    userTest.authenticated = true;
+		    $location.path("/user");
 		} else {
 		    alert("Invalid Login");
 		}
 	    }
 	};
-	return true;
+	this.userTest = userTest;
     }]);
 var settings = {
     displayLogin: true
@@ -124,8 +124,10 @@ app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	    pin: ''
 	};
 	$scope.auth = function () {
-	    alert("auth");
 	    Api.userTest.authenticate($scope.user.number, $scope.user.pin);
 	};
     }]);
 
+app.controller("homeController", ["$scope", 'Api', function ($scope, Api) {
+	$scope.api = Api.userTest;
+    }]);
