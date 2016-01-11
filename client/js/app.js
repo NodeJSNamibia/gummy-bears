@@ -18,11 +18,51 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	}).when("/", {
 	    templateUrl: "partials/index.html",
 	    controller: "Calendar"
+	}).when("/user", {
+	    templateUrl: "partials/user.html"
 	}).otherwise({redirectTo: '/'});
     }
 ]
 	);
 
+// API Service
+
+app.factory('Api', ['$http', function ($http) {
+
+	user = {
+	    authenticated: false,
+	    details: {},
+	    authenticate: function (studentNumber, studentPin) {
+		$http.post("auth/login", {studentNumber: studentNumber, studentPin: studentPin}).then(function (data) {
+		    user.details = data;
+		    authenticated = true;
+		}, function (data) {
+
+		});
+	    }
+	};
+	userTest = {
+	    authenticated: false,
+	    details: {},
+	    authenticate: function (studentNumber, studentPin) {
+		if (studentNumber === "201019593", studentPin === "34341") {
+		    user.details = {
+			name: "Field",
+			surname: "Marshal",
+			student_number: "201019593",
+			faculty: "Faculty of Engineering",
+			programme: "Beng Mechanical Engineering",
+			dept: "Department of Mechanical Engineering"
+		    };
+		    user.authenticated = true;
+		    window.location = "user";
+		} else {
+		    alert("Invalid Login");
+		}
+	    }
+	};
+	return true;
+    }]);
 var settings = {
     displayLogin: true
 };
@@ -78,43 +118,14 @@ function monthAdd(add) {
 }
 
 
-app.controller('loginController', ['$scope', function ($scope) {
-
+app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	$scope.user = {
 	    number: '',
 	    pin: ''
 	};
-
-    }]);
-// API Service
-app.factory('api', ['$scope', '$http', '$httpProvider', function ($scope, $http, $httpProvider) {
-	$scope.user = {
-	    authenticated: false,
-	    details: {},
-	    authenticate: function (studentNumber, studentPin) {
-		$http.post("auth/login", {studentNumber: studentNumber, studentPin: studentPin}).then(function (data) {
-		    $scope.user.details = data;
-		    authenticated = true;
-		}, function (data) {
-
-		});
-	    }
-	};
-	$scope.userTest = {
-	    authenticated: false,
-	    details: {},
-	    authenticate: function (studentNumber, studentPin) {
-		if (studentNumber === "201019593", studentPin === "34341") {
-		    $scope.user.details = {
-			name: "Field",
-			surname: "Marshal",
-			student_number: "201019593",
-			faculty: "Faculty of Engineering",
-			programme: "Beng Mechanical Engineering",
-			dept: "Department of Mechanical Engineering"
-		    };
-		    $scope.user.authenticated = true;
-		}
-	    }
+	$scope.auth = function () {
+	    alert("auth");
+	    Api.userTest.authenticate($scope.user.number, $scope.user.pin);
 	};
     }]);
+

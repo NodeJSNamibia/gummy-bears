@@ -20,9 +20,10 @@
 		<input type="password" name="studentPassword" ng-model="user.pin" ng-minlength="5"
 		       required ng-required="true" placeholder="Pin"/>
 	    </md-input-container>
+	    {{user.pin}}
 	    <div>
 		<center>
-		    <md-button class="md-raised" aria-label="Login">
+		    <md-button class="md-raised" aria-label="fLogin" ng-click="auth()">
 			<i class="fa fa-lock"></i>
 			Login
 		    </md-button>
