@@ -48,6 +48,32 @@ exports.DataManager = class DataManager
                     bucket.get docID, (docError, docData) =>
                         callback docError, docData
 
+        _findAllFacultyByProgrammeCode = (programmeCode, callback) ->
+            _findAllFaculties.call @, (allFacultiesError, allFaculties) =>
+                if allFacultiesError?
+                    callback allFacultiesError, null
+                else
+                    facultyName = undefined
+                    for curFaculty in allFaculties
+                        curDepartments = curFaculty.departments
+                        for curDepartment in curStudent
+                            curProgrammes = curDepartment.programmes
+                            for curProgramme in curProgrammes
+                                if curProgramme is programmeCode
+                                    facultyName = curFaculty.name
+                                    breakDeptLoop = true
+                                    break
+                            if breakDeptLoop
+                                breakFacLoop = true
+                                break
+                        if breakFacLoop = true
+                            break
+                    if not facultyName?
+                        unknownProgrammeError = new Error "Programme #{programmeCode} does not belong to an existing faculty"
+                        callback unknownProgrammeError, null
+                    else
+                        callback null, facultyName
+
         _getDataBucket = (bucketName, callback) ->
             currentBucket = @allBuckets[bucketName]
             if not currentBucket?
@@ -98,6 +124,10 @@ exports.DataManager = class DataManager
         findAllFaculties: (callback) =>
             _findAllFaculties.call @, (findAllError, allFaculties) =>
                 callback findAllError, allFaculties
+
+        findFacultyByProgrammeCode: (programmeCode, callback) =>
+            _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, facultyName) =>
+                callback facultyNameError, facultyName
 
         insertFaculty: (facultyId, facultyData, callback) =>
             _insertDocument.call @, 'faculty', facultyId, facultyData, (insertFacultyError, insertFacultyResult) =>
