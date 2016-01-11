@@ -13,10 +13,13 @@
     var running_day = ndate.getDay();
     var app = angular.module('oweek', ['ngMaterial', 'ngRoute']);
     app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-	    $locationProvider.html5Mode({enabled: true, requireBase: false});
-	    $routeProvider.when("./login", {
-		templateUrl: "partials/login.html"
-	    });
+	    $locationProvider.html5Mode(true);
+	    $routeProvider.when("/login", {
+		templateUrl: "partials/login.html",
+	    }).when("/", {
+		templateUrl: "partials/index.html",
+		controller: "Calendar"
+	    }).otherwise({redirectTo: '/'});
 	}
     ]
 	    );
