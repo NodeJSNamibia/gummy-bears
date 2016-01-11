@@ -26,6 +26,20 @@ exports.DataManager = class DataManager
                             allStudents = (curStudent.value for curStudent in studentCol)
                             callback null, allStudents
 
+        _findAllFaculties = (callback) ->
+            _getDataBucket.call @, 'faculty', (bucketError, bucket) =>
+                if bucketError?
+                    callback bucketError, null
+                else
+                    ViewQuery = Couchbase.ViewQuery
+                    allFacultiesQuery = ViewQuery.from @facultyDesignDoc, @facultyView
+                    bucket.query allFacultiesQuery, (multiFacultyError, facultyCol) =>
+                        if multiFacultyError?
+                            callback multiFacultyError, null
+                        else
+                            allFaculties = (curFaculty.value for curFaculty in facultyCol)
+                            callback null, allFaculties
+
         _findDocument = (bucketName, docID, callback) ->
             _getDataBucket.call @, bucketName, (bucketError, bucket) =>
                 if bucketError?
@@ -80,6 +94,10 @@ exports.DataManager = class DataManager
         findAllStudents: (callback) =>
             _findAllStudents.call @, (findAllError, allStudents) =>
                 callback findAllError, allStudents
+
+        findAllFaculties: (callback) =>
+            _findAllFaculties.call @, (findAllError, allFaculties) =>
+                callback findAllError, allFaculties
 
         insertFaculty: (facultyId, facultyData, callback) =>
             _insertDocument.call @, 'faculty', facultyId, facultyData, (insertFacultyError, insertFacultyResult) =>
