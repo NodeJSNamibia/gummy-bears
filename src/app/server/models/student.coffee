@@ -15,6 +15,7 @@ exports.StudentModel = class StudentModel
         else
             callback null, validator.toInt(studentNumber)
 
+    # should change the programme check and sanitization
     _checkAndSanitizeString = (strValue, errorMessage,  callback) ->
         if not validator.isAlpha(strValue) or validator.isNull(strValue)
             invalidNameError = new Error errorMessage
@@ -134,7 +135,17 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
-                                            callback null, {}
+                                            DataManager.getDBManagerInstance(dbURL).findFacultyByProgrammeCode studentDoc.programme, (facultyNameError, facultyRes) =>
+                                                if facultyNameError?
+                                                    callback facultyNameError, null
+                                                else
+                                                    studentAuthRes =
+                                                        name: studentDoc.firstName
+                                                        surname: studentDoc.lastName
+                                                        studentNumber: validStudentNumber
+                                                        faculty: facultyRes.facultyName
+                                                        programme: facultyRes.programmeName
+                                                    callback null, studentAuthRes
 
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>

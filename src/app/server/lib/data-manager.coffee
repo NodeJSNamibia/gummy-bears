@@ -53,14 +53,16 @@ exports.DataManager = class DataManager
                 if allFacultiesError?
                     callback allFacultiesError, null
                 else
-                    facultyName = undefined
+                    result = undefined
                     for curFaculty in allFaculties
                         curDepartments = curFaculty.departments
                         for curDepartment in curStudent
                             curProgrammes = curDepartment.programmes
                             for curProgramme in curProgrammes
                                 if curProgramme is programmeCode
-                                    facultyName = curFaculty.name
+                                    result =
+                                        facultyName: curFaculty.name
+                                        programmeName: curProgramme.name
                                     breakDeptLoop = true
                                     break
                             if breakDeptLoop
@@ -68,11 +70,11 @@ exports.DataManager = class DataManager
                                 break
                         if breakFacLoop = true
                             break
-                    if not facultyName?
+                    if not result?
                         unknownProgrammeError = new Error "Programme #{programmeCode} does not belong to an existing faculty"
                         callback unknownProgrammeError, null
                     else
-                        callback null, facultyName
+                        callback null, result
 
         _getDataBucket = (bucketName, callback) ->
             currentBucket = @allBuckets[bucketName]
@@ -126,8 +128,8 @@ exports.DataManager = class DataManager
                 callback findAllError, allFaculties
 
         findFacultyByProgrammeCode: (programmeCode, callback) =>
-            _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, facultyName) =>
-                callback facultyNameError, facultyName
+            _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, faculty) =>
+                callback facultyNameError, faculty
 
         insertFaculty: (facultyId, facultyData, callback) =>
             _insertDocument.call @, 'faculty', facultyId, facultyData, (insertFacultyError, insertFacultyResult) =>
