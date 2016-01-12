@@ -16,6 +16,7 @@
 	<!-- Angular Material Library -->
 	<script src="js/angular-material.min.js"></script>
 	<script src="js/moment.js"></script>
+	<script src="js/cookie.js"></script>
     </head>
     <body ng-cloak ng-controller="homeController">
 	<header layout="column" ng-cloak>
@@ -30,8 +31,9 @@
 			<span ng-show="api.authenticated">
 			    <i class="fa fa-user"></i>
 			    {{"Logged in as " + api.details.name}}
+			    <a href="logout"> Logout</a>
 			</span>
-			<md-button class="md-raised" aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-show="!settings.displayLogin">
+			<md-button class="md-raised" aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="settings.displayLogin || api.authenticated">
 			    <i class="fa fa-lock"></i>
 			    Login
 			</md-button>
