@@ -96,9 +96,18 @@ app.service('Api', ['$http', "$location", function ($http, $location) {
 			};
 		    }
 		} else {
-		    this.userTest.authenticated = false;
+		    userTest.authenticated = false;
 		}
 	    }
+	};
+	this.checkOut = function () {
+	    userTest.details = {};
+	    userTest.authenticated = false;
+	    cookie.removeCookie('oweekSessionId');
+
+	    setTimeout(function () {
+		window.location = "login";
+	    }, 1000);
 	};
 	this.session = session;
     }]);
@@ -201,6 +210,9 @@ app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
  */
 app.controller("homeController", ["$scope", 'Api', function ($scope, Api) {
 	$scope.session = Api.session;
-	$scope.session.checkAuth()
+	$scope.session.checkAuth();
 	$scope.api = Api.userTest;
+	$scope.logout = function () {
+	    Api.checkOut();
+	};
     }]);
