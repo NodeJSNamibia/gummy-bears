@@ -10,7 +10,7 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _authenticate = (authenticationData, poolManager, queueManager, callback) ->
         @student.authenticate authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
-            @release poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -42,9 +42,9 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _insertAllStudents = (poolManager, queueManager, callback) ->
         # load student information first
-        StudentInfoLoader.getStudentInfoLoader().loadStudents (laodError, allStudents) =>
+        StudentInfoLoader.getStudentInfoLoader().loadStudents (loadError, allStudents) =>
             if loadError?
-                @release poolManager, queueManager, (releaseError, releaseResult) =>
+                @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                     if releaseError?
                         callback releaseError, null
                     else
@@ -53,13 +53,13 @@ exports.StudentsController = class StudentsController extends AbstractController
                 async.each allStudents, @_insertSingleStudentIter, (insertError) =>
                     if insertError?
                         console.log insertError
-                        @release poolManager, queueManager, (releaseError, releaseResult) =>
+                        @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
                                 callback insertError, null
                     else
-                        @release poolManager, queueManager, (releaseError, releaseResult) =>
+                        @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
@@ -67,7 +67,7 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _createPassword = (studentNumber, passwordData, poolManager, queueManager, callback) ->
         @student.createPassword studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
-            @release poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -75,7 +75,7 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _updateCourses = (studentNumber, courseData, poolManager, queueManager, callback) ->
         @student.updateCourses studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
-            @release poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -83,7 +83,7 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _getStudent = (studentNumber, poolManager, queueManager, callback) ->
         @student.findOne studentNumber, (findError, studentDetails) =>
-            @release poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -91,7 +91,7 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     _getAllStudents = (poolManager, queueManager, callback) ->
         @student.findAll (findError, allStudents) =>
-            @release poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else

@@ -15,6 +15,7 @@ exports.StudentModel = class StudentModel
         else
             callback null, validator.toInt(studentNumber)
 
+    # should change the programme check and sanitization
     _checkAndSanitizeString = (strValue, errorMessage,  callback) ->
         if not validator.isAlpha(strValue) or validator.isNull(strValue)
             invalidNameError = new Error errorMessage
@@ -23,7 +24,7 @@ exports.StudentModel = class StudentModel
             callback null, validator.trim(strValue)
 
     _checkAndSanitizeTitle = (titleValue, callback) ->
-        if not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
+        if validator.isNull(titleValue) or not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
             invalidTitleError = new Error "Invalid Title"
             callback invalidTitleError, null
         else
@@ -44,36 +45,32 @@ exports.StudentModel = class StudentModel
             callback null, validator.trim(modeOfStudy)
 
     _checkAndSanitizeCourses = (courses, callback) ->
-        # will use a regex to represent the array
-        callback null, courses
-
-    _checkAndSanitizeEmailAddresses = (emailAddress1, emailAddress2, callback) ->
-        emailAddresses = []
-        error1Str = undefined
-        error2Str = undefined
-        emailError = undfefined
-        if emailAddress1?
-            if not validator.isEmail emailAddress1
-                error1Str = "Invalid First Email Address"
-            else
-                emailAddresses.push emailAddress1
-        if emailAddress2?
-            if not validator.isEmail emailAddress2
-                error2Str = "Invalid Second Email Address"
-            else
-                emailAddresses.push emailAddress2
-        if not error1Str? and not error2Str?
-            if emailAddresses.length is 0
-                emailError = new Error "No valid email address"
-                callback emailError, null
-            else
-                callback null, emailAddresses
+        courseCodeErrorStrs = []
+        validCourseCodes = []
+        for singleCourseCode, singleCourseCodeIdx in courses
+            do (singleCourseCode, singleCourseCodeIdx) =>
+                if validator.isNull(singleCourseCode) or not validator.isAlphanumeric(singleCourseCode)
+                    courseCodeErrorStrs.push "Course Item #{singleCourseCodeIdx + 1} Error: Invalid Course Code"
+                else
+                    validCourseCodes.push validator.trim(singleCourseCode)
+        if courseCodeErrorStrs.length > 0
+            callback new Error(courseCodeErrorStrs.join(', ')), null
         else
-            errorStr = error1Str ? ""
-            if error2Str?
-                errorStr += " #{error2Str}"
-            emailError = new Error errorStr
-            callback emailError, null
+            callback null, validCourseCodes
+
+    _checkAndSanitizeEmailAddresses = (emailAddresses, callback) ->
+        validEmailAddresses = []
+        emailAddressErrorStrs = []
+        for singleEmailAddress, singleEmailAddressIdx in emailAddresses
+            do (singleEmailAddress, singleEmailAddressIdx) =>
+                if validator.isNull(singleEmailAddress) or not validator.isEmail(singleEmailAddress)
+                    emailAddressErrorStrs.push "Email Address Item #{singleEmailAddressIdx + 1} Error: Invalid Email Address"
+                else
+                    validEmailAddresses.push validator.trim(singleEmailAddress)
+        if validEmailAddresses.length > 0
+            callback null, validEmailAddresses
+        else
+            callback new Error(emailAddressErrorStrs.join(', ')), null
 
     _checkAndSanitizeForInsertion = (studentData, callback) ->
         checkOptions = {}
@@ -111,7 +108,7 @@ exports.StudentModel = class StudentModel
                 partialCallback programmeError, Programme
         # add the student email addresses for validation
         checkOptions["emailAddresses"] = (partialCallback) =>
-            _checkAndSanitizeEmailAddresses.call @, studentData.emailAddress1, studentData.emailAddress2, (emailError, emailAddresses) =>
+            _checkAndSanitizeEmailAddresses.call @, [studentData.emailAddress1, studentData.emailAddress2], (emailError, emailAddresses) =>
                 partialCallback emailError, emailAddresses
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
@@ -138,7 +135,17 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
-                                            callback null, {}
+                                            DataManager.getDBManagerInstance(dbURL).findFacultyByProgrammeCode studentDoc.programme, (facultyNameError, facultyRes) =>
+                                                if facultyNameError?
+                                                    callback facultyNameError, null
+                                                else
+                                                    studentAuthRes =
+                                                        name: studentDoc.firstName
+                                                        surname: studentDoc.lastName
+                                                        studentNumber: validStudentNumber
+                                                        faculty: facultyRes.facultyName
+                                                        programme: facultyRes.programmeName
+                                                    callback null, studentAuthRes
 
     _insertStudent = (studentData, callback) ->
         _checkAndSanitizeForInsertion.call @, studentData, (checkError, studentInfo) =>
