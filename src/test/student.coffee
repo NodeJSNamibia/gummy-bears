@@ -35,23 +35,79 @@ describe 'Students Controller', ->
                         @statusCode = 200
                         @body = args[0]
             studentRequestHandler.createPassword queueManager, poolManager, request, response, (createPasswordError, createPasswordResult) =>
-                should.exist createPasswordError
+                response.should.have.statusCode(500);
+            response.body.should.be.(passwordCreationError)
                 done()
+         it 'should not create password  with empty student number', (done) =>
+            request =
+                params:
+                    id: 
+                body:
+                    password: "myPassword"
+                    confirmPassword: "myPassword"
+            response =
+                statusCode: ""
+                body: {}
+                json: (options) ->
+                    args = [].slice.call arguments
+                    if args.length > 1
+                        if typeof args[0] is 'number'
+                            @statusCode = args[0]
+                        @body = args[1]
+                    else
+                        @statusCode = 200
+                        @body = args[0]
+            studentRequestHandler.createPassword queueManager, poolManager, request, response =>
+            response.should.have.statusCode(500);
+            response.body.should.be.(studentNumberError)
+                done()
+             it 'should not create password without matching the password and confirmPassword', (done) =>
+            request =
+                params:
+                    id: 200530303
+                body:
+                    password: "myPassword"
+                    confirmPassword: "Mypassword"
+            response =
+                statusCode: ""
+                body: {}
+                json: (options) ->
+                    args = [].slice.call arguments
+                    if args.length > 1
+                        if typeof args[0] is 'number'
+                            @statusCode = args[0]
+                        @body = args[1]
+                    else
+                        @statusCode = 200
+                        @body = args[0]
+            studentRequestHandler.createPassword queueManager, poolManager, request, response, (createPasswordError, createPasswordResult) =>
+                response.should.have.statusCode(500);
+            response.body.should.be.(unconfirmedPasswordError)
+                done()
+              it 'should correctly create the password', (done) =>
+            request =
+                params:
+                    id: 200530303
+                body:
+                    password: "myPassword"
+                    confirmPassword: "myPassword"
+            response =
+                statusCode: ""
+                body: {}
+                json: (options) ->
+                    args = [].slice.call arguments
+                    if args.length > 1
+                        if typeof args[0] is 'number'
+                            @statusCode = args[0]
+                        @body = args[1]
+                    else
+                        @statusCode = 200
+                        @body = args[0]
+            studentRequestHandler.createPassword queueManager, poolManager, request, response, (createPasswordError, createPasswordResult) =>
+                
+            response.should.have.statusCode(200);
+            response.body.should.be.(passwordCreationResult)
+                done()
+                          
 
-    #     it 'should not create blank passwords', (done) =>
-    #         StudentRequestHandler('test').createPassword{200513133},{password:" ",confirmPassword:" "},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
-    #             should.exist(createPasswordError)
-    #             done()
-       #
-    #    it 'should not create a passwords without a student number',(done)=>
-    #         StudentRequestHandler('test').createPassword{0},{password:"Oweek",confirmPassword:"Oweek"},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
-    #             should.exist(createPasswordError)
-    #             done()
-    #     it 'should match the password and the confirm password fields',(done)=>
-    #         StudentRequestHandler('test').createPassword{200513133},{password:"Oweek",confirmPassword:"orWeek"},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
-    #             should.exist(createPasswordError)
-    #             done()
-    #     it 'should correctly create the password with the right inputs',(done)=>
-    #         StudentRequestHandler('test').createPassword{200513133},{password:"Oweek",confirmPassword:"Oweek"},poolManager,queueManager,(createPasswordError, createPasswordResult)=>
-    #             should.exist(authenticationResult)
-    #             done()
+
