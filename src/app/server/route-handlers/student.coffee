@@ -83,7 +83,7 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'students', insertAllStudentsRequestObject
                 else
-                    controllerInstance.insertAllStudents poolManager, queueManager, (studentCreationError, studentCreationResult) =>
+                    controllerInstance.insertAllStudents request.session?.user?.username, poolManager, queueManager, (studentCreationError, studentCreationResult) =>
                         if studentCreationError?
                             response.json 500, {error: studentCreationError.message}
                         else

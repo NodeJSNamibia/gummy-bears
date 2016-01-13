@@ -16,7 +16,7 @@ exports.StudentsController = class StudentsController extends AbstractController
                 else
                     callback authenticationError, authenticationResult
 
-    _insertSingleStudentIter = (singleStudentData, callback) ->
+    _insertSingleStudent = (singleStudentData, callback) ->
         # create the proper object representing the student
         studentEmails = []
         studentEmails.push singleStudentData["Email 1"]
@@ -40,30 +40,41 @@ exports.StudentsController = class StudentsController extends AbstractController
         @student.insertStudent studentInfo, (saveError, saveResult) =>
             callback saveError, saveResult
 
-    _insertAllStudents = (poolManager, queueManager, callback) ->
-        # load student information first
-        StudentInfoLoader.getStudentInfoLoader().loadStudents (loadError, allStudents) =>
-            if loadError?
-                @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
-                    if releaseError?
-                        callback releaseError, null
-                    else
-                        callback loadError, null
+    _insertAllStudents = (username, poolManager, queueManager, callback) ->
+        @student.checkAuthorization username, 'insertAllStudents', (authorizationError, authorizationResult) =>
+            if authorizationError?
+                callback authorizationError, null
+            else if not authorizationResult
+                unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to insert students."
+                callback unauthorizedInsertionError, null
             else
-                async.each allStudents, @_insertSingleStudentIter, (insertError) =>
-                    if insertError?
-                        console.log insertError
+                StudentInfoLoader.getStudentInfoLoader().loadStudents (loadError, allStudents) =>
+                    if loadError?
                         @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
                                 callback releaseError, null
                             else
-                                callback insertError, null
+                                callback loadError, null
                     else
-                        @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
-                            if releaseError?
-                                callback releaseError, null
+                        studentOptions = {}
+                        for curStudent in allStudents
+                            do (curStudent) =>
+                                studentOptions[curStudent["Student Number"]] = (partialCallback) =>
+                                    _insertSingleStudent.call @, curStudent, (insertError, singleStudent) =>
+                                        partialCallback insertError, singleStudent
+                        async.series studentOptions, (insertAllError, insertAllResult) =>
+                            if insertAllError?
+                                @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
+                                    if releaseError?
+                                        callback releaseError, null
+                                    else
+                                        callback insertError, null
                             else
-                                callback null, {}
+                                @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
+                                    if releaseError?
+                                        callback releaseError, null
+                                    else
+                                        callback null, insertAllResult
 
     _createPassword = (studentNumber, passwordData, poolManager, queueManager, callback) ->
         @student.createPassword studentNumber, passwordData, (createPasswordError, createPasswordResult) =>

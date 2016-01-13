@@ -72,6 +72,13 @@ exports.StudentModel = class StudentModel
         else
             callback new Error(emailAddressErrorStrs.join(', ')), null
 
+    _checkAndSanitizeUsername = (username, callback) ->
+        if validator.isNull(username) or not validator.isAlphanumeric(username)
+            invalidUsernameError = new Error "Invalid Username"
+            callback invalidUsernameError, null
+        else
+            callback null, validator.trim(username)
+
     _checkAndSanitizeForInsertion = (studentData, callback) ->
         checkOptions = {}
         # add student number for validation
@@ -170,6 +177,19 @@ exports.StudentModel = class StudentModel
                         dataManager.insertStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
 
+    _checkAuthorization = (username, mthName, callback) ->
+        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
+            if checkError?
+                callback checkError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                    if findTechnicalUserError?
+                        callback findTechnicalUserError, null
+                    else if technicalUserDoc.profile is 'admin'
+                        callback null, true
+                    else
+                        callback null, false
+
     _createPassword = (studentNumber, passwordData, callback) ->
         _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
@@ -243,6 +263,10 @@ exports.StudentModel = class StudentModel
     insertStudent: (studentData, callback) =>
         _insertStudent.call @, studentData, (saveError, saveResult) =>
             callback saveError, saveResult
+
+    checkAuthorization: (username, mthName, callback) =>
+        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+            callback authorizationError, authorizationResult
 
     createPassword: (studentNumber, passwordData, callback) =>
         _createPassword.call @, studentNumber, passwordData, (createPasswordError, createPasswordResult) =>
