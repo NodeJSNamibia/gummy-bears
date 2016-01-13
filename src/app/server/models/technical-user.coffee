@@ -8,61 +8,62 @@ async                = require 'async'
 
 exports.TechnicalUserModel = class TechnicalUserModel
 
-# should change the username check and sanitization
-    _checkAndSanitizeString = (strValue, errorMessage,  callback) ->
-        if not validator.isAlpha(strValue) or validator.isNull(strValue)
-            invalidUserNameError = new Error "Invalid username"
-            callback invalidUserNameError, null
-        else
-            callback null, validator.trim(strValue)
-
-            _authenticate = (authenticationData, poolManager, queueManager, callback) ->
-        _checkAndSanitizeString.call @, authenticationData.username, (invalidUserNameError, validUserName) =>
-            if invalidUserNameError?
-                callback invalidUserNameError, null
+    _authenticate = (authenticationData, callback) ->
+        _checkAndSanitizeUsername.call @, authenticationData.username, (usernameError, validUsername) =>
+            if usernameError?
+                callback usernameError, null
             else
                 ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
                     if urlError?
                         callback urlError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findTechnicalUser ValidUserName, (findTechnicalUserError, TechnicalUserDoc) =>
+                        DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
                             if findTechnicalUserError?
-                                callback findtechnicalUserError, null
+                                callback findTechnicalUserError, null
                             else
-                                new PasswordHandler().verifyPassword authenticationData.password, TechnicalUserDoc.password, (verifyError, verificationResult) =>
+                                new PasswordHandler().verifyPassword authenticationData.password, technicalUserDoc.password, (verifyError, verificationResult) =>
                                     if verifyError?
                                         callback verifyError, null
+                                    else if not verificationResult
+                                        authenticationError = new Error "Authentication Failed for Technical User #{validUsername}"
+                                        callback authenticationError, null
                                     else
-                                        if not verificationResult
-                                            authenticationError = new Error "Authentication failed for Technical User #{validUsername}"
-                                            callback authenticationError, null
-                                       
-                                                else
-                                                    technicalUserAuthRes =
-                                                        username: validUserName
-                                                        name: TechnicalUserDoc.firstName
+                                        technicalUserAuthRes =
+                                            username: validUsername
+                                            firstName: technicalUserDoc.firstName
+                                            lastName: technicalUserDoc.lastName
+                                        callback null, technicalUserAuthRes
 
-                                                    callback null, technicalUserAuthRes
-        _findOne = (username, callback) ->
-        _checkAndSanitizeString.call @, authenticationData.username, (invalidUserNameError, validUserName) =>
-            if invalidUserNameError?
-                callback invalidUserNameError, null
+    _checkAndSanitizeUsername = (username, callback) ->
+        if validator.isNull(username) or not validator.isAlphanumeric(username)
+            invalidUsernameError = new Error "Invalid Username"
+            callback invalidUsernameError, null
+        else
+            callback null, validator.trim(username)
+
+    _findOne = (username, callback) ->
+        _checkAndSanitizeUsername.call @, authenticationData.username, (usernameError, validUsername) =>
+            if usernameError?
+                callback usernameError, null
             else
                 ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
                     if urlError?
                         callback urlError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findTechnicalUser ValidUserName, (findError, findResult) =>
-                            
-                                callback Error, findResult
-        
+                        DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                            if findTechnicalUserError?
+                                callback findTechnicalUserError, null
+                            else
+                                technicalUserResult = {}
+                                technicalUserResult[entryKey] = entryValue for entryKey, entryValue of technicalUserDoc when entryKey isnt 'password'
+                                callback null, technicalUserResult
 
-                                                    constructor: (@appEnv) ->
+    constructor: (@appEnv) ->
 
-        (authenticationData, poolManager, queueManager, callback) =>
-        _authenticate.call @, authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, callback) =>
+        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
 
-            findOne: (username, callback) =>
+    findOne: (username, callback) =>
         _findOne.call @, username, (findError, technicalUserDetails) =>
             callback findError, technicalUserDetails

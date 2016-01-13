@@ -1,49 +1,50 @@
 'use strict'
 
 exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
-    _t-urhInstance = undefined
+    _turhInstance = undefined
 
     @getRequestHandler: ->
-        _t-urhInstance ?= new _LocalTechnicalUserRequestHandler
+        _turhInstance ?= new _LocalTechnicalUserRequestHandler
 
     class _LocalTechnicalUserRequestHandler
 
-     _authenticate = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'technical-user', (controllerInstanceError, controllerInstance) =>
+        _authenticate = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'technical-users', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
                     authenticationRequestObject =
                         methodName: 'authenticate'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'tecchnical-user', authenticationRequestObject
+                    queueManager.enqueueRequest 'tecchnical-users', authenticationRequestObject
                 else
                     controllerInstance.authenticate request.body, poolManager, queueManager, (authenticationError, authenticationResult) =>
                         if authenticationError?
                             response.json 500, {error: authenticationError.message}
                         else
-                            request.session.technical-user = authenticationResult
+                            request.session.technicalUser = authenticationResult
                             response.json 200, authenticationResult
 
-     _getTechnicalUser = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'tehnical-user', (controllerInstanceError, controllerInstance) =>
+        _getTechnicalUser = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'tehnical-users', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
                     getTechnicalUserRequestObject =
                         methodName: 'getTechnicalUser'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'technical-user', getTechnicalUserRequestObject
+                    queueManager.enqueueRequest 'technical-users', getTechnicalUserRequestObject
                 else
-                    controllerInstance.getTechnicalUser request.params.usename, poolManager, queueManager, (getTechnicalUserRequestError, technicalUserDetails) =>
+                    controllerInstance.getTechnicalUser request.params.id, poolManager, queueManager, (getTechnicalUserRequestError, technicalUserDetails) =>
                         if getTechnicalUserRequest?
                             response.json 500, {error: getTechnicalUserRequestError.message}
                         else
                             response.json 200, technicalUserDetails
 
-                            constructor: ->
+        constructor: ->
+
         authenticate: (queueManager, poolManager, request, response) =>
-        _authenticate.call @, queueManager, poolManager, request, response
+            _authenticate.call @, queueManager, poolManager, request, response
 
         getTechnicalUser: (queueManager, poolManager,  request, response) =>
             _getTechnicalUser.call @, queueManager, poolManager, request, response
