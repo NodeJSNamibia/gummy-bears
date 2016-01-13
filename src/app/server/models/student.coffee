@@ -1,5 +1,6 @@
 'use strict'
 
+AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
 ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
 PasswordHandler      = require('../util/password-handler').PasswordHandler
@@ -185,10 +186,9 @@ exports.StudentModel = class StudentModel
                 DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
                     if findTechnicalUserError?
                         callback findTechnicalUserError, null
-                    else if technicalUserDoc.profile is 'admin'
-                        callback null, true
                     else
-                        callback null, false
+                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
+                            callback authorizationError, authorizationResult
 
     _createPassword = (studentNumber, passwordData, callback) ->
         _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
