@@ -111,42 +111,49 @@ exports.FacultiesController = class FacultiesController extends AbstractControll
             callback insertError, insertResult
 
     _insertAcademicStructure = (poolManager, queueManager, callback) ->
-        AcademicStructureLoader.getAcademicStructureLoader().loadStructure (loadError, academicStructure) =>
-            if loadError?
-                @release 'faculties', poolManager, queueManager, (releaseError, releaseResult) =>
-                    if releaseError?
-                        callback releaseError, null
-                    else
-                        callback loadError, null
+        @faculty.checkAuthorization username, 'insertAcademicStructure', (authorizationError, authorizationResult) =>
+            if authorizationError?
+                callback authorizationError, null
+            else if not authorizationResult
+                unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to insert academic structure."
+                callback unauthorizedInsertionError, null
             else
-                _extractAcademicStructure.call @, academicStructure, (extractionError, extractionResult) =>
-                    if extractionError?
-                        @release 'faculties', poolManager, queueManager, (releaseError1, releaseResult1) =>
-                            if releaseError1?
-                                callback releaseError1, null
+                AcademicStructureLoader.getAcademicStructureLoader().loadStructure (loadError, academicStructure) =>
+                    if loadError?
+                        @release 'faculties', poolManager, queueManager, (releaseError, releaseResult) =>
+                            if releaseError?
+                                callback releaseError, null
                             else
-                                callback extractionError, null
+                                callback loadError, null
                     else
-                        facultyHandlingFuncs = {}
-                        for facultyId, facultyDesc of extractionResult
-                            do (facultyId, facultyDesc) =>
-                                curFacultyHandlingFunc = (partialCallback) =>
-                                    _handleSingleFaculty.call @, facultyId, facultyDesc, (handleError, handleResult) =>
-                                        partialCallback handleError, handleResult
-                                facultyHandlingFuncs[facultyId] = curFacultyHandlingFunc
-                        async.series facultyHandlingFuncs, (handleSeriesError, handleSeriesResult) =>
-                            if handleSeriesError?
-                                @release 'faculties', poolManager, queueManager, (releaseError2, releaseResult2) =>
-                                    if releaseError2?
-                                        callback releaseError2, null
+                        _extractAcademicStructure.call @, academicStructure, (extractionError, extractionResult) =>
+                            if extractionError?
+                                @release 'faculties', poolManager, queueManager, (releaseError1, releaseResult1) =>
+                                    if releaseError1?
+                                        callback releaseError1, null
                                     else
-                                        callback handleSeriesError, null
+                                        callback extractionError, null
                             else
-                                @release 'faculties', poolManager, queueManager, (releaseError3, releaseResult3) =>
-                                    if releaseError3?
-                                        callback releaseError3, null
+                                facultyHandlingFuncs = {}
+                                for facultyId, facultyDesc of extractionResult
+                                    do (facultyId, facultyDesc) =>
+                                        curFacultyHandlingFunc = (partialCallback) =>
+                                            _handleSingleFaculty.call @, facultyId, facultyDesc, (handleError, handleResult) =>
+                                                partialCallback handleError, handleResult
+                                        facultyHandlingFuncs[facultyId] = curFacultyHandlingFunc
+                                async.series facultyHandlingFuncs, (handleSeriesError, handleSeriesResult) =>
+                                    if handleSeriesError?
+                                        @release 'faculties', poolManager, queueManager, (releaseError2, releaseResult2) =>
+                                            if releaseError2?
+                                                callback releaseError2, null
+                                            else
+                                                callback handleSeriesError, null
                                     else
-                                        callback null, handleSeriesResult
+                                        @release 'faculties', poolManager, queueManager, (releaseError3, releaseResult3) =>
+                                            if releaseError3?
+                                                callback releaseError3, null
+                                            else
+                                                callback null, handleSeriesResult
 
     constructor: (envVal) ->
         @faculty = new FacultyModel envVal

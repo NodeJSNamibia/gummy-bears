@@ -1,5 +1,6 @@
 'use strict'
 
+AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
 ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
 validator            = require('validator')
@@ -226,6 +227,18 @@ exports.FacultyModel = class FacultyModel
             emptyWordError = new Error emptyWordErrorStr
             callback emptyWordError, null
 
+    _checkAuthorization = (username, mthName, callback) ->
+        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
+            if checkError?
+                callback checkError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                    if findTechnicalUserError?
+                        callback findTechnicalUserError, null
+                    else
+                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
+                            callback authorizationError, authorizationResult
+
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
@@ -264,6 +277,10 @@ exports.FacultyModel = class FacultyModel
                                     callback saveError, saveResult
 
     constructor: (@appEnv) ->
+
+    checkAuthorization: (username, mthName, callback) =>
+        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+            callback authorizationError, authorizationResult
 
     insertFaculty: (facultyId, facultyData, callback) =>
         _insertFaculty.call @, facultyId, facultyData, (insertError, insertResult) =>
