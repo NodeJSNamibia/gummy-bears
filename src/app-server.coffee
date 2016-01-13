@@ -56,7 +56,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         app.use(bodyParser.urlencoded({extended: false}))
         app.use(bodyParser.json())
         app.use(methodOverride())
-        # connect session data to express
+        app.use session, owSessionOptions
 
         # define folder for static resources and how long they can be cached
 
