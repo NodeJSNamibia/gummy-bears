@@ -9,7 +9,7 @@ AbstractController = require('./abstract-controller').AbstractController
 exports.StudentsController = class StudentsController extends AbstractController
 
     _authenticate = (authenticationData, poolManager, queueManager, callback) ->
-        @student.authenticate authenticationData, poolManager, queueManager, (authenticationError, authenticationResult) =>
+        @student.authenticate authenticationData, (authenticationError, authenticationResult) =>
             @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
