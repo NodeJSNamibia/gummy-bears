@@ -213,15 +213,30 @@ exports.StudentModel = class StudentModel
                         callback urlError, null
                     else
                         DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
-                            callback findError, findResult
+                            if findError?
+                                callback findError, null
+                            else
+                                studentRes = {}
+                                studentRes[entryKey] = entryValue for entryKey, entryValue of findResult when entryKey isnt 'password'
+                                callback null, studentRes
 
+    # should be careful not to expose student password
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
                 callback urlError, null
             else
                 DataManager.getDBManagerInstance(dbURL).findAllStudents (findAllError, allStudents) =>
-                    callback findAllError, allStudents
+                    if findAllError?
+                        callback findAllError, null
+                    else
+                        filteredStudentCol = []
+                        for curStudent in allStudents
+                            do (curStudent) =>
+                                studentCopy = {}
+                                studentCopy[entryKey] = entryValue for entryKey, entryValue of curStudent when entryKey isnt 'password'
+                                filteredStudentCol.push studentCopy
+                        callback null, filteredStudentCol
 
     constructor: (@appEnv) ->
 
