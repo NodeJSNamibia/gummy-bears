@@ -131,6 +131,10 @@ exports.DataManager = class DataManager
             _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, faculty) =>
                 callback facultyNameError, faculty
 
+        findTechnicalUser: (username, callback) =>
+            _findDocument.call @, 'technical-user', username, (findTechnicalUserError, technicalUserDoc) =>
+                callback findTechnicalUserError, technicalUserDoc
+
         insertFaculty: (facultyId, facultyData, callback) =>
             _insertDocument.call @, 'faculty', facultyId, facultyData, (insertFacultyError, insertFacultyResult) =>
                 callback insertFacultyError, insertFacultyResult
