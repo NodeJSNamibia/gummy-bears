@@ -1,6 +1,8 @@
 'use strict'
 
-# This class represents a students controller. It handles all requests related to students
+# This class represents a students controller.
+# It handles all requests related to students
+
 async              = require 'async'
 StudentModel       = require('../models/student').StudentModel
 StudentInfoLoader  = require('../util/student-info-loader').StudentInfoLoader
@@ -111,8 +113,8 @@ exports.StudentsController = class StudentsController extends AbstractController
     constructor: (envVal) ->
         @student = new StudentModel envVal
 
-    insertAllStudents: (poolManager, queueManager, callback) =>
-        _insertAllStudents.call @, poolManager, queueManager, (insertAllError, insertAllResult) =>
+    insertAllStudents: (username, poolManager, queueManager, callback) =>
+        _insertAllStudents.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>
             callback insertAllError, insertAllResult
 
     createPassword: (studentNumber, passwordData, poolManager, queueManager, callback) =>

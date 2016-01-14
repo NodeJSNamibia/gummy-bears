@@ -4,7 +4,7 @@ exports.AuthorizationManager = class AuthorizationManager
 
     _amInstance = undefined
 
-    @getAuthorizationManagerInstance = ->
+    @getAuthorizationManagerInstance: ->
         _amInstance ?= new _LocalAuthorizationManager
 
     class _LocalAuthorizationManager
