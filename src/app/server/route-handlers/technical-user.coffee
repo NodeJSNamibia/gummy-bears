@@ -9,7 +9,7 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
     class _LocalTechnicalUserRequestHandler
 
         _authenticate = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'technical-users', (controllerInstanceError, controllerInstance) =>
+            poolManager.acquire 'technicalUsers', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
@@ -26,7 +26,7 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
                             response.json 200, authenticationResult
 
         _getTechnicalUser = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'tehnical-users', (controllerInstanceError, controllerInstance) =>
+            poolManager.acquire 'tehnicalUsers', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
