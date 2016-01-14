@@ -11,7 +11,7 @@ exports.TechnicalUsersController = class TechnicalUsersController extends Abstra
 
     _authenticate = (authenticationData, poolManager, queueManager, callback) ->
         @technicalUser.authenticate authenticationData, (authenticationError, authenticationResult) =>
-            @release 'technical-users', poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'technicalUsers', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else
@@ -19,7 +19,7 @@ exports.TechnicalUsersController = class TechnicalUsersController extends Abstra
 
     _getTechnicalUser = (username, poolManager, queueManager, callback) ->
         @technicalUser.findOne username, (findError, technicalUserDetails) =>
-            @release 'technical-users', poolManager, queueManager, (releaseError, releaseResult) =>
+            @release 'technicalUsers', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
                 else

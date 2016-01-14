@@ -16,7 +16,7 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
                     authenticationRequestObject =
                         methodName: 'authenticate'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'tecchnical-users', authenticationRequestObject
+                    queueManager.enqueueRequest 'tecchnicalUsers', authenticationRequestObject
                 else
                     controllerInstance.authenticate request.body, poolManager, queueManager, (authenticationError, authenticationResult) =>
                         if authenticationError?
@@ -33,7 +33,7 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
                     getTechnicalUserRequestObject =
                         methodName: 'getTechnicalUser'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'technical-users', getTechnicalUserRequestObject
+                    queueManager.enqueueRequest 'technicalUsers', getTechnicalUserRequestObject
                 else
                     controllerInstance.getTechnicalUser request.params.id, poolManager, queueManager, (getTechnicalUserRequestError, technicalUserDetails) =>
                         if getTechnicalUserRequest?
