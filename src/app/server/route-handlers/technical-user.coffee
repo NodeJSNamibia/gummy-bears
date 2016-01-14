@@ -41,6 +41,11 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
                         else
                             response.json 200, technicalUserDetails
 
+        _logOut = (request, response) ->
+            while request.session.hasOwnProperty 'user'
+                delete request.session.user
+            response.redirect '/'
+
         constructor: ->
 
         authenticate: (queueManager, poolManager, request, response) =>
@@ -48,3 +53,6 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
 
         getTechnicalUser: (queueManager, poolManager,  request, response) =>
             _getTechnicalUser.call @, queueManager, poolManager, request, response
+
+        logOut: (request, response) =>
+            _logOut.call @, request, response
