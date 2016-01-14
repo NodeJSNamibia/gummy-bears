@@ -105,6 +105,11 @@ exports.StudentRequestHandler = class StudentRequestHandler
                         else
                             response.json courseUpdateResult
 
+        _logOut = (request, response) ->
+            while request.session.hasOwnProperty 'student'
+                delete request.session.student
+            response.redirect '/'
+
         constructor: ->
 
         insertAllStudents: (queueManager, poolManager, request, response) =>
@@ -124,3 +129,6 @@ exports.StudentRequestHandler = class StudentRequestHandler
 
         getStudent: (queueManager, poolManager,  request, response) =>
             _getStudent.call @, queueManager, poolManager, request, response
+
+        logOut: (request, response) =>
+            _logOut.call @, request, response

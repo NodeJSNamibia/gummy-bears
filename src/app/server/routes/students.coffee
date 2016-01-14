@@ -30,3 +30,7 @@ module.exports = (app, poolManager, queueManager) ->
     # get a specific student with her student number as an id
     app.route('/api/students/:id').get (request, response) ->
         studentRequestHandler.getStudent queueManager, poolManager, request, response
+
+    # log out student
+    app.route('/api/students/logout').get (request, response) ->
+        studentRequestHandler.logOut request, response
