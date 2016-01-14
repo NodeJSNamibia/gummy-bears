@@ -10,7 +10,7 @@ async                = require 'async'
 exports.StudentModel = class StudentModel
 
     _checkAndSanitizeStudentNumber = (studentNumber, callback) ->
-        if not validator.isNumeric(studentNumber)
+        if validator.isNull(studentNumber) or not validator.isNumeric(studentNumber)
             invalidStudentNumberError = new Error "Invalid Student Number"
             callback invalidStudentNumberError, null
         else
@@ -174,8 +174,7 @@ exports.StudentModel = class StudentModel
                     if urlError?
                         callback urlError, null
                     else
-                        dataManager = DataManager.getDBManagerInstance dbURL
-                        dataManager.insertStudent studentInfo, (saveError, saveResult) =>
+                        DataManager.getDBManagerInstance(dbURL).insertStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
 
     _checkAuthorization = (username, mthName, callback) ->

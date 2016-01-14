@@ -50,7 +50,7 @@ exports.StudentsController = class StudentsController extends AbstractController
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to insert students."
                 callback unauthorizedInsertionError, null
             else
-                StudentInfoLoader.getStudentInfoLoader().loadStudents (loadError, allStudents) =>
+                StudentInfoLoader.getInfoLoader().loadStudents (loadError, allStudents) =>
                     if loadError?
                         @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
@@ -70,7 +70,7 @@ exports.StudentsController = class StudentsController extends AbstractController
                                     if releaseError?
                                         callback releaseError, null
                                     else
-                                        callback insertError, null
+                                        callback insertAllError, null
                             else
                                 @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                                     if releaseError?

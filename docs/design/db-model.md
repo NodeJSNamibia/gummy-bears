@@ -145,9 +145,8 @@ A event organized during the orientation week can be represented as follows:
 {
     "id": "evt01",
     "description": "event description",
-    "date": "12/12/2015",
-    "start": "11:00",
-    "ends": "13:00",
+    "start": "2015-12-12 11:00",
+    "end": "2015-12-12 13:00",
     "location": "location3",
     "faculty": "fci",
     "organizer": {

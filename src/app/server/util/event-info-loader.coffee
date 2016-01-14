@@ -2,19 +2,19 @@
 
 xlsxj = require 'xlsx-to-json'
 
-exports.StudentInfoLoader = class StudentInfoLoader
+exports.EventInfoLoader = class EventInfoLoader
 
     _loaderInstance = undefined
 
     @getInfoLoader = ->
-        _loaderInstance ?= new _LocalStudentInfoLoader
+        _loaderInstance ?= new _LocalEventInfoLoader
 
-    class _LocalStudentInfoLoader
+    class _LocalEventInfoLoader
         constructor: ->
 
-        loadStudents: (callback) =>
+        loadEvents: (callback) =>
             convConfig =
-                input: __dirname + '/../../../opt/students.xls'
+                input: __dirname + '/../../../opt/events.xls'
                 output: null
                 sheet: "Sheet 1"
             xlsxj convConfig, callback

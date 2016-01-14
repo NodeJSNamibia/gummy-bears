@@ -118,7 +118,7 @@ exports.FacultiesController = class FacultiesController extends AbstractControll
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to insert academic structure."
                 callback unauthorizedInsertionError, null
             else
-                AcademicStructureLoader.getAcademicStructureLoader().loadStructure (loadError, academicStructure) =>
+                AcademicStructureLoader.getInfoLoader().loadStructure (loadError, academicStructure) =>
                     if loadError?
                         @release 'faculties', poolManager, queueManager, (releaseError, releaseResult) =>
                             if releaseError?
