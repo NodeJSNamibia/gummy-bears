@@ -147,6 +147,10 @@ exports.DataManager = class DataManager
             _insertDocument.call @, 'student', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
                 callback insertStudentError, insertStudentResult
 
+        insertEvent: (eventID, eventData, callback) =>
+            _insertDocument.call @, 'event', eventID, eventData, (insertEventError, insertEventResult) =>
+                callback insertEventError, insertEventResult
+
         updateStudent: (studentNumber, studentData, callback) =>
             _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
                     callback updateStudentError, updateStudentResult
