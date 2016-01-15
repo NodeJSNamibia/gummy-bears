@@ -35,16 +35,44 @@ exports.EventModel = class EventModel
             callback null, validator.trim(eventID)
 
     _checkAndSanitizeEventDescription = (eventDesc, callback) ->
-        callback null, null
+        descriptionComponentError = undefined
+        descriptionComponents = eventDesc.split " "
+        validDescriptionComponents = []
+        for descriptionComponentItem in descriptionComponents
+            do (descriptionComponentItem) =>
+                if validator.isNull(descriptionComponentItem) or not validator.isAlpha(descriptionComponentItem)
+                    if not descriptionComponentError?
+                        descriptionComponentError = new Error "Error in Event Description"
+                else
+                    validDescriptionComponents.push validator.trim(descriptionComponentItem)
+        if descriptionComponentError?
+            callback descriptionComponentError, null
+        else if validDescriptionComponents.length > 0
+            callback null, validDescriptionComponents.join(' ')
+        else
+            emptyDescriptionError = new Error "Empty Event Description"
+            callback emptyDescriptionError, null
 
     _checkAndSanitizeEventStartDate = (eventStartDate, callback) ->
-        callback null, null
+        if validator.isNull(eventStartDate) or not validator.isDate(eventStartDate)
+            invalidEventStartDateError = new Error "Invalid event start date"
+            callback invalidEventStartDateError, null
+        else
+            callback null, validator.trim(eventStartDate)
 
     _checkAndSanitizeEventEndDate = (eventEndDate, callback) ->
-        callback null, null
+        if validator.isNull(eventEndDate) or not validator.isDate(eventEndDate)
+            invalidEventEndDateError = new Error "Invalid event end date"
+            callback invalidEventEndDateError, null
+        else
+            callback null, validator.trim(eventEndDate)
 
     _checkAndSanitizeLocation = (eventLocation, callback) ->
-        callback null, null
+        if validator.isNull(eventLocation) or not validator.isAlphanumeric(eventLocation)
+            invalidLocationCodeError = new Error "Invalid Event Location"
+            callbac invalidLocationCodeError, null
+        else
+            callbac null, validator.trim(eventLocation)
 
     _checkAndSanitizeFacultyID = (facultyId, callback) ->
         if validator.isNull(facultyId) or not validator.isAlpha(facultyId)
@@ -54,7 +82,52 @@ exports.EventModel = class EventModel
             callback null, validator.trim(facultyId)
 
     _checkAndSanitizeEventOrganizer = (eventOrganizer, callback) ->
-        callback null, null
+        organizerOptions =
+            firstName: (firstNamePartialCallback) =>
+                _checkAndSanitizeFirstName.call @, eventOrganizer.firstName, (firstNameError, validFirstName) =>
+                    firstNamePartialCallback firstNameError, validFirstName
+            lastName: (lastNamePartialCallback) =>
+                _checkAndSanitizeLastName.call @, eventOrganizer.lastName, (lastNameError, validLastName) =>
+                    lastNamePartialCallback lastNameError, validLastName
+            title: (titlePartialCallback) =>
+                _checkAndSanitizeTitle.call @, eventOrganizer.title, (titleError, validTitle) =>
+                    titlePartialCallback titleError, validTitle
+            emailAddress: (emailAddressPartialCallback) =>
+                _checkAndSanitizeEmailAddress.call @, eventOrganizer.emailAddress, (emailAddressError, validEmailAddress) =>
+                    emailAddressPartialCallback emailAddressError, validEmailAddress
+        async.parallel organizerOptions, (organizerError, validOrganizer) =>
+            callback organizerError, validOrganizer
+
+    _checkAndSanitizeFirstOrLastName = (name, nameErrorStr, callback) ->
+        if validator.isNull(name) or not validator.isAlpha(name)
+            invalidNameError = new Error nameErrorStr
+            callback invalidNameError, null
+        else
+            validName = validator.trim(name)
+            capitalizedValidName = validName[0].toUpperCase() + validName[1..-1].toLowerCase()
+            callback null, capitalizedValidName
+
+    _checkAndSanitizeFirstName = (firstName, callback) ->
+        _checkAndSanitizeFirstOrLastName.call @, firstName, "Invalid First Name", (firstNameError, validFirstName) =>
+            callback firstNameError, validFirstName
+
+    _checkAndSanitizeLastName = (lastName, callback) ->
+        _checkAndSanitizeFirstOrLastName.call @, lastName, "Invalid Last Name", (lastNameError, validLastName) =>
+            callback lastNameError, validLastName
+
+    _checkAndSanitizeTitle = (titleValue, callback) ->
+        if validator.isNull(titleValue) or not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms", "Dr", "Prof"]))
+            invalidTitleError = new Error "Invalid Organizer Title"
+            callback invalidTitleError, null
+        else
+            callback null, validator.trim(titleValue)
+
+    _checkAndSanitizeEmailAddress = (emailAddress, callback) ->
+        if validator.isNull(emailAddress) or not validator.isEmail(emailAddress)
+            invalidEmailAddressError = new Error "Invalid Organizer Email Address"
+            callback invalidEmailAddressError, null
+        else
+            callback null, validator.trim(emailAddress)
 
     _checkAndSanitizeForInsertion = (eventObj, callback) ->
         checkOptions =
