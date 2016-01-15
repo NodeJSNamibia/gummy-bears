@@ -81,43 +81,31 @@ exports.StudentModel = class StudentModel
             callback null, validator.trim(username)
 
     _checkAndSanitizeForInsertion = (studentData, callback) ->
-        checkOptions = {}
-        # add student number for validation
-        checkOptions["studentNumber"] = (partialCallback) =>
-            _checkAndSanitizeStudentNumber.call @, studentData.studentNumber, (studentNumberError, studentNumber) =>
-                partialCallback studentNumberError, studentNumber
-        # add the student first name for validation
-        checkOptions["firstName"] = (partialCallback) =>
-            _checkAndSanitizeString.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, firstName) =>
-                partialCallback firstNameError, firstName
-        # add the student last name for validation
-        checkOptions["lastName"] = (partialCallback) =>
-            _checkAndSanitizeString.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, lastName) =>
-                partialCallback lastNameError, lastName
-        # add the student title for validation
-        checkOptions["title"] = (partialCallback) =>
-            _checkAndSanitizeTitle.call @, studentData.title, (titleError, title) =>
-                partialCallback titleError, title
-        # add the student nationality for validation
-        checkOptions["nationality"] = (partialCallback) =>
-            _checkAndSanitizeString.call @, studentData.nationality, "Invalid Nationality", (nationalityError, nationality) =>
-                partialCallback nationalityError, nationality
-        # add the student year of study for validation
-        checkOptions["yearOfStudy"] = (partialCallback) =>
-            _checkAndSanitizeYearOfStudy.call @, studentData.yearOfStudy, (yearOfStudyError, yearOfStudy) =>
-                callback yearOfStudyError, yearOfStudy
-        # add the student mode of study for validation
-        checkOptions["modeOfStudy"] = (partialCallback) =>
-            _checkAndSanitizeModeOfStudy.call @, studentData.modeOfStudy, (modeOfStudyError, modeOfStudy) =>
-                partialCallback modeOfStudyError, modeOfStudy
-        # add the student programme for validation
-        checkOptions["programme"] = (partialCallback) =>
-            _checkAndSanitizeString.call @, studentData.programme, "Invalid Programme Code", (programmeError, programme) =>
-                partialCallback programmeError, Programme
-        # add the student email addresses for validation
-        checkOptions["emailAddresses"] = (partialCallback) =>
-            _checkAndSanitizeEmailAddresses.call @, [studentData.emailAddress1, studentData.emailAddress2], (emailError, emailAddresses) =>
-                partialCallback emailError, emailAddresses
+        checkOptions =
+            studentNumber: (studentNumberPartialCallback) =>
+                _checkAndSanitizeStudentNumber.call @, studentData.studentNumber, (studentNumberError, validStudentNumber) =>
+                    studentNumberPartialCallback studentNumberError, validStudentNumber
+            firstName: (firstNamePartialCallback) =>
+                _checkAndSanitizeString.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, validFirstName) =>
+                    firstNamePartialCallback firstNameError, validFirstName
+            lastName: (lastNamePartialCallback) =>
+                _checkAndSanitizeString.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, validLastName) =>
+                    lastNamePartialCallback lastNameError, validLastName
+            nationality: (nationalityPartialCallback) =>
+                _checkAndSanitizeString.call @, studentData.nationality, "Invalid Nationality", (nationalityError, validNationality) =>
+                    nationalityPartialCallback nationalityError, validNationality
+            yearOfStudy: (yearOfStudyPartialCallback) =>
+                _checkAndSanitizeYearOfStudy.call @, studentData.yearOfStudy, (yearOfStudyError, validYearOfStudy) =>
+                    yearOfStudyPartialCallback yearOfStudyError, validYearOfStudy
+            modeOfStudy: (modeOfStudyPartialCallback) =>
+                _checkAndSanitizeModeOfStudy.call @, studentData.modeOfStudy, (modeOfStudyError, validModeOfStudy) =>
+                    partialCallback modeOfStudyError, validModeOfStudy
+            programme: (programmePartialCallback) =>
+                _checkAndSanitizeString.call @, studentData.programme, "Invalid Programme Code", (programmeError, validProgramme) =>
+                    programmePartialCallback programmeError, validProgramme
+            emailAddresses: (emailAddressPartialCallback) =>
+                _checkAndSanitizeEmailAddresses.call @, [studentData.emailAddress1, studentData.emailAddress2], (emailError, validEmailAddresses) =>
+                    emailAddressPartialCallback emailError, validEmailAddresses
         async.parallel checkOptions, (checkError, studentInfo) =>
             callback checkError, studentInfo
 
