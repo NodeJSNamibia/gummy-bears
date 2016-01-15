@@ -58,6 +58,17 @@ exports.TechnicalUserModel = class TechnicalUserModel
                                 technicalUserResult[entryKey] = entryValue for entryKey, entryValue of technicalUserDoc when entryKey isnt 'password'
                                 callback null, technicalUserResult
 
+    _findTechnicalUserProfile = (username, callback) ->
+        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
+            if checkError?
+                callback checkError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                    if findTechnicalUserError?
+                        callback findTechnicalUserError, null
+                    else
+                        callback null, technicalUserDoc.profile
+
     constructor: (@appEnv) ->
 
     authenticate: (authenticationData, callback) =>
@@ -67,3 +78,7 @@ exports.TechnicalUserModel = class TechnicalUserModel
     findOne: (username, callback) =>
         _findOne.call @, username, (findError, technicalUserDetails) =>
             callback findError, technicalUserDetails
+
+    findTechnicalUserProfile: (username, callback) =>
+        _findTechnicalUserProfile.call @, username, (technicalUserProfileError, technicalUserProfile) =>
+            callback technicalUserProfileError, technicalUserProfile

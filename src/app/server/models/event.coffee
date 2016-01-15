@@ -3,6 +3,9 @@
 AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
 ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
+FacultyProxy         = require('../proxies/faculty').FacultyProxy
+TechnicalUserProxy   = require('../proxies/technical-user').TechnicalUserProxy
+StudentProxy         = require('../proxies/student').StudentProxy
 validator            = require('validator')
 async                = require 'async'
 moment               = require 'moment'
@@ -10,16 +13,14 @@ moment               = require 'moment'
 exports.EventModel = class EventModel
 
     _checkAuthorization = (username, mthName, callback) ->
-        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
-            if checkError?
-                callback checkError, null
+        unless @technicalUserProxy?
+            @technicalUserProxy = new TechnicalUserProxy @appEnv
+        @technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
+            if technicalUserProfileError?
+                callback technicalUserProfileError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
-                    if findTechnicalUserError?
-                        callback findTechnicalUserError, null
-                    else
-                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
-                            callback authorizationError, authorizationResult
+                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                    callback authorizationError, authorizationResult
 
     _checkAndSanitizeUsername = (username, callback) ->
         if validator.isNull(username) or not validator.isAlphanumeric(username)
@@ -174,24 +175,21 @@ exports.EventModel = class EventModel
             _findAllTimeFilteredForAllFaculties.call @, (findAllError, eventsForAllFaculties) =>
                 callback findAllError, eventsForAllFaculties
         else
-            _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError., validStudentNumber) =>
-                if studentNumberError?
-                    callback studentNumberError, null
+            unless @studentProxy?
+                @studentProxy = new StudentProxy @appEnv
+            @studentProxy.findProgramme studentNumber, (programmeError, enrolledInProgramme) =>
+                if programmeError?
+                    callback programmeError, null
                 else
-                    ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                        if urlError?
-                            callback urlError, null
+                    # get the faculty id from a faculty proxy
+                    unless @facultyProxy?
+                        @facultyProxy = new FacultyProxy @appEnv
+                    @facultyProxy.getID enrolledInProgramme, (facultyIDError, facultyID) =>
+                        if facultyIDError?
+                            callback facultyIDError, null
                         else
-                            DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
-                                if findError?
-                                    callback findError, null
-                                else
-                                    DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode findResult.programme, (facultyNameError, facultyID) =>
-                                        if facultyNameError?
-                                            callback facultyNameError, null
-                                        else
-                                            _findAllTimeFilteredForFaculty.call @, facultyID, (eventsError, facultyTimeFilteredEvents) =>
-                                                callback eventsError, facultyTimeFilteredEvents
+                            _findAllTimeFilteredForFaculty.call @, facultyID, (eventsError, facultyTimeFilteredEvents) =>
+                                callback eventsError, facultyTimeFilteredEvents
 
     _findAllTimeFilteredForAllFaculties = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>

@@ -272,9 +272,16 @@ exports.FacultyModel = class FacultyModel
                             if urlError?
                                 callback urlError, null
                             else
-                                dataManager = DataManager.getDBManagerInstance dbURL
-                                dataManager.insertFaculty validFacultyID, validFacultyData, (saveError, saveResult) =>
+                                DataManager.getDBManagerInstance(dbURL).insertFaculty validFacultyID, validFacultyData, (saveError, saveResult) =>
                                     callback saveError, saveResult
+
+    _getID = (enrolledInProgramme, callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode enrolledInProgramme, validFacultyData, (facultyIDError, facultyID) =>
+                    callback facultyIDError, facultyID
 
     constructor: (@appEnv) ->
 
@@ -293,3 +300,7 @@ exports.FacultyModel = class FacultyModel
     findOne: (facultyId, callback) =>
         _findOne.call @, facultyId, (findOneError, facultyDetails) =>
             callback findOneError, facultyDetails
+
+    getID: (enrolledInProgramme, callback) =>
+        _getID.call @, enrolledInProgramme, (facultyIdError, facultyID) =>
+            callback facultyIDError, facultyID

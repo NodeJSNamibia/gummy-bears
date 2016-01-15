@@ -227,7 +227,6 @@ exports.StudentModel = class StudentModel
                                 studentRes[entryKey] = entryValue for entryKey, entryValue of findResult when entryKey isnt 'password'
                                 callback null, studentRes
 
-    # should be careful not to expose student password
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
@@ -244,6 +243,21 @@ exports.StudentModel = class StudentModel
                                 studentCopy[entryKey] = entryValue for entryKey, entryValue of curStudent when entryKey isnt 'password'
                                 filteredStudentCol.push studentCopy
                         callback null, filteredStudentCol
+
+    _findProgramme = (studentNumber, callback) ->
+        _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                    if urlError?
+                        callback urlError, null
+                    else
+                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
+                            if findError?
+                                callback findError, null
+                            else
+                                callback null, findResult.programme
 
     constructor: (@appEnv) ->
 
@@ -274,3 +288,7 @@ exports.StudentModel = class StudentModel
     findAll: (callback) =>
         _findAll.call @, (findAllError, allStudents) =>
             callback findAllError, allStudents
+
+    findProgramme: (studentNumber, callback) =>
+        _findProgramme.call @, studentNumber, (programmeError, enrolledInProgramme) =>
+            callback programmeError, enrolledInProgramme
