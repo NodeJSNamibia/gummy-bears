@@ -8,6 +8,22 @@ exports.EventRequestHandler = class EventRequestHandler
 
     class _LocalEventRequestHandler
 
+        _getAllEvents = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'events', (controllerInstanceError, controllerInstance) =>
+                if controllerInstanceError?
+                    response.json 500, {error: controllerInstanceError.message}
+                else if not controllerInstance?
+                    getAllEventsRequestObject =
+                        methodName: 'getAllEvents'
+                        arguments: [queueManager, poolManager, request, response]
+                    queueManager.enqueueRequest 'events', getAllEventsRequestObject
+                else
+                    controllerInstance.getAllEvents poolManager, queueManager, (allEventError, allEvents) =>
+                        if allEventError?
+                            response.json 500, {error: allEventError.message}
+                        else
+                            response.json 200, allEvents
+
         _getTimeFilteredEvents = (queueManager, poolManager, request, response) ->
             poolManager.acquire 'events', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
@@ -47,3 +63,6 @@ exports.EventRequestHandler = class EventRequestHandler
 
         getTimeFilteredEvents: (queueManager, poolManager, request, response) =>
             _getTimeFilteredEvents.call @, queueManager, poolManager, request, response
+
+        getAllEvents: (queueManager, poolManager, request, response) =>
+            _getAllEvents.call @, queueManager, poolManager, request, response

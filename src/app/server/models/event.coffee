@@ -73,7 +73,7 @@ exports.EventModel = class EventModel
             invalidLocationCodeError = new Error "Invalid Event Location"
             callbac invalidLocationCodeError, null
         else
-            callbac null, validator.trim(eventLocation)
+            callback null, validator.trim(eventLocation)
 
     _checkAndSanitizeFacultyID = (facultyId, callback) ->
         if validator.isNull(facultyId) or not validator.isAlpha(facultyId)
@@ -228,6 +228,14 @@ exports.EventModel = class EventModel
                     eventsToCome.push curEVent
         callback null, eventsToCome
 
+    _findAll = (callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findAllEvents (allEventsError, allEvents) =>
+                    callback allEventsError, allEvents
+
     constructor: (@appEnv) ->
 
     checkAuthorization: (username, mthName, callback) =>
@@ -237,6 +245,10 @@ exports.EventModel = class EventModel
     insertEvent: (eventID, eventObj, callback) =>
         _insertEvent.call @, eventID, eventObj, (insertError, insertResult) =>
             callback insertError, insertResult
+
+    findAll: (callback) =>
+        _findAll.call @, (findError, allEvents) =>
+            callback findError, allEvents
 
     findAllTimeFiltered: (studentNumber, callback) =>
         _findAllTimeFiltered.call @, studentNumber, (findAllError, timeFilteredEvents) =>
