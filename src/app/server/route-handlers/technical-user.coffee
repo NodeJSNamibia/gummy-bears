@@ -9,14 +9,14 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
     class _LocalTechnicalUserRequestHandler
 
         _authenticate = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'technical-users', (controllerInstanceError, controllerInstance) =>
+            poolManager.acquire 'technicalUsers', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
                     authenticationRequestObject =
                         methodName: 'authenticate'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'tecchnical-users', authenticationRequestObject
+                    queueManager.enqueueRequest 'tecchnicalUsers', authenticationRequestObject
                 else
                     controllerInstance.authenticate request.body, poolManager, queueManager, (authenticationError, authenticationResult) =>
                         if authenticationError?
@@ -26,14 +26,14 @@ exports.TechnicalUserRequestHandler = class TechnicalUserRequestHandler
                             response.json 200, authenticationResult
 
         _getTechnicalUser = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'tehnical-users', (controllerInstanceError, controllerInstance) =>
+            poolManager.acquire 'tehnicalUsers', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
                     getTechnicalUserRequestObject =
                         methodName: 'getTechnicalUser'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'technical-users', getTechnicalUserRequestObject
+                    queueManager.enqueueRequest 'technicalUsers', getTechnicalUserRequestObject
                 else
                     controllerInstance.getTechnicalUser request.params.id, poolManager, queueManager, (getTechnicalUserRequestError, technicalUserDetails) =>
                         if getTechnicalUserRequest?

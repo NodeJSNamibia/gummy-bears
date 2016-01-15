@@ -4,7 +4,7 @@ exports.AuthorizationManager = class AuthorizationManager
 
     _amInstance = undefined
 
-    @getAuthorizationManagerInstance = ->
+    @getAuthorizationManagerInstance: ->
         _amInstance ?= new _LocalAuthorizationManager
 
     class _LocalAuthorizationManager
@@ -21,7 +21,7 @@ exports.AuthorizationManager = class AuthorizationManager
 
         constructor: ->
             @authorizations =
-                admin: ['insertAllStudents', 'insertAcademicStructure']
+                admin: ['insertAllStudents', 'insertAcademicStructure', 'insertAllEvents']
 
         checkAuthorization: (userProfile, mthName, callback) =>
             _checkAuthorization.call @ userProfile, mthName, (authorizationError, authorizationResult) =>

@@ -16,7 +16,7 @@ exports.LoginRecordRequestHandler = class LoginRecordRequestHandler
                     saveLRRequestObject =
                         methodName: 'save'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'students', updateCoursesRequestObject
+                    queueManager.enqueueRequest 'loginRecords', updateCoursesRequestObject
                 else
                     controllerInstance.save request.params.id, poolManager, (saveLoginRecordError, saveLoginRecordResult) =>
                         callback saveLoginRecordError, saveLoginRecordResult

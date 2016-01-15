@@ -59,6 +59,12 @@ exports.PoolManager = class PoolManager
                 faculties:
                     available: []
                     count: 0
+                technicalUsers:
+                    available: []
+                    count: 0
+                events:
+                    available: []
+                    count: 0
             return pool
 
         setExecutionEnvironment: (envVal) =>

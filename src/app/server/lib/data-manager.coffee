@@ -27,6 +27,14 @@ exports.DataManager = class DataManager
                             callback null, allStudents
 
         _findAllFaculties = (callback) ->
+            _findRawFacultyCollection.call @, (rawFacultyError, facultyCol) =>
+                if rawFacultyError?
+                    callback rawFacultyError, null
+                else
+                    allFaculties = (curFaculty.value for curFaculty in facultyCol)
+                    callback null, allFaculties
+
+        _findRawFacultyCollection = (callback) ->
             _getDataBucket.call @, 'faculty', (bucketError, bucket) =>
                 if bucketError?
                     callback bucketError, null
@@ -34,11 +42,7 @@ exports.DataManager = class DataManager
                     ViewQuery = Couchbase.ViewQuery
                     allFacultiesQuery = ViewQuery.from @facultyDesignDoc, @facultyView
                     bucket.query allFacultiesQuery, (multiFacultyError, facultyCol) =>
-                        if multiFacultyError?
-                            callback multiFacultyError, null
-                        else
-                            allFaculties = (curFaculty.value for curFaculty in facultyCol)
-                            callback null, allFaculties
+                        callback multiFacultyError, facultyCol
 
         _findDocument = (bucketName, docID, callback) ->
             _getDataBucket.call @, bucketName, (bucketError, bucket) =>
@@ -63,6 +67,32 @@ exports.DataManager = class DataManager
                                     result =
                                         facultyName: curFaculty.name
                                         programmeName: curProgramme.name
+                                    breakDeptLoop = true
+                                    break
+                            if breakDeptLoop
+                                breakFacLoop = true
+                                break
+                        if breakFacLoop = true
+                            break
+                    if not result?
+                        unknownProgrammeError = new Error "Programme #{programmeCode} does not belong to an existing faculty"
+                        callback unknownProgrammeError, null
+                    else
+                        callback null, result
+
+        _findFacultyIDByProgrammeCode = (programmeCode, callback) ->
+            _findRawFacultyCollection.call @, (allFacultiesError, rawFacultyCol) =>
+                if allFacultiesError?
+                    callback allFacultiesError, null
+                else
+                    result = undefined
+                    for curFaculty in allFaculties
+                        curDepartments = curFaculty.value.departments
+                        for curDepartment in curStudent
+                            curProgrammes = curDepartment.programmes
+                            for curProgramme in curProgrammes
+                                if curProgramme is programmeCode
+                                    result = curFaculty.key
                                     breakDeptLoop = true
                                     break
                             if breakDeptLoop
@@ -131,6 +161,10 @@ exports.DataManager = class DataManager
             _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, faculty) =>
                 callback facultyNameError, faculty
 
+        findFacultyIDByProgrammeCode: (programmeCode, callback) =>
+            _findFacultyIDByProgrammeCode.call @, programmeCode, (facultyIDError, facultyID) =>
+                callback facultyIDError, facultyID
+
         findTechnicalUser: (username, callback) =>
             _findDocument.call @, 'technical-user', username, (findTechnicalUserError, technicalUserDoc) =>
                 callback findTechnicalUserError, technicalUserDoc
@@ -146,6 +180,10 @@ exports.DataManager = class DataManager
         insertStudent: (studentData, callback) =>
             _insertDocument.call @, 'student', studentData.studentNumber, studentData, (insertStudentError, insertStudentResult) =>
                 callback insertStudentError, insertStudentResult
+
+        insertEvent: (eventID, eventData, callback) =>
+            _insertDocument.call @, 'event', eventID, eventData, (insertEventError, insertEventResult) =>
+                callback insertEventError, insertEventResult
 
         updateStudent: (studentNumber, studentData, callback) =>
             _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>

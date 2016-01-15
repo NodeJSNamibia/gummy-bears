@@ -3,7 +3,7 @@
 exports.AcademicStructureLoader = class AcademicStructureLoader
     _loaderInstance = undefined
 
-    @getAcademicStructureLoader = ->
+    @getInfoLoader = ->
         _loaderInstance ?= new _LocalAcademicStructureLoader
 
     class _LocalAcademicStructureLoader
