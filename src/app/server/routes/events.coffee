@@ -10,3 +10,7 @@ module.exports = (app, poolManager, queueManager) ->
     # load all events
     app.route('/api/events').post (request, response) ->
         eventRequestHandler.insertAllEvents queueManager, poolManager, request, response
+
+    # get the list of time filtered events
+    app.route('/api/events').get (request, response) ->
+        eventRequestHandler.getTimeFilteredEvents queueManager, poolManager, request, response

@@ -5,6 +5,7 @@ ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
 validator            = require('validator')
 async                = require 'async'
+moment               = require 'moment'
 
 exports.EventModel = class EventModel
 
@@ -168,6 +169,65 @@ exports.EventModel = class EventModel
                                 DataManager.getDBManagerInstance(dbURL).insertEvent validEventID, validEventObj, (saveError, saveResult) =>
                                     callback saveError, saveResult
 
+    _findAllTimeFiltered = (studentNumber, callback) =>
+        if not studentNumber?
+            _findAllTimeFilteredForAllFaculties.call @, (findAllError, eventsForAllFaculties) =>
+                callback findAllError, eventsForAllFaculties
+        else
+            _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError., validStudentNumber) =>
+                if studentNumberError?
+                    callback studentNumberError, null
+                else
+                    ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                        if urlError?
+                            callback urlError, null
+                        else
+                            DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
+                                if findError?
+                                    callback findError, null
+                                else
+                                    DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode findResult.programme, (facultyNameError, facultyID) =>
+                                        if facultyNameError?
+                                            callback facultyNameError, null
+                                        else
+                                            _findAllTimeFilteredForFaculty.call @, facultyID, (eventsError, facultyTimeFilteredEvents) =>
+                                                callback eventsError, facultyTimeFilteredEvents
+
+    _findAllTimeFilteredForAllFaculties = (callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findAllEvents (allEventsError, allEvents) =>
+                    if allEventsError?
+                        callback allEventsError, null
+                    else
+                        _filterByTime.call @, allEvents, (filterError, timeFilteredEvents) =>
+                            callback filterError, timeFilteredEvents
+
+    _findAllTimeFilteredForFaculty = (facultyID, callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findAllEvents (allEventsError, allEvents) =>
+                    if allEventsError?
+                        callback allEventsError, null
+                    else
+                        facultyEvents = (singleFacEvent for singleFacEvent in allEvents when singleFacEvent.faculty is facultyID)
+                        _filterByTime.call @, facultyEvents, (filterError, timeFilteredEvents) =>
+                            callback filterError, timeFilteredEvents
+
+    _filterByTime = (eventCol, callback) ->
+        eventsToCome = []
+        now = moment()
+        for curEVent in eventCol
+            do (curEVent) =>
+                curStartTime = moment(curEVent.start)
+                if not curStartTime.isBefore now
+                    eventsToCome.push curEVent
+        callback null, eventsToCome
+
     constructor: (@appEnv) ->
 
     checkAuthorization: (username, mthName, callback) =>
@@ -177,3 +237,7 @@ exports.EventModel = class EventModel
     insertEvent: (eventID, eventObj, callback) =>
         _insertEvent.call @, eventID, eventObj, (insertError, insertResult) =>
             callback insertError, insertResult
+
+    findAllTimeFiltered: (studentNumber, callback) =>
+        _findAllTimeFiltered.call @, studentNumber, (findAllError, timeFilteredEvents) =>
+            callback findAllError, timeFilteredEvents

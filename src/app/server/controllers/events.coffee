@@ -11,6 +11,14 @@ uuid               = require 'uuid4'
 
 exports.EventsController = class EventsController extends AbstractController
 
+    _getTimeFilteredEvents = (studentNumber, poolManager, queueManager, callback) ->
+        @event.findAllTimeFiltered studentNumber, (findError, timeFilteredEvents) =>
+            @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
+                if releaseError?
+                    callback releaseError, null
+                else
+                    callback findError, timeFilteredEvents
+
     _insertSingleEvent = (eventID, eventObj, callback) ->
         eventInfo =
             description: eventObj["Event Description"]
@@ -69,3 +77,7 @@ exports.EventsController = class EventsController extends AbstractController
     insertAllEvents: (username, poolManager, queueManager, callback) =>
         _insertAllEvents.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>
             callback insertAllError, insertAllResult
+
+    getTimeFilteredEvents: (studentNumber, poolManager, queueManager, callback) =>
+        _getTimeFilteredEvents.call @, studentNumber, poolManager, queueManager, (timeFilteredEventsError, timeFilteredEvents) =>
+            callback timeFilteredEventsError, timeFilteredEvents
