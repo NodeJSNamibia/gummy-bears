@@ -87,10 +87,10 @@ exports.StudentModel = class StudentModel
                     studentNumberPartialCallback studentNumberError, validStudentNumber
             firstName: (firstNamePartialCallback) =>
                 _checkAndSanitizeString.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, validFirstName) =>
-                    firstNamePartialCallback firstNameError, validFirstName
+                    firstNamePartialCallback firstNameError, validFirstName[0].toUpperCase() + validFirstName[1..-1].toLowerCase()
             lastName: (lastNamePartialCallback) =>
                 _checkAndSanitizeString.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, validLastName) =>
-                    lastNamePartialCallback lastNameError, validLastName
+                    lastNamePartialCallback lastNameError, validLastName[0].toUpperCase() + validLastName[1..-1].toLowerCase()
             nationality: (nationalityPartialCallback) =>
                 _checkAndSanitizeString.call @, studentData.nationality, "Invalid Nationality", (nationalityError, validNationality) =>
                     nationalityPartialCallback nationalityError, validNationality
