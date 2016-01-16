@@ -17,13 +17,6 @@ exports.EventModel = class EventModel
                 AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
                     callback authorizationError, authorizationResult
 
-    _checkAndSanitizeUsername = (username, callback) ->
-        if validator.isNull(username) or not validator.isAlphanumeric(username)
-            invalidUsernameError = new Error "Invalid Username"
-            callback invalidUsernameError, null
-        else
-            callback null, validator.trim(username)
-
     _checkAndSanitizeEventID = (eventID, callback) ->
         if validator.isNull(eventID) or not validator.isAlphanumeric(eventID)
             invalidEventIDError = new Error "Invalid Event ID"

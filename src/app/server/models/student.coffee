@@ -73,13 +73,6 @@ exports.StudentModel = class StudentModel
         else
             callback new Error(emailAddressErrorStrs.join(', ')), null
 
-    _checkAndSanitizeUsername = (username, callback) ->
-        if validator.isNull(username) or not validator.isAlphanumeric(username)
-            invalidUsernameError = new Error "Invalid Username"
-            callback invalidUsernameError, null
-        else
-            callback null, validator.trim(username)
-
     _checkAndSanitizeForInsertion = (studentData, callback) ->
         checkOptions =
             studentNumber: (studentNumberPartialCallback) =>
