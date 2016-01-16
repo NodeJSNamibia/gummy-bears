@@ -84,6 +84,20 @@ exports.CheckAndSanitizationHelper = class CheckAndSanitizationHelper
         else
             callback null, validator.trim(emailAddress)
 
+    _checkAndSanitizeNumber = (numberValue, errorStr, validator, callback) ->
+        if validator.isNull(studentNumber) or not validator.isNumeric(studentNumber)
+            invalidStudentNumberError = new Error errorStr
+            callback invalidStudentNumberError, null
+        else
+            callback null, validator.toInt(studentNumber)
+
+    _checkAndSanitizeString = (strValue, errorStr, validator,  callback) ->
+        if validator.isNull(strValue) or not validator.isAlpha(strValue)
+            invalidNameError = new Error errorStr
+            callback invalidNameError, null
+        else
+            callback null, validator.trim(strValue)
+
     constructor: ->
 
     checkAndSanitizeID: (idValue, nullIDErrorStr, errorStr, isAlphanumericType, validator, callback) =>
@@ -113,3 +127,11 @@ exports.CheckAndSanitizationHelper = class CheckAndSanitizationHelper
     checkAndSanitizeEmailAddress: (emailAddress, errorStr, validator, callback) =>
         _checkAndSanitizeEmailAddress.call @, emailAddress, errorStr, validator, (emailAddressError, validEmailAddress) =>
             callback emailAddressError, validEmailAddress
+
+    checkAndSanitizeNumber = (numberValue, errorStr, validator, callback) =>
+        _checkAndSanitizeNumber.call @, numberValue, errorStr, validator, (numberError, validNumber) =>
+            callback numberError, validNumber
+
+    checkAndSanitizeString: (strValue, errorStr, validator, callback) =>
+        _checkAndSanitizeString.call @, strValue, errorStr, validator, (stringError, validString) =>
+            callback stringError, validString

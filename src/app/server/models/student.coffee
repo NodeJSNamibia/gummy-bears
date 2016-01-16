@@ -1,49 +1,30 @@
 'use strict'
 
-AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager = require('../lib/config-manager').ConfigurationManager
-DataManager          = require('../lib/data-manager').DataManager
-PasswordHandler      = require('../util/password-handler').PasswordHandler
-validator            = require('validator')
-async                = require 'async'
+AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
+ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
+CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
+DataManager                = require('../lib/data-manager').DataManager
+PasswordHandler            = require('../util/password-handler').PasswordHandler
+validator                  = require('validator')
+async                      = require 'async'
 
 exports.StudentModel = class StudentModel
 
     _checkAndSanitizeStudentNumber = (studentNumber, callback) ->
-        if validator.isNull(studentNumber) or not validator.isNumeric(studentNumber)
-            invalidStudentNumberError = new Error "Invalid Student Number"
-            callback invalidStudentNumberError, null
-        else
-            callback null, validator.toInt(studentNumber)
-
-    # should change the programme check and sanitization
-    _checkAndSanitizeString = (strValue, errorMessage,  callback) ->
-        if not validator.isAlpha(strValue) or validator.isNull(strValue)
-            invalidNameError = new Error errorMessage
-            callback invalidNameError, null
-        else
-            callback null, validator.trim(strValue)
+        @sanitizationHelper.checkAndSanitizeNumber studentNumber, "Invalid Student Number", validator, (studentNumberError, validStudentNumber) =>
+            callback studentNumberError, validStudentNumber
 
     _checkAndSanitizeTitle = (titleValue, callback) ->
-        if validator.isNull(titleValue) or not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
-            invalidTitleError = new Error "Invalid Title"
-            callback invalidTitleError, null
-        else
-            callback null, validator.trim(titleValue)
+        @sanitizationHelper.checkAndSanitizeTitle titleValue, "Invalid Student Title", ["Mr", "Mrs", "Ms"], validator, (titleValueError, validTitleValue) =>
+            callback titleValueError, validTitleValue
 
     _checkAndSanitizeYearOfStudy = (yearOfStudy, callback) ->
-        if not (validator.isAlpha(yearOfStudy) and validator.isIn(yearOfStudy, ["first", "second", "third", "honours"]))
-            invalidYearOfStudyError = new Error "Invalid Year of study"
-            callback invalidYearOfStudyError, null
-        else
-            callback null, validator.trim(yearOfStudy)
+        @sanitizationHelper.checkAndSanitizeTitle yearOfStudy, "Invalid Year of Study", ["first", "second", "third", "honours"], validator, (yearOfStudyError, validYearOfStudy) =>
+            callback yearOfStudyError, validYearOfStudy
 
     _checkAndSanitizeModeOfStudy = (modeOfStudy, callback) ->
-        if not (validator.isAlpha(modeOfStudy) and validator.isIn(modeOfStudy, ["PM","FM"]))
-            invalidModeOfStudyError = new Error "Invalid Mode of study"
-            callback invalidModeOfStudyError, null
-        else
-            callback null, validator.trim(modeOfStudy)
+        @sanitizationHelper.checkAndSanitizeTitle modeOfStudy, "Invalid Mode of Study", ["PM","FM"], validator, (modeOfStudyError, validModeOfStudy) =>
+            callback modeOfStudyError, validModeOfStudy
 
     _checkAndSanitizeCourses = (courses, callback) ->
         courseCodeErrorStrs = []
@@ -79,13 +60,13 @@ exports.StudentModel = class StudentModel
                 _checkAndSanitizeStudentNumber.call @, studentData.studentNumber, (studentNumberError, validStudentNumber) =>
                     studentNumberPartialCallback studentNumberError, validStudentNumber
             firstName: (firstNamePartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, validFirstName) =>
-                    firstNamePartialCallback firstNameError, validFirstName[0].toUpperCase() + validFirstName[1..-1].toLowerCase()
+                @sanitizationHelper.checkAndSanitizePersonName studentData.firstName, "Invalid Student First Name", validator, (firstNameError, validFirstName) =>
+                    firstNamePartialCallback firstNameError, validFirstName
             lastName: (lastNamePartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, validLastName) =>
-                    lastNamePartialCallback lastNameError, validLastName[0].toUpperCase() + validLastName[1..-1].toLowerCase()
+                @sanitizationHelper.checkAndSanitizePersonName studentData.lastName, "Invalid Student Last Name", validator, (lastNameError, validLastName) =>
+                    lastNamePartialCallback lastNameError, validLastName
             nationality: (nationalityPartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.nationality, "Invalid Nationality", (nationalityError, validNationality) =>
+                @sanitizationHelper.checkAndSanitizeString studentData.nationality, "Invalid Nationality", validator, (nationalityError, validNationality) =>
                     nationalityPartialCallback nationalityError, validNationality
             yearOfStudy: (yearOfStudyPartialCallback) =>
                 _checkAndSanitizeYearOfStudy.call @, studentData.yearOfStudy, (yearOfStudyError, validYearOfStudy) =>
@@ -94,7 +75,7 @@ exports.StudentModel = class StudentModel
                 _checkAndSanitizeModeOfStudy.call @, studentData.modeOfStudy, (modeOfStudyError, validModeOfStudy) =>
                     partialCallback modeOfStudyError, validModeOfStudy
             programme: (programmePartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.programme, "Invalid Programme Code", (programmeError, validProgramme) =>
+                @sanitizationHelper.checkAndSanitizeCode studentData.programme, "Invalid Programme Code", validator, (programmeError, validProgramme) =>
                     programmePartialCallback programmeError, validProgramme
             emailAddresses: (emailAddressPartialCallback) =>
                 _checkAndSanitizeEmailAddresses.call @, [studentData.emailAddress1, studentData.emailAddress2], (emailError, validEmailAddresses) =>
@@ -249,6 +230,7 @@ exports.StudentModel = class StudentModel
                                 callback null, findResult.programme
 
     constructor: (@appEnv) ->
+        @sanitizationHelper = new CheckAndSanitizationHelper()
 
     insertStudent: (studentData, callback) =>
         _insertStudent.call @, studentData, (saveError, saveResult) =>
