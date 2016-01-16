@@ -1,26 +1,20 @@
 'use strict'
 
-AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager = require('../lib/config-manager').ConfigurationManager
-DataManager          = require('../lib/data-manager').DataManager
-validator            = require('validator')
-async                = require 'async'
+AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
+ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
+CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
+DataManager                = require('../lib/data-manager').DataManager
+validator                  = require('validator')
+async                      = require 'async'
 
 exports.FacultyModel = class FacultyModel
 
-    _checkAndSanitizeCode = (codeName, errorStr, callback) ->
-        if validator.isNull(codeName) or not validator.isAlphanumeric(codeName)
-            invalidCodenameError = new Error errorStr
-            callback invalidCodenameError, null
-        else
-            callback null, validator.trim(codeName)
-
     _checkAndSanitizeCourseCode = (courseCode, callback) ->
-        _checkAndSanitizeCode.call @, courseCode, "Invalid Course Code", (codeNameError, validCourseCode) =>
+        @sanitizationHelper.checkAndSanitizeCode courseCode, "Invalid Course Code", validator, (codeNameError, validCourseCode) =>
             callback codeNameError, validCourseCode
 
     _checkAndSanitizeCourseDescription = (courseDesc, callback) ->
-        _checkAndSanitizeWords.call @, courseDesc, "Invalid Course Description Part", "Empty Course Description", (courseDescError, validCourseDesc) =>
+        @sanitizationHelper.checkAndSanitizeWords courseDesc, "Invalid Course Description Part", "Empty Course Description", validator, (courseDescError, validCourseDesc) =>
             callback courseDescError, validCourseDesc
 
     _checkAndSanitizeCourses = (courses, callback) ->
@@ -39,7 +33,7 @@ exports.FacultyModel = class FacultyModel
             callback null, validCourses
 
     _checkAndSanitizeCourseTitle = (courseTitle, callback) ->
-        _checkAndSanitizeWords.call @, courseTitle, "Invalid Course Title Part", "Empty Course Title", (courseTitleError, validCourseTitle) =>
+        @sanitizationHelper.checkAndSanitizeWords courseTitle, "Invalid Course Title Part", "Empty Course Title", validator, (courseTitleError, validCourseTitle) =>
             callback courseTitleError, validCourseTitle
 
     _checkAndSanitizeContact = (contactDetails, entityName, callback) ->
@@ -72,22 +66,16 @@ exports.FacultyModel = class FacultyModel
             callback null, validDepartments
 
     _checkAndSanitizeDepartmentCode = (departmentCode, callback) ->
-        _checkAndSanitizeCode.call @, departmentCode, "Invalid Department Code", (codeNameError, validDepartmentCode) =>
+        @sanitizationHelper.checkAndSanitizeCode departmentCode, "Invalid Department Code", validator, (codeNameError, validDepartmentCode) =>
             callback codeNameError, validDepartmentCode
 
     _checkAndSanitizeEmailAddress = (emailAddress, entityName, callback) ->
-        if validator.isNull(emailAddress) or not validator.isEmail(emailAddress)
-            invalidEmailAddress = new Error "Invalid #{entityName} Email Address"
-            callback invalidEmailAddress, null
-        else
-            callback null, validator.trimm(emailAddress)
+        @sanitizationHelper.checkAndSanitizeEmailAddress emailAddress, "Invalid #{entityName} Email Address", validator, (emailAddressError, validEmailAddress) =>
+            callback emailAddressError, validEmailAddress
 
-    _checkAndSanitizeFacultyID = (facultyId, callback) ->
-        if validator.isNull(facultyId) or not validator.isAlpha(facultyId)
-            invalidFacultyIDError = new Error "Invalid Faculty Identifier"
-            callback invalidFacultyIDError, null
-        else
-            callback null, validator.trim(facultyId)
+    _checkAndSanitizeFacultyID = (facultyID, callback) ->
+        @sanitizationHelper.checkAndSanitizeID facultyID, "Error! Null faculty ID", "Invalid Faculty ID", false, validator, (facultyIDError, validFacultyID) =>
+            callback facultyIDError, validFacultyID
 
     _checkAndSanitizeDepartmentName = (departmentName, callback) ->
         _checkAndSanitizeName.call @, departmentName, "Invalid Department Name Part", "Empty Department Name", (departmentNameError, validDepartmentName) =>
@@ -102,11 +90,11 @@ exports.FacultyModel = class FacultyModel
             callback facultyCheckError, validFaculty
 
     _checkAndSanitizeName = (name, namePartErrorStr, emptyNameStr, callback) ->
-        _checkAndSanitizeWords.call @, name, namePartErrorStr, emptyNameStr, (nameError, validName) =>
+        @sanitizationHelper.checkAndSanitizeWords name, namePartErrorStr, emptyNameStr, validator, (nameError, validName) =>
             callback nameError, validName
 
     _checkAndSanitizeProgrammeCode = (programmeCode, callback) ->
-        _checkAndSanitizeCode.call @, programmeCode, "Invalid Programme Code", (codeNameError, validProgrammeCode) =>
+        @sanitizationHelper.checkAndSanitizeCode programmeCode, "Invalid Programme Code", validator, (codeNameError, validProgrammeCode) =>
             callback codeNameError, validProgrammeCode
 
     _checkAndSanitizeProgrammeName = (programmeName, callback) ->
@@ -208,36 +196,13 @@ exports.FacultyModel = class FacultyModel
         else
             callback null, validator.trim(telephoneNumber)
 
-    _checkAndSanitizeWords = (words, wordPartErrorStr, emptyWordErrorStr, callback) ->
-        wordComponentError = undefined
-        wordComponents = words.split " "
-        validWordComponents = []
-        for wordComponentItem in wordComponents
-            do (wordComponentItem) =>
-                if validator.isNull(wordComponentItem) or not validator.isAlpha(wordComponentItem)
-                    if not wordComponentError?
-                        wordComponentError = new Error wordPartErrorStr
-                else
-                    validWordComponents.push validator.trim(wordComponentItem)
-        if wordComponentError?
-            callback wordComponentError, null
-        else if validWordComponents.length > 0
-            callback null, validWordComponents.join(' ')
-        else
-            emptyWordError = new Error emptyWordErrorStr
-            callback emptyWordError, null
-
-    _checkAuthorization = (username, mthName, callback) ->
-        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
-            if checkError?
-                callback checkError, null
+    _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
+        technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
+            if technicalUserProfileError?
+                callback technicalUserProfileError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
-                    if findTechnicalUserError?
-                        callback findTechnicalUserError, null
-                    else
-                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
-                            callback authorizationError, authorizationResult
+                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                    callback authorizationError, authorizationResult
 
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
@@ -272,14 +237,30 @@ exports.FacultyModel = class FacultyModel
                             if urlError?
                                 callback urlError, null
                             else
-                                dataManager = DataManager.getDBManagerInstance dbURL
-                                dataManager.insertFaculty validFacultyID, validFacultyData, (saveError, saveResult) =>
+                                DataManager.getDBManagerInstance(dbURL).insertFaculty validFacultyID, validFacultyData, (saveError, saveResult) =>
                                     callback saveError, saveResult
 
-    constructor: (@appEnv) ->
+    _getID = (enrolledInProgramme, callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
+                    callback facultyIDError, facultyID
 
-    checkAuthorization: (username, mthName, callback) =>
-        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+    _getName = (enrolledInProgramme, callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findFacultyNameByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
+                    callback facultyIDError, facultyID
+
+    constructor: (@appEnv) ->
+        @sanitizationHelper = new CheckAndSanitizationHelper()
+
+    checkAuthorization: (username, mthName, technicalUserProxy, callback) =>
+        _checkAuthorization.call @, username, mthName, technicalUserProxy, (authorizationError, authorizationResult) =>
             callback authorizationError, authorizationResult
 
     insertFaculty: (facultyId, facultyData, callback) =>
@@ -293,3 +274,11 @@ exports.FacultyModel = class FacultyModel
     findOne: (facultyId, callback) =>
         _findOne.call @, facultyId, (findOneError, facultyDetails) =>
             callback findOneError, facultyDetails
+
+    getID: (enrolledInProgramme, callback) =>
+        _getID.call @, enrolledInProgramme, (facultyIdError, facultyID) =>
+            callback facultyIDError, facultyID
+
+    getName: (enrolledInProgramme, callback) =>
+        _getName.call @, enrolledInProgramme, (facultyNameError, facultyNameObj) =>
+            callback facultyNameError, facultyNameObj

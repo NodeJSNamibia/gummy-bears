@@ -7,6 +7,9 @@ async              = require 'async'
 EventInfoLoader    = require('../util/event-info-loader').EventInfoLoader
 AbstractController = require('./abstract-controller').AbstractController
 EventModel         = require('../models/event').EventModel
+FacultyProxy       = require('../proxies/faculty').FacultyProxy
+TechnicalUserProxy = require('../proxies/technical-user').TechnicalUserProxy
+StudentProxy       = require('../proxies/student').StudentProxy
 uuid               = require 'uuid4'
 
 exports.EventsController = class EventsController extends AbstractController
@@ -20,7 +23,7 @@ exports.EventsController = class EventsController extends AbstractController
                     callback findError, allEvents
 
     _getTimeFilteredEvents = (studentNumber, poolManager, queueManager, callback) ->
-        @event.findAllTimeFiltered studentNumber, (findError, timeFilteredEvents) =>
+        @event.findAllTimeFiltered studentNumber, @studentProxy, @facultyProxy, (findError, timeFilteredEvents) =>
             @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
@@ -43,7 +46,7 @@ exports.EventsController = class EventsController extends AbstractController
             callback saveError, saveResult
 
     _insertAllEvents = (username, poolManager, queueManager, callback) ->
-        @event.checkAuthorization username, 'insertAllEvents', (authorizationError, authorizationResult) =>
+        @event.checkAuthorization username, 'insertAllEvents', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
                 callback authorizationError, null
             else if not authorizationResult
@@ -81,6 +84,9 @@ exports.EventsController = class EventsController extends AbstractController
 
     constructor: (envVal) ->
         @event = new EventModel envVal
+        @studentProxy = new StudentProxy envVal
+        @facultyProxy = new FacultyProxy envVal
+        @technicalUserProxy = new TechnicalUserProxy envVal
 
     insertAllEvents: (username, poolManager, queueManager, callback) =>
         _insertAllEvents.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>

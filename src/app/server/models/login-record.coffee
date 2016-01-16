@@ -21,8 +21,7 @@ exports.LoginRecordModel = class LoginRecordModel
                     studentNumber: validStudentNumber
                     date: now.format('YYYY-MM-DD')
                     time: now.format('HH:mm')
-                dataManager = DataManager.getDBManagerInstance dbURL
-                dataManager.insertLoginRecord recordID, studentLR, (saveError, saveResult) =>
+                DataManager.getDBManagerInstance(dbURL).insertLoginRecord recordID, studentLR, (saveError, saveResult) =>
                     callback saveError, saveResult
 
     constructor: (@appEnv) ->

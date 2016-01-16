@@ -5,13 +5,15 @@
 
 async              = require 'async'
 StudentModel       = require('../models/student').StudentModel
+FacultyProxy       = require('../proxies/faculty').FacultyProxy
+TechnicalUserProxy = require('../proxies/technical-user').TechnicalUserProxy
 StudentInfoLoader  = require('../util/student-info-loader').StudentInfoLoader
 AbstractController = require('./abstract-controller').AbstractController
 
 exports.StudentsController = class StudentsController extends AbstractController
 
     _authenticate = (authenticationData, poolManager, queueManager, callback) ->
-        @student.authenticate authenticationData, (authenticationError, authenticationResult) =>
+        @student.authenticate authenticationData, @facultyProxy, (authenticationError, authenticationResult) =>
             @release 'students', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
@@ -43,7 +45,7 @@ exports.StudentsController = class StudentsController extends AbstractController
             callback saveError, saveResult
 
     _insertAllStudents = (username, poolManager, queueManager, callback) ->
-        @student.checkAuthorization username, 'insertAllStudents', (authorizationError, authorizationResult) =>
+        @student.checkAuthorization username, 'insertAllStudents', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
                 callback authorizationError, null
             else if not authorizationResult
@@ -112,6 +114,8 @@ exports.StudentsController = class StudentsController extends AbstractController
 
     constructor: (envVal) ->
         @student = new StudentModel envVal
+        @facultyProxy = new FacultyProxy envVal
+        @technicalUserProxy = new TechnicalUserProxy envVal
 
     insertAllStudents: (username, poolManager, queueManager, callback) =>
         _insertAllStudents.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>

@@ -1,49 +1,30 @@
 'use strict'
 
-AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager = require('../lib/config-manager').ConfigurationManager
-DataManager          = require('../lib/data-manager').DataManager
-PasswordHandler      = require('../util/password-handler').PasswordHandler
-validator            = require('validator')
-async                = require 'async'
+AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
+ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
+CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
+DataManager                = require('../lib/data-manager').DataManager
+PasswordHandler            = require('../util/password-handler').PasswordHandler
+validator                  = require('validator')
+async                      = require 'async'
 
 exports.StudentModel = class StudentModel
 
     _checkAndSanitizeStudentNumber = (studentNumber, callback) ->
-        if validator.isNull(studentNumber) or not validator.isNumeric(studentNumber)
-            invalidStudentNumberError = new Error "Invalid Student Number"
-            callback invalidStudentNumberError, null
-        else
-            callback null, validator.toInt(studentNumber)
-
-    # should change the programme check and sanitization
-    _checkAndSanitizeString = (strValue, errorMessage,  callback) ->
-        if not validator.isAlpha(strValue) or validator.isNull(strValue)
-            invalidNameError = new Error errorMessage
-            callback invalidNameError, null
-        else
-            callback null, validator.trim(strValue)
+        @sanitizationHelper.checkAndSanitizeNumber studentNumber, "Invalid Student Number", validator, (studentNumberError, validStudentNumber) =>
+            callback studentNumberError, validStudentNumber
 
     _checkAndSanitizeTitle = (titleValue, callback) ->
-        if validator.isNull(titleValue) or not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms"]))
-            invalidTitleError = new Error "Invalid Title"
-            callback invalidTitleError, null
-        else
-            callback null, validator.trim(titleValue)
+        @sanitizationHelper.checkAndSanitizeTitle titleValue, "Invalid Student Title", ["Mr", "Mrs", "Ms"], validator, (titleValueError, validTitleValue) =>
+            callback titleValueError, validTitleValue
 
     _checkAndSanitizeYearOfStudy = (yearOfStudy, callback) ->
-        if not (validator.isAlpha(yearOfStudy) and validator.isIn(yearOfStudy, ["first", "second", "third", "honours"]))
-            invalidYearOfStudyError = new Error "Invalid Year of study"
-            callback invalidYearOfStudyError, null
-        else
-            callback null, validator.trim(yearOfStudy)
+        @sanitizationHelper.checkAndSanitizeTitle yearOfStudy, "Invalid Year of Study", ["first", "second", "third", "honours"], validator, (yearOfStudyError, validYearOfStudy) =>
+            callback yearOfStudyError, validYearOfStudy
 
     _checkAndSanitizeModeOfStudy = (modeOfStudy, callback) ->
-        if not (validator.isAlpha(modeOfStudy) and validator.isIn(modeOfStudy, ["PM","FM"]))
-            invalidModeOfStudyError = new Error "Invalid Mode of study"
-            callback invalidModeOfStudyError, null
-        else
-            callback null, validator.trim(modeOfStudy)
+        @sanitizationHelper.checkAndSanitizeTitle modeOfStudy, "Invalid Mode of Study", ["PM","FM"], validator, (modeOfStudyError, validModeOfStudy) =>
+            callback modeOfStudyError, validModeOfStudy
 
     _checkAndSanitizeCourses = (courses, callback) ->
         courseCodeErrorStrs = []
@@ -73,26 +54,19 @@ exports.StudentModel = class StudentModel
         else
             callback new Error(emailAddressErrorStrs.join(', ')), null
 
-    _checkAndSanitizeUsername = (username, callback) ->
-        if validator.isNull(username) or not validator.isAlphanumeric(username)
-            invalidUsernameError = new Error "Invalid Username"
-            callback invalidUsernameError, null
-        else
-            callback null, validator.trim(username)
-
     _checkAndSanitizeForInsertion = (studentData, callback) ->
         checkOptions =
             studentNumber: (studentNumberPartialCallback) =>
                 _checkAndSanitizeStudentNumber.call @, studentData.studentNumber, (studentNumberError, validStudentNumber) =>
                     studentNumberPartialCallback studentNumberError, validStudentNumber
             firstName: (firstNamePartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.firstName, "Invalid Student First Name", (firstNameError, validFirstName) =>
-                    firstNamePartialCallback firstNameError, validFirstName[0].toUpperCase() + validFirstName[1..-1].toLowerCase()
+                @sanitizationHelper.checkAndSanitizePersonName studentData.firstName, "Invalid Student First Name", validator, (firstNameError, validFirstName) =>
+                    firstNamePartialCallback firstNameError, validFirstName
             lastName: (lastNamePartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.lastName, "Invalid Student Last Name", (lastNameError, validLastName) =>
-                    lastNamePartialCallback lastNameError, validLastName[0].toUpperCase() + validLastName[1..-1].toLowerCase()
+                @sanitizationHelper.checkAndSanitizePersonName studentData.lastName, "Invalid Student Last Name", validator, (lastNameError, validLastName) =>
+                    lastNamePartialCallback lastNameError, validLastName
             nationality: (nationalityPartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.nationality, "Invalid Nationality", (nationalityError, validNationality) =>
+                @sanitizationHelper.checkAndSanitizeString studentData.nationality, "Invalid Nationality", validator, (nationalityError, validNationality) =>
                     nationalityPartialCallback nationalityError, validNationality
             yearOfStudy: (yearOfStudyPartialCallback) =>
                 _checkAndSanitizeYearOfStudy.call @, studentData.yearOfStudy, (yearOfStudyError, validYearOfStudy) =>
@@ -101,7 +75,7 @@ exports.StudentModel = class StudentModel
                 _checkAndSanitizeModeOfStudy.call @, studentData.modeOfStudy, (modeOfStudyError, validModeOfStudy) =>
                     partialCallback modeOfStudyError, validModeOfStudy
             programme: (programmePartialCallback) =>
-                _checkAndSanitizeString.call @, studentData.programme, "Invalid Programme Code", (programmeError, validProgramme) =>
+                @sanitizationHelper.checkAndSanitizeCode studentData.programme, "Invalid Programme Code", validator, (programmeError, validProgramme) =>
                     programmePartialCallback programmeError, validProgramme
             emailAddresses: (emailAddressPartialCallback) =>
                 _checkAndSanitizeEmailAddresses.call @, [studentData.emailAddress1, studentData.emailAddress2], (emailError, validEmailAddresses) =>
@@ -110,7 +84,7 @@ exports.StudentModel = class StudentModel
             callback checkError, studentInfo
 
     # carry the queue manager along
-    _authenticate = (authenticationData, callback) ->
+    _authenticate = (authenticationData, facultyProxy, callback) ->
         _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
                 callback studentNumberError, null
@@ -131,7 +105,7 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
-                                            DataManager.getDBManagerInstance(dbURL).findFacultyByProgrammeCode studentDoc.programme, (facultyNameError, facultyRes) =>
+                                            facultyProxy.getName studentDoc.programme, (facultyNameError, facultyRes) =>
                                                 if facultyNameError?
                                                     callback facultyNameError, null
                                                 else
@@ -165,17 +139,13 @@ exports.StudentModel = class StudentModel
                         DataManager.getDBManagerInstance(dbURL).insertStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
 
-    _checkAuthorization = (username, mthName, callback) ->
-        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
-            if checkError?
-                callback checkError, null
+    _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
+        technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
+            if technicalUserProfileError?
+                callback technicalUserProfileError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
-                    if findTechnicalUserError?
-                        callback findTechnicalUserError, null
-                    else
-                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
-                            callback authorizationError, authorizationResult
+                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                    callback authorizationError, authorizationResult
 
     _createPassword = (studentNumber, passwordData, callback) ->
         _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
@@ -227,7 +197,6 @@ exports.StudentModel = class StudentModel
                                 studentRes[entryKey] = entryValue for entryKey, entryValue of findResult when entryKey isnt 'password'
                                 callback null, studentRes
 
-    # should be careful not to expose student password
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
@@ -245,14 +214,30 @@ exports.StudentModel = class StudentModel
                                 filteredStudentCol.push studentCopy
                         callback null, filteredStudentCol
 
+    _findProgramme = (studentNumber, callback) ->
+        _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
+            if studentNumberError?
+                callback studentNumberError, null
+            else
+                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                    if urlError?
+                        callback urlError, null
+                    else
+                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
+                            if findError?
+                                callback findError, null
+                            else
+                                callback null, findResult.programme
+
     constructor: (@appEnv) ->
+        @sanitizationHelper = new CheckAndSanitizationHelper()
 
     insertStudent: (studentData, callback) =>
         _insertStudent.call @, studentData, (saveError, saveResult) =>
             callback saveError, saveResult
 
-    checkAuthorization: (username, mthName, callback) =>
-        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+    checkAuthorization: (username, mthName, technicalUserProxy, callback) =>
+        _checkAuthorization.call @, username, mthName, technicalUserProxy, (authorizationError, authorizationResult) =>
             callback authorizationError, authorizationResult
 
     createPassword: (studentNumber, passwordData, callback) =>
@@ -263,8 +248,8 @@ exports.StudentModel = class StudentModel
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
-    authenticate: (authenticationData, callback) =>
-        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, facultyProxy, callback) =>
+        _authenticate.call @, authenticationData, facultyProxy, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
 
     findOne: (studentNumber, callback) =>
@@ -274,3 +259,7 @@ exports.StudentModel = class StudentModel
     findAll: (callback) =>
         _findAll.call @, (findAllError, allStudents) =>
             callback findAllError, allStudents
+
+    findProgramme: (studentNumber, callback) =>
+        _findProgramme.call @, studentNumber, (programmeError, enrolledInProgramme) =>
+            callback programmeError, enrolledInProgramme
