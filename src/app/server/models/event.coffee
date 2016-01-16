@@ -1,11 +1,12 @@
 'use strict'
 
-AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager = require('../lib/config-manager').ConfigurationManager
-DataManager          = require('../lib/data-manager').DataManager
-validator            = require('validator')
-async                = require 'async'
-moment               = require 'moment'
+AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
+ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
+DataManager                = require('../lib/data-manager').DataManager
+CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
+validator                  = require('validator')
+async                      = require 'async'
+moment                     = require 'moment'
 
 exports.EventModel = class EventModel
 
@@ -18,58 +19,28 @@ exports.EventModel = class EventModel
                     callback authorizationError, authorizationResult
 
     _checkAndSanitizeEventID = (eventID, callback) ->
-        if validator.isNull(eventID) or not validator.isAlphanumeric(eventID)
-            invalidEventIDError = new Error "Invalid Event ID"
-            callback invalidEventIDError, null
-        else
-            callback null, validator.trim(eventID)
+        @sanitizationHelper.checkAndSanitizeID eventID, "Error! Null Event ID", "Invalid Event ID", true, validator, (eventIDError, validEventID) =>
+            callback eventIDError, validEventID
 
     _checkAndSanitizeEventDescription = (eventDesc, callback) ->
-        descriptionComponentError = undefined
-        descriptionComponents = eventDesc.split " "
-        validDescriptionComponents = []
-        for descriptionComponentItem in descriptionComponents
-            do (descriptionComponentItem) =>
-                if validator.isNull(descriptionComponentItem) or not validator.isAlpha(descriptionComponentItem)
-                    if not descriptionComponentError?
-                        descriptionComponentError = new Error "Error in Event Description"
-                else
-                    validDescriptionComponents.push validator.trim(descriptionComponentItem)
-        if descriptionComponentError?
-            callback descriptionComponentError, null
-        else if validDescriptionComponents.length > 0
-            callback null, validDescriptionComponents.join(' ')
-        else
-            emptyDescriptionError = new Error "Empty Event Description"
-            callback emptyDescriptionError, null
+        @sanitizationHelper.checkAndSanitizeWords eventDesc, "Error in Event Description", "Empty Event Description", validator, (eventDescriptionError, validEventDescription) =>
+            callback eventDescriptionError, validEventDescription
 
     _checkAndSanitizeEventStartDate = (eventStartDate, callback) ->
-        if validator.isNull(eventStartDate) or not validator.isDate(eventStartDate)
-            invalidEventStartDateError = new Error "Invalid event start date"
-            callback invalidEventStartDateError, null
-        else
-            callback null, validator.trim(eventStartDate)
+        @sanitizationHelper.checkAndSanitizeDate eventStartDate, "Invalid event start date", validator, (eventStartDateError, validEventStartDate) =>
+            callback eventStartDateError, validEventStartDate
 
     _checkAndSanitizeEventEndDate = (eventEndDate, callback) ->
-        if validator.isNull(eventEndDate) or not validator.isDate(eventEndDate)
-            invalidEventEndDateError = new Error "Invalid event end date"
-            callback invalidEventEndDateError, null
-        else
-            callback null, validator.trim(eventEndDate)
+        @sanitizationHelper.checkAndSanitizeDate eventEndDate, "Invalid event end date", validator, (eventEndDateError, validEventEndDate) =>
+            callback eventEndDateError, validEventEndDate
 
     _checkAndSanitizeLocation = (eventLocation, callback) ->
-        if validator.isNull(eventLocation) or not validator.isAlphanumeric(eventLocation)
-            invalidLocationCodeError = new Error "Invalid Event Location"
-            callbac invalidLocationCodeError, null
-        else
-            callback null, validator.trim(eventLocation)
+        @sanitizationHelper.checkAndSanitizeCode eventLocation, "Invalid Event Location", validator, (locationError, validLocation) =>
+            callback locationError, validLocation
 
-    _checkAndSanitizeFacultyID = (facultyId, callback) ->
-        if validator.isNull(facultyId) or not validator.isAlpha(facultyId)
-            invalidFacultyIDError = new Error "Invalid Faculty Identifier"
-            callback invalidFacultyIDError, null
-        else
-            callback null, validator.trim(facultyId)
+    _checkAndSanitizeFacultyID = (facultyID, callback) ->
+        @sanitizationHelper.checkAndSanitizeID facultyID, "Error! Null faculty ID", "Invalid Faculty ID", false, validator, (facultyIDError, validFacultyID) =>
+            callback facultyIDError, validFacultyID
 
     _checkAndSanitizeEventOrganizer = (eventOrganizer, callback) ->
         organizerOptions =
@@ -88,36 +59,21 @@ exports.EventModel = class EventModel
         async.parallel organizerOptions, (organizerError, validOrganizer) =>
             callback organizerError, validOrganizer
 
-    _checkAndSanitizeFirstOrLastName = (name, nameErrorStr, callback) ->
-        if validator.isNull(name) or not validator.isAlpha(name)
-            invalidNameError = new Error nameErrorStr
-            callback invalidNameError, null
-        else
-            validName = validator.trim(name)
-            capitalizedValidName = validName[0].toUpperCase() + validName[1..-1].toLowerCase()
-            callback null, capitalizedValidName
-
     _checkAndSanitizeFirstName = (firstName, callback) ->
-        _checkAndSanitizeFirstOrLastName.call @, firstName, "Invalid First Name", (firstNameError, validFirstName) =>
+        @sanitizationHelper.checkAndSanitizePersonName firstName, "Invalid First Name", validator, (firstNameError, validFirstName) =>
             callback firstNameError, validFirstName
 
     _checkAndSanitizeLastName = (lastName, callback) ->
-        _checkAndSanitizeFirstOrLastName.call @, lastName, "Invalid Last Name", (lastNameError, validLastName) =>
+        @sanitizationHelper.checkAndSanitizePersonName firstName, "Invalid Last Name", validator, (lastNameError, validLastName) =>
             callback lastNameError, validLastName
 
     _checkAndSanitizeTitle = (titleValue, callback) ->
-        if validator.isNull(titleValue) or not (validator.isAlpha(titleValue)  and validator.isIn(titleValue, ["Mr", "Mrs", "Ms", "Dr", "Prof"]))
-            invalidTitleError = new Error "Invalid Organizer Title"
-            callback invalidTitleError, null
-        else
-            callback null, validator.trim(titleValue)
+        @sanitizationHelper.checkAndSanitizeTitle titleValue, "Invalid Event Organizer Title", ["Mr", "Mrs", "Ms", "Dr", "Prof"], validator, (titleValueError, validTitleValue) =>
+            callback titleValueError, validTitleValue
 
     _checkAndSanitizeEmailAddress = (emailAddress, callback) ->
-        if validator.isNull(emailAddress) or not validator.isEmail(emailAddress)
-            invalidEmailAddressError = new Error "Invalid Organizer Email Address"
-            callback invalidEmailAddressError, null
-        else
-            callback null, validator.trim(emailAddress)
+        @sanitizationHelper.checkAndSanitizeEmailAddress emailAddress, "Invalid Organizer Email Address", validator, (emailAddressError, validEmailAddress) =>
+            callback emailAddressError, validEmailAddress
 
     _checkAndSanitizeForInsertion = (eventObj, callback) ->
         checkOptions =
@@ -218,6 +174,7 @@ exports.EventModel = class EventModel
                     callback allEventsError, allEvents
 
     constructor: (@appEnv) ->
+        @sanitizationHelper = new CheckAndSanitizationHelper()
 
     checkAuthorization: (username, mthName, technicalUserProxy, callback) =>
         _checkAuthorization.call @, username, mthName, technicalUserProxy, (authorizationError, authorizationResult) =>
