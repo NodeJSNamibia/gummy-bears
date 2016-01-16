@@ -3,19 +3,14 @@
 AuthorizationManager = require('../lib/authorization-manager').AuthorizationManager
 ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
-FacultyProxy         = require('../proxies/faculty').FacultyProxy
-TechnicalUserProxy   = require('../proxies/technical-user').TechnicalUserProxy
-StudentProxy         = require('../proxies/student').StudentProxy
 validator            = require('validator')
 async                = require 'async'
 moment               = require 'moment'
 
 exports.EventModel = class EventModel
 
-    _checkAuthorization = (username, mthName, callback) ->
-        unless @technicalUserProxy?
-            @technicalUserProxy = new TechnicalUserProxy @appEnv
-        @technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
+    _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
+        technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
             if technicalUserProfileError?
                 callback technicalUserProfileError, null
             else
@@ -170,25 +165,20 @@ exports.EventModel = class EventModel
                                 DataManager.getDBManagerInstance(dbURL).insertEvent validEventID, validEventObj, (saveError, saveResult) =>
                                     callback saveError, saveResult
 
-    _findAllTimeFiltered = (studentNumber, callback) =>
+    _findAllTimeFiltered = (studentNumber, studentProxy, facultyProxy, callback) =>
         if not studentNumber?
             _findAllTimeFilteredForAllFaculties.call @, (findAllError, eventsForAllFaculties) =>
                 callback findAllError, eventsForAllFaculties
         else
-            unless @studentProxy?
-                @studentProxy = new StudentProxy @appEnv
-            @studentProxy.findProgramme studentNumber, (programmeError, enrolledInProgramme) =>
+            studentProxy.findProgramme studentNumber, (programmeError, enrolledInProgramme) =>
                 if programmeError?
                     callback programmeError, null
                 else
-                    # get the faculty id from a faculty proxy
-                    unless @facultyProxy?
-                        @facultyProxy = new FacultyProxy @appEnv
-                    @facultyProxy.getID enrolledInProgramme, (facultyIDError, facultyID) =>
+                    facultyProxy.getID enrolledInProgramme, (facultyIDError, facultyID) =>
                         if facultyIDError?
                             callback facultyIDError, null
                         else
-                            _findAllTimeFilteredForFaculty.call @, facultyID, (eventsError, facultyTimeFilteredEvents) =>
+                            _findAllTimeFilteredForSingleFaculty.call @, facultyID, (eventsError, facultyTimeFilteredEvents) =>
                                 callback eventsError, facultyTimeFilteredEvents
 
     _findAllTimeFilteredForAllFaculties = (callback) ->
@@ -203,7 +193,7 @@ exports.EventModel = class EventModel
                         _filterByTime.call @, allEvents, (filterError, timeFilteredEvents) =>
                             callback filterError, timeFilteredEvents
 
-    _findAllTimeFilteredForFaculty = (facultyID, callback) ->
+    _findAllTimeFilteredForSingleFaculty = (facultyID, callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
                 callback urlError, null
@@ -236,8 +226,8 @@ exports.EventModel = class EventModel
 
     constructor: (@appEnv) ->
 
-    checkAuthorization: (username, mthName, callback) =>
-        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+    checkAuthorization: (username, mthName, technicalUserProxy, callback) =>
+        _checkAuthorization.call @, username, mthName, technicalUserProxy, (authorizationError, authorizationResult) =>
             callback authorizationError, authorizationResult
 
     insertEvent: (eventID, eventObj, callback) =>
@@ -248,6 +238,6 @@ exports.EventModel = class EventModel
         _findAll.call @, (findError, allEvents) =>
             callback findError, allEvents
 
-    findAllTimeFiltered: (studentNumber, callback) =>
-        _findAllTimeFiltered.call @, studentNumber, (findAllError, timeFilteredEvents) =>
+    findAllTimeFiltered: (studentNumber, studentProxy, facultyProxy, callback) =>
+        _findAllTimeFiltered.call @, studentNumber, studentProxy, facultyProxy, (findAllError, timeFilteredEvents) =>
             callback findAllError, timeFilteredEvents
