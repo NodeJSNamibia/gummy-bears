@@ -110,7 +110,7 @@ exports.StudentModel = class StudentModel
             callback checkError, studentInfo
 
     # carry the queue manager along
-    _authenticate = (authenticationData, callback) ->
+    _authenticate = (authenticationData, facultyProxy, callback) ->
         _checkAndSanitizeStudentNumber.call @, authenticationData.studentNumber, (studentNumberError, validStudentNumber) =>
             if studentNumberError?
                 callback studentNumberError, null
@@ -131,7 +131,7 @@ exports.StudentModel = class StudentModel
                                             authenticationError = new Error "Authentication failed for student #{validStudentNumber}"
                                             callback authenticationError, null
                                         else
-                                            DataManager.getDBManagerInstance(dbURL).findFacultyByProgrammeCode studentDoc.programme, (facultyNameError, facultyRes) =>
+                                            facultyProxy.getName studentDoc.programme, (facultyNameError, facultyRes) =>
                                                 if facultyNameError?
                                                     callback facultyNameError, null
                                                 else
@@ -165,17 +165,13 @@ exports.StudentModel = class StudentModel
                         DataManager.getDBManagerInstance(dbURL).insertStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
 
-    _checkAuthorization = (username, mthName, callback) ->
-        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
-            if checkError?
-                callback checkError, null
+    _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
+        technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
+            if technicalUserProfileError?
+                callback technicalUserProfileError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
-                    if findTechnicalUserError?
-                        callback findTechnicalUserError, null
-                    else
-                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
-                            callback authorizationError, authorizationResult
+                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                    callback authorizationError, authorizationResult
 
     _createPassword = (studentNumber, passwordData, callback) ->
         _checkAndSanitizeStudentNumber.call @, studentNumber, (studentNumberError, validStudentNumber) =>
@@ -265,8 +261,8 @@ exports.StudentModel = class StudentModel
         _insertStudent.call @, studentData, (saveError, saveResult) =>
             callback saveError, saveResult
 
-    checkAuthorization: (username, mthName, callback) =>
-        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+    checkAuthorization: (username, mthName, technicalUserProxy, callback) =>
+        _checkAuthorization.call @, username, mthName, technicalUserProxy, (authorizationError, authorizationResult) =>
             callback authorizationError, authorizationResult
 
     createPassword: (studentNumber, passwordData, callback) =>
@@ -277,8 +273,8 @@ exports.StudentModel = class StudentModel
         _updateCourses.call @, studentNumber, courseData, (courseUpdateError, courseUpdateResult) =>
             callback courseUpdateError, courseUpdateResult
 
-    authenticate: (authenticationData, callback) =>
-        _authenticate.call @, authenticationData, (authenticationError, authenticationResult) =>
+    authenticate: (authenticationData, facultyProxy, callback) =>
+        _authenticate.call @, authenticationData, facultyProxy, (authenticationError, authenticationResult) =>
             callback authenticationError, authenticationResult
 
     findOne: (studentNumber, callback) =>

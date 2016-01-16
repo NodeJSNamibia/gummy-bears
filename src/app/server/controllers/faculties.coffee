@@ -3,6 +3,7 @@
 async                   = require 'async'
 AbstractController      = require('./abstract-controller').AbstractController
 AcademicStructureLoader = require('../util/academic-structure-loader').AcademicStructureLoader
+TechnicalUserProxy      = require('../proxies/technical-user').TechnicalUserProxy
 FacultyModel            = require('../models/faculty').FacultyModel
 
 exports.FacultiesController = class FacultiesController extends AbstractController
@@ -111,7 +112,7 @@ exports.FacultiesController = class FacultiesController extends AbstractControll
             callback insertError, insertResult
 
     _insertAcademicStructure = (poolManager, queueManager, callback) ->
-        @faculty.checkAuthorization username, 'insertAcademicStructure', (authorizationError, authorizationResult) =>
+        @faculty.checkAuthorization username, 'insertAcademicStructure', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
                 callback authorizationError, null
             else if not authorizationResult
@@ -157,6 +158,7 @@ exports.FacultiesController = class FacultiesController extends AbstractControll
 
     constructor: (envVal) ->
         @faculty = new FacultyModel envVal
+        @technicalUserProxy = new TechnicalUserProxy envVal
 
     insertAcademicStructure: (poolManager, queueManager, callback) =>
         _insertAcademicStructure.call @, poolManager, queueManager, (insertAllError, insertAllResult) =>

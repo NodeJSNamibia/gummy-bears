@@ -227,17 +227,13 @@ exports.FacultyModel = class FacultyModel
             emptyWordError = new Error emptyWordErrorStr
             callback emptyWordError, null
 
-    _checkAuthorization = (username, mthName, callback) ->
-        _checkAndSanitizeUsername.call @, username, (checkError, validUsername) =>
-            if checkError?
-                callback checkError, null
+    _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
+        technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
+            if technicalUserProfileError?
+                callback technicalUserProfileError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
-                    if findTechnicalUserError?
-                        callback findTechnicalUserError, null
-                    else
-                        AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserDoc.profile, mthName, (authorizationError, authorizationResult) =>
-                            callback authorizationError, authorizationResult
+                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                    callback authorizationError, authorizationResult
 
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
@@ -280,13 +276,21 @@ exports.FacultyModel = class FacultyModel
             if urlError?
                 callback urlError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode enrolledInProgramme, validFacultyData, (facultyIDError, facultyID) =>
+                DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
+                    callback facultyIDError, facultyID
+
+    _getName = (enrolledInProgramme, callback) ->
+        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+            if urlError?
+                callback urlError, null
+            else
+                DataManager.getDBManagerInstance(dbURL).findFacultyNameByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
                     callback facultyIDError, facultyID
 
     constructor: (@appEnv) ->
 
-    checkAuthorization: (username, mthName, callback) =>
-        _checkAuthorization.call @, username, mthName, (authorizationError, authorizationResult) =>
+    checkAuthorization: (username, mthName, technicalUserProxy, callback) =>
+        _checkAuthorization.call @, username, mthName, technicalUserProxy, (authorizationError, authorizationResult) =>
             callback authorizationError, authorizationResult
 
     insertFaculty: (facultyId, facultyData, callback) =>
@@ -304,3 +308,7 @@ exports.FacultyModel = class FacultyModel
     getID: (enrolledInProgramme, callback) =>
         _getID.call @, enrolledInProgramme, (facultyIdError, facultyID) =>
             callback facultyIDError, facultyID
+
+    getName: (enrolledInProgramme, callback) =>
+        _getName.call @, enrolledInProgramme, (facultyNameError, facultyNameObj) =>
+            callback facultyNameError, facultyNameObj

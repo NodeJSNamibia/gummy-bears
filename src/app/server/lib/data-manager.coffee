@@ -52,7 +52,7 @@ exports.DataManager = class DataManager
                     bucket.get docID, (docError, docData) =>
                         callback docError, docData
 
-        _findAllFacultyByProgrammeCode = (programmeCode, callback) ->
+        _findAllFacultyNameByProgrammeCode = (programmeCode, callback) ->
             _findAllFaculties.call @, (allFacultiesError, allFaculties) =>
                 if allFacultiesError?
                     callback allFacultiesError, null
@@ -157,8 +157,8 @@ exports.DataManager = class DataManager
             _findAllFaculties.call @, (findAllError, allFaculties) =>
                 callback findAllError, allFaculties
 
-        findFacultyByProgrammeCode: (programmeCode, callback) =>
-            _findAllFacultyByProgrammeCode.call @, programmeCode, (facultyNameError, faculty) =>
+        findFacultyNameByProgrammeCode: (programmeCode, callback) =>
+            _findAllFacultyNameByProgrammeCode.call @, programmeCode, (facultyNameError, faculty) =>
                 callback facultyNameError, faculty
 
         findFacultyIDByProgrammeCode: (programmeCode, callback) =>
