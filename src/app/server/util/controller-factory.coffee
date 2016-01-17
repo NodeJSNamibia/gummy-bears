@@ -7,6 +7,7 @@ LoginRecordsController   = require('../controllers/login-records').LoginRecordsC
 FacultiesController      = require('../controllers/faculties').FacultiesController
 TechnicalUsersController = require('../controllers/technical-users').TechnicalUsersController
 EventsController         = require('../controllers/events').EventsController
+FAQsController           = require('../controllers/faqs').FAQsController
 
 exports.ControllerFactory = class ControllerFactory
     _cfInstance = undefined
@@ -22,6 +23,7 @@ exports.ControllerFactory = class ControllerFactory
                 when "technicalUsers" then _createTechnicalUsersController.call @, appEnv, callback
                 when "faculties" then _createFacultiesController.call @, appEnv, callback
                 when "events" then _createEventsController.call @, appEnv, callback
+                when "faqs" then _createFAQsController.call @, appEnv, callback
 
         _createStudentsController = (appEnv, callback) ->
             studentsController = new StudentsController appEnv
@@ -42,6 +44,9 @@ exports.ControllerFactory = class ControllerFactory
         _createEventsController = (appEnv, callback) ->
             eventsController = new EventsController appEnv
             callback null, eventsController
+
+        _createFAQsController = (appEnv, callback) ->
+            faqsController = new FAQsController appEnv
 
         constructor: ->
 
