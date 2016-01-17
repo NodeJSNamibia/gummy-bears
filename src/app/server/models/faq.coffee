@@ -1,12 +1,36 @@
 'use strict'
 
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
+ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
+DataManager                = require('../lib/data-manager').DataManager
+validator                  = require('validator')
+async                      = require 'async'
 
 exports.FAQModel = class FAQModel
 
     _checkAndSanitizeFAQID = (faqID, callback) ->
         @sanitizationHelper.checkAndSanitizeID faqID, "Error! Null FAQ ID", "Invalid FAQ ID", true, validator, (faqIDError, validFAQID) =>
             callback faqIDError, validFAQID
+
+    _checkAndSanitizeQuestion = (questionDesc, callback) ->
+        @sanitizationHelper.checkAndSanitizeWords questionDesc, "Error in FAQ question", "Empty FAQ question", validator, (questionDescriptionError, validQuestionDescription) =>
+            callback questionDescriptionError, validQuestionDescription
+
+    _checkAndSanitizeAnswer = (answerDesc, callback) ->
+        @sanitizationHelper.checkAndSanitizeWords answerDesc, "Error in FAQ anser", "Empty FAQ answer", validator, (answerDescriptionError, validAnswerDescription) =>
+            callback answerDescriptionError, validAnswerDescription
+
+    _checkAndSanitizeForInsertion = (faqObj, callback) ->
+        checkOptions =
+            question: (questionPartialCallback) =>
+                _checkAndSanitizeQuestion.call @, faqObj.question, (questionError, validQuestion) =>
+                    questionPartialCallback questionError, validQuestion
+
+            answer: (answerPartialCallback) =>
+                _checkAndSanitizeAnswer.call @, faqObj.answer, (answerError, validAnswer) =>
+                    answerPartialCallback answerError, validAnswer
+        async.parallel checkOptions, (checkInsertError, validFAQ) =>
+            callback checkInsertError, validFAQ
 
     _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
         technicalUserProxy.findTechnicalUserProfile username, (technicalUserProfileError, technicalUserProfile) =>
@@ -21,7 +45,7 @@ exports.FAQModel = class FAQModel
             if faqIDError?
                 callback faqIDError, null
             else
-                _checkAndSanititeForInsertion.call @, faqObj, (checkError, validFAQObject) =>
+                _checkAndSanitizeForInsertion.call @, faqObj, (checkError, validFAQObject) =>
                     if checkError?
                         callback checkError, null
                     else
@@ -51,7 +75,7 @@ exports.FAQModel = class FAQModel
             else
                 DataManager.getDBManagerInstance(dbURL).findAllFAQs (findAllError, allFAQs) =>
                     callback findAllError, allFAQs
-    
+
     constructor: (@appEnv) ->
         @sanitizationHelper = new CheckAndSanitizationHelper()
 
