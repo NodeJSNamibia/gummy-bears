@@ -66,9 +66,15 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         queueManager = QueueManager.getQueueManagerInstance evtEmitter
         poolManager.setExecutionEnvironment app.settings.env
 
+
+        # insert routes
         require('app/server/routes/students')(app, poolManager, queueManager)
         require('app/server/routes/login-records')(app, poolManager, queueManager)
         require('app/server/routes/faculties')(app, poolManager, queueManager)
+        require('app/server/routes/events')(app, poolManager, queueManager)
+        require('app/server/routes/faqs')(app, poolManager, queueManager)
+        require('app/server/routes/technical-users')(app, poolManager, queueManager)
+        require('app/server/routes/quick-notes')(app, poolManager, queueManager)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?
