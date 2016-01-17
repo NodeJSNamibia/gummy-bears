@@ -140,10 +140,44 @@ exports.DataManager = class DataManager
                             bucket.upsert docID, docData, (updateError, updateResult) =>
                                 callback updateError, updateResult
 
+        _findAllFAQs = (callback) ->
+            _getDataBucket.call @, 'faq', (bucketError, bucket) =>
+                if bucketError?
+                    callback bucketError, null
+                else
+                    ViewQuery = Couchbase.ViewQuery
+                    allFAQsQuery = ViewQuery.from @faqDesignDoc, @faqView
+                    bucket.query allFAQsQuery, (multiFAQError, faqCol) =>
+                        if multiFAQError?
+                            callback multiFAQError, null
+                        else
+                            allFAQs = (curFAQ.value for curFAQ in faqCol)
+                            callback null, allFAQs
+
+        _findAllEvents = (callback) ->
+            _getDataBucket.call @, 'event', (bucketError, bucket) =>
+                if bucketError?
+                    callback bucketError, null
+                else
+                    ViewQuery = Couchbase.ViewQuery
+                    allEventsQuery = ViewQuery.from @eventDesignDoc, @eventView
+                    bucket.query allEventsQuery, (multiEventError, eventCol) =>
+                        if multiEventError?
+                            callback multiEventError, null
+                        else
+                            allEvents = (curEvent.value for curEvent in eventCol)
+                            callback null, allEvents
+
         constructor: (@dbURL) ->
             @allBuckets = {}
             @studentDesignDoc = 'student_dd'
             @studentView = 'student'
+            @faqDesignDoc = 'faq_dd'
+            @faqView = 'faq'
+            @facultyDesignDoc = 'faculty_dd'
+            @facultyView = 'faculty'
+            @eventDesignDoc = 'event_dd'
+            @eventView = 'event'
 
         findStudent: (studentNumber, callback) =>
             _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
@@ -188,3 +222,19 @@ exports.DataManager = class DataManager
         updateStudent: (studentNumber, studentData, callback) =>
             _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
                     callback updateStudentError, updateStudentResult
+
+        insertFAQ: (faqID, faqObj, callback) =>
+            _insertDocument.call @, 'faq', faqID, faqObj, (insertFAQError, insertFAQResult) =>
+                callback insertFAQError, insertFAQResult
+
+        findFAQ: (faqID, callback) =>
+            _findDocument.call @, 'faq', faqID, (findFAQError, faqDetail) =>
+                callback findFAQError, faqDetail
+
+        findAllFAQs: (callback) =>
+            _findAllFAQs.call @, (findAllError, allFAQs) =>
+                callback findAllError, allFAQs
+
+        findAllEvents: (callback) =>
+            _findAllEvents.call @, (findAllError, allEvents) =>
+                callback findAllError, allEvents
