@@ -142,8 +142,8 @@ exports.DataManager = class DataManager
 
         constructor: (@dbURL) ->
             @allBuckets = {}
-            @studentDesignDoc = 'students_dd'
-            @studentView = 'students'
+            @studentDesignDoc = 'student_dd'
+            @studentView = 'student'
 
         findStudent: (studentNumber, callback) =>
             _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
