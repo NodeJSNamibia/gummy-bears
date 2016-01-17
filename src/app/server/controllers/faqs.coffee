@@ -11,33 +11,6 @@ AbstractController = require('./abstract-controller').AbstractController
 uuid               = require 'uuid4'
 
 exports.FAQsController = class FAQsController extends AbstractController
-    _insertSingleFAQIter = (singleFAQData, callback) ->
-        # create the proper object representing the FAQ
-        faqInfo =
-            question: singleFAQData.question
-            answer: singleFAQData.answer
-        @faq.insertFAQ uuid(), faqInfo, (saveError, saveResult) =>
-            if saveError?
-                
-            else
-              # body...
-            callback saveError, saveResult
-
-    _getFAQ = (id, poolManager, queueManager, callback) ->
-        @faq.findOne id, (findError, FAQDetails) =>
-            @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
-                if releaseError?
-                    callback releaseError, null
-                else
-                    callback findError, FAQDetails
-
-    _getAllFAQs = (poolManager, queueManager, callback) ->
-        @faq.findAll (findError, allFAs) =>
-            @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
-                if releaseError?
-                    callback releaseError, null
-                else
-                    callback findError, allFAQs
 
     _insertAllFAQs = (username, poolManager, queueManager, callback) ->
         @faq.checkAuthorization username, 'insertAllFAQs', @technicalUserProxy, (authorizationError, authorizationResult) =>
@@ -78,13 +51,29 @@ exports.FAQsController = class FAQsController extends AbstractController
                                     else
                                         callback null, insertAllResult
 
+    _getFAQ = (id, poolManager, queueManager, callback) ->
+        @faq.findOne id, (findError, FAQDetails) =>
+            @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                if releaseError?
+                    callback releaseError, null
+                else
+                    callback findError, FAQDetails
+
+    _getAllFAQs = (poolManager, queueManager, callback) ->
+        @faq.findAll (findError, allFAs) =>
+            @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                if releaseError?
+                    callback releaseError, null
+                else
+                    callback findError, allFAQs
+
     constructor: (envVal) ->
         @faq = new FAQModel envVal
         @technicalUserProxy = new TechnicalUserProxy envVal
 
-    insertSingleFAQIter: (poolManager, queueManager, callback) =>
-        _insertSingleFAQIter.call @, poolManager, queueManager, (insertSingleError, insertSingleResult) =>
-            callback insertSingleError, insertSingleResult
+    insertAllFAQs: (username, poolManager, queueManager, callback) =>
+        _insertAllFAQs.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>
+            callback insertAllError, insertAllResult
 
     getFAQ: (id, poolManager, queueManager, callback) =>
         _getFAQ.call @, id, poolManager, queueManager, (getFAQError, FAQDetails) =>
@@ -94,6 +83,18 @@ exports.FAQsController = class FAQsController extends AbstractController
         _getAllFAQs.call @, poolManager, queueManager, (getAllFAQsError, allFAQs) =>
             callback getAllFAQsError, allFAQs
 
-    insertAllFAQs: (username, poolManager, queueManager, callback) =>
-        _insertAllFAQs.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>
-            callback insertAllError, insertAllResult
+    _insertSingleFAQIter = (singleFAQData, callback) ->
+        # create the proper object representing the FAQ
+        faqInfo =
+            question: singleFAQData.question
+            answer: singleFAQData.answer
+        @faq.insertFAQ uuid(), faqInfo, (saveError, saveResult) =>
+            if saveError?
+
+            else
+              # body...
+            callback saveError, saveResult
+
+    insertSingleFAQIter: (poolManager, queueManager, callback) =>
+        _insertSingleFAQIter.call @, poolManager, queueManager, (insertSingleError, insertSingleResult) =>
+            callback insertSingleError, insertSingleResult

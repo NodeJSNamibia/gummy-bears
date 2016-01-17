@@ -23,7 +23,7 @@ exports.FAQRequestHandler = class FAQRequestHandler
                         else
                             response.json 201, FAQCreationResult
 
-        insertFAQ = (queueManager, poolManager, request, response) ->
+        _insertFAQ = (queueManager, poolManager, request, response) ->
             poolManager.acquire 'faqs', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
@@ -33,7 +33,7 @@ exports.FAQRequestHandler = class FAQRequestHandler
                         arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'faqs', insertFAQRequestObject
                 else
-                    controllerInstance.insertAllFAQ poolManager, queueManager, (FAQCreationError, FAQCreationResult) =>
+                    controllerInstance.insertFAQ request.session?.user?.username, poolManager, queueManager, (FAQCreationError, FAQCreationResult) =>
                         if FAQCreationError?
                             response.json 500, {error: FAQCreationError.message}
                         else
@@ -47,7 +47,7 @@ exports.FAQRequestHandler = class FAQRequestHandler
                     getAllFAQsRequestObject =
                         methodName: 'getAllFAQs'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'FAQs', getAllFAQsRequestObject
+                    queueManager.enqueueRequest 'faqs', getAllFAQsRequestObject
                 else
                     controllerInstance.getAllFAQ poolManager, queueManager, (getAllFAQsError, allFAQs) =>
                         if getAllFAQsError?
@@ -56,14 +56,14 @@ exports.FAQRequestHandler = class FAQRequestHandler
                             response.json 200, allFAQs
 
         _getFAQ = (queueManager, poolManager, request, response) ->
-            poolManager.acquire 'faq', (controllerInstanceError, controllerInstance) =>
+            poolManager.acquire 'faqs', (controllerInstanceError, controllerInstance) =>
                 if controllerInstanceError?
                     response.json 500, {error: controllerInstanceError.message}
                 else if not controllerInstance?
                     getFAQRequestObject =
                         methodName: 'getFAQ'
                         arguments: [queueManager, poolManager, request, response]
-                    queueManager.enqueueRequest 'faq', getFAQRequestObject
+                    queueManager.enqueueRequest 'faqs', getFAQRequestObject
                 else
                     controllerInstance.getFAQ request.params.id, poolManager, queueManager, (getFAQError, FAQDetails) =>
                         if getFAQError?
