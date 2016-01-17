@@ -1,5 +1,6 @@
 'use strict'
 
+AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
 ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
 DataManager                = require('../lib/data-manager').DataManager
