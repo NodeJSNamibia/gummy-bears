@@ -13,12 +13,14 @@ uuid               = require 'uuid4'
 exports.FAQsController = class FAQsController extends AbstractController
     _insertSingleFAQIter = (singleFAQData, callback) ->
         # create the proper object representing the FAQ
-        FAQInfo =
-            id: singleFAQData["id"]
-            Question: singleFAQData["Question"]
-            Answer: singleFAQData["Answer"]
-
-        @faq.insertFAQ FAQInfo, (saveError, saveResult) =>
+        faqInfo =
+            question: singleFAQData.question
+            answer: singleFAQData.answer
+        @faq.insertFAQ uuid(), faqInfo, (saveError, saveResult) =>
+            if saveError?
+                
+            else
+              # body...
             callback saveError, saveResult
 
     _getFAQ = (id, poolManager, queueManager, callback) ->
