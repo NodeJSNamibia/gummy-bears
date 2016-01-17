@@ -17,7 +17,7 @@ module.exports = (app, poolManager, queueManager) ->
 
     # get the list of FAQ
     app.route('/api/faq').get (request, response) ->
-        faqRequestHandler.getAllFAQ queueManager, poolManager, request, response
+        faqRequestHandler.getAllFAQs queueManager, poolManager, request, response
 
     # get a specific FAQ with its id
     app.route('/api/faq/:id').get (request, response) ->

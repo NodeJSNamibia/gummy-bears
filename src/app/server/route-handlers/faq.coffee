@@ -33,7 +33,7 @@ exports.FAQRequestHandler = class FAQRequestHandler
                         arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'faqs', insertFAQRequestObject
                 else
-                    controllerInstance.insertFAQ request.session?.user?.username, poolManager, queueManager, (FAQCreationError, FAQCreationResult) =>
+                    controllerInstance.insertFAQ request.session?.user?.username, request.body, poolManager, queueManager, (FAQCreationError, FAQCreationResult) =>
                         if FAQCreationError?
                             response.json 500, {error: FAQCreationError.message}
                         else
@@ -49,7 +49,7 @@ exports.FAQRequestHandler = class FAQRequestHandler
                         arguments: [queueManager, poolManager, request, response]
                     queueManager.enqueueRequest 'faqs', getAllFAQsRequestObject
                 else
-                    controllerInstance.getAllFAQ poolManager, queueManager, (getAllFAQsError, allFAQs) =>
+                    controllerInstance.getAllFAQs poolManager, queueManager, (getAllFAQsError, allFAQs) =>
                         if getAllFAQsError?
                             response.json 500, {error: getAllFAQsError.message}
                         else

@@ -51,6 +51,31 @@ exports.FAQsController = class FAQsController extends AbstractController
                                     else
                                         callback null, insertAllResult
 
+    _insertFAQ = (username, singleFAQData, poolManager, queueManager, callback) ->
+        @faq.checkAuthorization username, 'insertFAQ', @technicalUserProxy, (authorizationError, authorizationResult) =>
+            if authorizationError?
+                callback authorizationError, null
+            else if not authorizationResult
+                unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to add a frequently asked question"
+                callback unauthorizedInsertionError, null
+            else
+                faqInfo =
+                    question: singleFAQData.question
+                    answer: singleFAQData.answer
+                @faq.insertFAQ uuid(), faqInfo, (saveError, saveResult) =>
+                    if saveError?
+                        @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                            if releaseError?
+                                callback releaseError, null
+                            else
+                                callback saveError, null
+                    else
+                        @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                            if releaseError?
+                                callback releaseError, null
+                            else
+                                callback null, saveResult
+    
     _getFAQ = (id, poolManager, queueManager, callback) ->
         @faq.findOne id, (findError, FAQDetails) =>
             @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
@@ -75,6 +100,10 @@ exports.FAQsController = class FAQsController extends AbstractController
         _insertAllFAQs.call @, username, poolManager, queueManager, (insertAllError, insertAllResult) =>
             callback insertAllError, insertAllResult
 
+    insertFAQ: (username, insertObject, poolManager, queueManager, callback) =>
+        _insertFAQ.call @, username, insertObject, poolManager, queueManager, (insertSingleError, insertSingleResult) =>
+            callback insertSingleError, insertSingleResult
+
     getFAQ: (id, poolManager, queueManager, callback) =>
         _getFAQ.call @, id, poolManager, queueManager, (getFAQError, FAQDetails) =>
             callback getFAQError, FAQDetails
@@ -82,19 +111,3 @@ exports.FAQsController = class FAQsController extends AbstractController
     getAllFAQs: (poolManager, queueManager, callback) =>
         _getAllFAQs.call @, poolManager, queueManager, (getAllFAQsError, allFAQs) =>
             callback getAllFAQsError, allFAQs
-
-    _insertSingleFAQIter = (singleFAQData, callback) ->
-        # create the proper object representing the FAQ
-        faqInfo =
-            question: singleFAQData.question
-            answer: singleFAQData.answer
-        @faq.insertFAQ uuid(), faqInfo, (saveError, saveResult) =>
-            if saveError?
-
-            else
-              # body...
-            callback saveError, saveResult
-
-    insertSingleFAQIter: (poolManager, queueManager, callback) =>
-        _insertSingleFAQIter.call @, poolManager, queueManager, (insertSingleError, insertSingleResult) =>
-            callback insertSingleError, insertSingleResult
