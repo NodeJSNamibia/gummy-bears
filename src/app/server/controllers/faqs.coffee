@@ -4,9 +4,11 @@
 # It handles all requests related to FAQs
 
 async              = require 'async'
+cson               = require 'cson'
 FAQModel           = require('../models/faq').FAQModel
 TechnicalUserProxy = require('../proxies/technical-user').TechnicalUserProxy
 AbstractController = require('./abstract-controller').AbstractController
+uuid               = require 'uuid4'
 
 exports.FAQsController = class FAQsController extends AbstractController
     _insertSingleFAQIter = (singleFAQData, callback) ->
@@ -43,47 +45,36 @@ exports.FAQsController = class FAQsController extends AbstractController
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to load all frequently asked questions"
                 callback unauthorizedInsertionError, null
             else
-                
-
-
-
-        @event.checkAuthorization username, 'insertAllEvents', @technicalUserProxy, (authorizationError, authorizationResult) =>
-            if authorizationError?
-                callback authorizationError, null
-            else if not authorizationResult
-                unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to load all events"
-                callback unauthorizedInsertionError, null
-            else
-                EventInfoLoader.getInfoLoader().loadEvents (loadError, rawEvents) =>
-                    if loadError?
-                        @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
-                            if releaseError?
-                                callback releaseError, null
-                            else
-                                callback loadError, null
+                faqSampleFilePath = __dirname + '/../../var/faqs.cson'
+                parseOptions =
+                    cson: true
+                    json: true
+                    javascript: false
+                    coffeescript: false
+                cson.parseFile faqSampleFilePath, parseOptions, (parseError, faqCollection) =>
+                    if parseError?
+                        callback parseError, null
                     else
-                        eventOptions = {}
-                        for curEvent in rawEvents
-                            do (curEvent) =>
-                                curEventID = uuid()
-                                eventOptions[curEventID] = (partialCallback) =>
-                                    _insertSingleEvent.call @, curEventID, curEvent, (insertError, singleEvent) =>
-                                        partialCallback insertError, singleEvent
-                        async.series eventOptions, (insertAllError, insertAllResult) =>
+                        faqOptions = {}
+                        for singleFAQ in faqCollection
+                            do (singleFAQ) =>
+                                curFAQID = uuid()
+                                faqOptions[curFAQID] = (faqPartialCallback) =>
+                                    @faq.insertFAQ curFAQID, singleFAQ, (saveError, saveResult) =>
+                                        faqPartialCallback saveError, saveResult
+                        async.series faqOptions, (insertAllError, insertAllResult) =>
                             if insertAllError?
-                                @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
+                                @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
                                     if releaseError?
                                         callback releaseError, null
                                     else
                                         callback insertAllError, null
                             else
-                                @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
+                                @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
                                     if releaseError?
                                         callback releaseError, null
                                     else
                                         callback null, insertAllResult
-
-
 
     constructor: (envVal) ->
         @faq = new FAQModel envVal
