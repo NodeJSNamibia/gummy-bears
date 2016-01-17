@@ -2,6 +2,11 @@
 
 AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
+ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
+DataManager                = require('../lib/data-manager').DataManager
+SocketContainer            = require('../util/socket-container').SocketContainer
+validator                  = require('validator')
+async                      = require 'async'
 
 exports.QuickNoteModel = class QuickNoteModel
 
@@ -13,8 +18,29 @@ exports.QuickNoteModel = class QuickNoteModel
                 AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
                     callback authorizationError, authorizationResult
 
-    _notify = (notificationID, notificationData, callback) ->
+    _checkAndSanitizeNotificationID = (notificationID, callback) ->
+        @sanitizationHelper.checkAndSanitizeID notificationID, "Error! Null Notification ID", "Invalid Notification ID", true, validator, (notificationIDError, validNotificationID) =>
+            callback notificationIDError, validNotificationID
+
+    _checkAndSanitizeForInsertion = (notificationData, callback) ->
         callback null, null
+
+    _notify = (notificationID, notificationData, callback) ->
+        _checkAndSanitizeNotificationID.call @, notificationID, (notificationIDError, validNotificationID) =>
+            if notificationIDError?
+                callback notificationIDError, null
+            else
+                _checkAndSanitizeForInsertion.call @, notificationData, (checkError, validNotificationData) =>
+                    if checkError?
+                        callback checkError, null
+                    else
+                        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
+                            if urlError?
+                                callback urlError, null
+                            else
+                                # use the socket container to propagate the notification
+                                DataManager.getDBManagerInstance(dbURL).insertNotification validNotificationID, validNotificationData, (saveError, saveResult) =>
+                                    callback saveError, saveResult
 
     constructor: (@appEnv) ->
         @sanitizationHelper = new CheckAndSanitizationHelper()
