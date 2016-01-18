@@ -24,7 +24,26 @@ exports.LocationRequestHandler = class LocationRequestHandler
                         else
                             response.json 200, allLocations
 
+        _getLocation = (queueManager, poolManager, request, response) ->
+            poolManager.acquire 'locations', (controllerInstanceError, controllerInstance) =>
+                if controllerInstanceError?
+                    response.json 500, {error: controllerInstanceError.message}
+                else if not controllerInstance?
+                    getLocationRequestObject =
+                        methodName: 'getLocation'
+                        arguments: [queueManager, poolManager, request, response]
+                    queueManager.enqueueRequest 'locations', getLocationRequestObject
+                else
+                    controllerInstance.getLocation request.params.id, poolManager, queueManager, (getLocationError, locationDetails) =>
+                        if getLocationError?
+                            response.json 500, {error: getLocationError.message}
+                        else
+                            response.json 200, locationDetails
+
         constructor: ->
 
         getAllLocations: (queueManager, poolManager, request, response) =>
             _getAllLocations.call @, queueManager, poolManager, request, response
+
+        getLocation: (queueManager, poolManager, request, response) =>
+            _getLocation.call @, queueManager, poolManager, request, response
