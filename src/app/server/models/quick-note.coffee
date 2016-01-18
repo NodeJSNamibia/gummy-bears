@@ -22,8 +22,24 @@ exports.QuickNoteModel = class QuickNoteModel
         @sanitizationHelper.checkAndSanitizeID notificationID, "Error! Null Notification ID", "Invalid Notification ID", true, validator, (notificationIDError, validNotificationID) =>
             callback notificationIDError, validNotificationID
 
+    _checkAndSanitizeNotificationContent = (notificationContent, callback) ->
+        @sanitizationHelper.checkAndSanitizeWords notificationContent, "Error in notification content", "Empty notification content", validator, (notificationContentError, validNotificationContent) =>
+            callback notificationContentError, validNotificationContent
+
+    _checkAndSanitizeNotificationTarget = (notificationTarget, callback) ->
+        @sanitizationHelper.checkAndSanitizeCode notificationTarget, "Invalid Notification Target", validator, (notificationTargetError, validNotificationTarget) =>
+            callback notificationTargetError, validNotificationTarget
+
     _checkAndSanitizeForInsertion = (notificationData, callback) ->
-        callback null, null
+        checkOptions =
+            content: (contentPartialCallback) =>
+                _checkAndSanitizeNotificationContent.call @, notificationData.content, (contentError, validNotificationContent) =>
+                    contentPartialCallback contentError, validNotificationContent
+            target: (targetPartialCallback) =>
+                _checkAndSanitizeNotificationTarget.call @, notificationData.target, (targetError, validNotificationTarget) =>
+                    targetPartialCallback targetError, validNotificationTarget
+        async.parallel checkOptions, (checkInsertError, validNotification) =>
+            callback checkInsertError, validNotification
 
     _notify = (notificationID, notificationData, callback) ->
         _checkAndSanitizeNotificationID.call @, notificationID, (notificationIDError, validNotificationID) =>
@@ -38,9 +54,12 @@ exports.QuickNoteModel = class QuickNoteModel
                             if urlError?
                                 callback urlError, null
                             else
-                                # use the socket container to propagate the notification
                                 DataManager.getDBManagerInstance(dbURL).insertNotification validNotificationID, validNotificationData, (saveError, saveResult) =>
-                                    callback saveError, saveResult
+                                    if saveError?
+                                        callback saveError, null
+                                    else
+                                        SocketContainer.getSocketContainer().sendNotification validNotificationData.target, validNotificationData.content, @appEnv, (sendNotificationError, sendNotificationResult) =>
+                                            callback sendNotificationError, sendNotificationResult
 
     constructor: (@appEnv) ->
         @sanitizationHelper = new CheckAndSanitizationHelper()
