@@ -75,6 +75,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         require('app/server/routes/faqs')(app, poolManager, queueManager)
         require('app/server/routes/technical-users')(app, poolManager, queueManager)
         require('app/server/routes/quick-notes')(app, poolManager, queueManager)
+        require('app/server/routes/locations')(app, poolManager, queueManager)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?

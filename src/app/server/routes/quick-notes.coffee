@@ -1,6 +1,6 @@
 'use strict'
 
-QuickNoteRequestHandler = require('../route-handlers/quick-notes').QuickNoteRequestHandler
+QuickNoteRequestHandler = require('../route-handlers/quick-note').QuickNoteRequestHandler
 
 module.exports = (app, poolManager, queueManager) ->
     quickNoteRequestHandler = QuickNoteRequestHandler.getRequestHandler()
