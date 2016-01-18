@@ -192,6 +192,8 @@ exports.DataManager = class DataManager
             @facultyView = 'faculty'
             @eventDesignDoc = 'event_dd'
             @eventView = 'event'
+            @locationDesignDoc = 'location_dd'
+            @locationView = 'location'
 
         findStudent: (studentNumber, callback) =>
             _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
@@ -262,5 +264,5 @@ exports.DataManager = class DataManager
                 callback findAllError, allLocations
 
         findlocation: (locationID, callback) =>
-            _findLocation.call @, locationID, (findLocationError, locationDetails) =>
+            _findDocument.call @, 'location', locationID, (findLocationError, locationDetails) =>
                 callback findLocationError, locationDetails
