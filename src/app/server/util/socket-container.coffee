@@ -2,6 +2,7 @@
 
 FacultyProxy = require('../proxies/faculty').FacultyProxy
 StudentProxy = require('../proxies/student').StudentProxy
+async        = require 'async'
 
 exports.SocketContainer = class SocketContainer
     _socketContainerInstance = undefined
@@ -30,9 +31,30 @@ exports.SocketContainer = class SocketContainer
                     if programmeListError?
                         callback programmeListError, null
                     else
-                        
-                facID = target
-                callback null, null
+                        connectedStudents = []
+                        for studentNumber, studentSocket of @socketMap
+                            do (studentNumber, studentSocket) =>
+                                connectedStudents.push studentNumber
+                        targetedStudents = {}
+                        for connectedStudent in connectedStudents
+                            do (connectedStudent) =>
+                                targetedStudents[connectedStudent] = (targetPartialCallback) =>
+                                    new StudentProxy(appEnv).findProgramme connectedStudent, (findError, programme) =>
+                                        if findError?
+                                            targetPartialCallback findError, null
+                                        else if programme in programmeList
+                                            targetPartialCallback null, true
+                                        else
+                                            targetPartialCallback null, false
+                        async.parallel targetedStudents, (connectError, connectResult) =>
+                            if connectError?
+                                callback connectError null
+                            else
+                                for studentNumber, shouldEmit of connectResult
+                                    do (studentNumber, shouldEmit) =>
+                                        if shouldEmit
+                                            @socketMap[studentNumber].emit 'quickNotification', {content: notificationContent}
+                                callback null, null
 
         constructor: ->
             @socketMap = {}
