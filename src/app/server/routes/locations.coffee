@@ -5,4 +5,5 @@ LocationRequestHandler = require('../route-handlers/location').LocationRequestHa
 module.exports = (app, poolManager, queueManager) ->
     locationRequestHandler = LocationRequestHandler.getRequestHandler()
 
-    
+    app.route('/api/locations').get (request, response) ->
+        locationRequestHandler.getAllLocations queueManager, poolManager, request, response
