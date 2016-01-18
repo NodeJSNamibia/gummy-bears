@@ -75,7 +75,7 @@ exports.FAQsController = class FAQsController extends AbstractController
                                 callback releaseError, null
                             else
                                 callback null, saveResult
-    
+
     _getFAQ = (id, poolManager, queueManager, callback) ->
         @faq.findOne id, (findError, FAQDetails) =>
             @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
@@ -85,7 +85,7 @@ exports.FAQsController = class FAQsController extends AbstractController
                     callback findError, FAQDetails
 
     _getAllFAQs = (poolManager, queueManager, callback) ->
-        @faq.findAll (findError, allFAs) =>
+        @faq.findAll (findError, allFAQs) =>
             @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
                     callback releaseError, null
