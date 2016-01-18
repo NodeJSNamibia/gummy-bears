@@ -256,6 +256,21 @@ exports.FacultyModel = class FacultyModel
                 DataManager.getDBManagerInstance(dbURL).findFacultyNameByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
                     callback facultyIDError, facultyID
 
+    _getProgrammeList = (facultyID, callback) ->
+        _findOne.call @, facultyID, (findError, facultyDetails) =>
+            if findError?
+                callback findError, null
+            else
+                allProgrammes = []
+                for dept in facultyDetails.departments
+                    do (dept) =>
+                        deptProgrammeCodes = []
+                        for deptProg in dept.programmes
+                            do (deptProg) =>
+                                deptProgrammeCodes.push deptProg.code
+                        Array::push.apply allProgrammes, deptProgrammeCodes
+                callback null, allProgrammes
+
     constructor: (@appEnv) ->
         @sanitizationHelper = new CheckAndSanitizationHelper()
 
@@ -282,3 +297,7 @@ exports.FacultyModel = class FacultyModel
     getName: (enrolledInProgramme, callback) =>
         _getName.call @, enrolledInProgramme, (facultyNameError, facultyNameObj) =>
             callback facultyNameError, facultyNameObj
+
+    getProgrammeList: (facultyID, callback) =>
+        _getProgrammeList.call @, facultyID, (programmeListError, programmeList) =>
+            callback programmeListError, programmeList

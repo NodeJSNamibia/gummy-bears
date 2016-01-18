@@ -219,6 +219,10 @@ exports.DataManager = class DataManager
             _insertDocument.call @, 'event', eventID, eventData, (insertEventError, insertEventResult) =>
                 callback insertEventError, insertEventResult
 
+        insertNotification: (notificationID, notificationData, callback) =>
+            _insertDocument.call @, 'quick-note', notificationID, notificationData, (insertNotificationError, insertNotificationResult) =>
+                callback insertNotificationError, insertNotificationResult
+
         updateStudent: (studentNumber, studentData, callback) =>
             _updateDocument.call @, 'student', studentNumber, studentData, (updateStudentError, updateStudentResult) =>
                     callback updateStudentError, updateStudentResult

@@ -8,20 +8,20 @@
 myEnv = process.env.NODE_ENV || 'development'
 
 # loading required packages
-bodyParser     = require 'body-parser'
-compress       = require 'compression'
-express        = require 'express'
-methodOverride = require 'method-override'
-morgan         = require 'morgan'
-fs             = require 'fs'
-session        = require 'express-session'
-RedisStore     = require('connect-redis')(session)
-redisClient    = require('redis').createClient()
-EventEmitter = require('events').EventEmitter
-
+bodyParser           = require 'body-parser'
+compress             = require 'compression'
+express              = require 'express'
+methodOverride       = require 'method-override'
+morgan               = require 'morgan'
+fs                   = require 'fs'
+session              = require 'express-session'
+RedisStore           = require('connect-redis')(session)
+redisClient          = require('redis').createClient()
+EventEmitter         = require('events').EventEmitter
 ConfigurationManager = require('app/server/lib/config-manager').ConfigurationManager
 PoolManager          = require('app/server/lib/pool-manager').PoolManager
 QueueManager         = require('app/server/lib/queue-manager').QueueManager
+SocketContainer      = require('../util/socket-container').SocketContainer
 
 ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult) =>
     if loadError?
@@ -66,9 +66,15 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         queueManager = QueueManager.getQueueManagerInstance evtEmitter
         poolManager.setExecutionEnvironment app.settings.env
 
+
+        # insert routes
         require('app/server/routes/students')(app, poolManager, queueManager)
         require('app/server/routes/login-records')(app, poolManager, queueManager)
         require('app/server/routes/faculties')(app, poolManager, queueManager)
+        require('app/server/routes/events')(app, poolManager, queueManager)
+        require('app/server/routes/faqs')(app, poolManager, queueManager)
+        require('app/server/routes/technical-users')(app, poolManager, queueManager)
+        require('app/server/routes/quick-notes')(app, poolManager, queueManager)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?
@@ -88,6 +94,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
                 portNumber = 5480
 
                 io = require('socket.io').listen server
+                SocketContainer.getSocketContainer().setSocket io
 
                 server.listen portNumber, () ->
                     console.log "Welcome to orientation week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env

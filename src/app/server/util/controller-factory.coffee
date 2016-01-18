@@ -8,6 +8,7 @@ FacultiesController      = require('../controllers/faculties').FacultiesControll
 TechnicalUsersController = require('../controllers/technical-users').TechnicalUsersController
 EventsController         = require('../controllers/events').EventsController
 FAQsController           = require('../controllers/faqs').FAQsController
+QuickNotesController     = require('../controllers/quick-notes').QuickNotesController
 
 exports.ControllerFactory = class ControllerFactory
     _cfInstance = undefined
@@ -24,6 +25,7 @@ exports.ControllerFactory = class ControllerFactory
                 when "faculties" then _createFacultiesController.call @, appEnv, callback
                 when "events" then _createEventsController.call @, appEnv, callback
                 when "faqs" then _createFAQsController.call @, appEnv, callback
+                when "quickNotes" then _createQuickNotesController.call @, appEnv, callback
 
         _createStudentsController = (appEnv, callback) ->
             studentsController = new StudentsController appEnv
@@ -47,6 +49,11 @@ exports.ControllerFactory = class ControllerFactory
 
         _createFAQsController = (appEnv, callback) ->
             faqsController = new FAQsController appEnv
+            callback null, faqsController
+
+        _createQuickNotesController = (appEnv, callback) ->
+            quickNotesController = new QuickNotesController appEnv
+            callback null, quickNotesController
 
         constructor: ->
 

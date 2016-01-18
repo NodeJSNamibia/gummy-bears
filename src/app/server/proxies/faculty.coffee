@@ -12,6 +12,10 @@ exports.FacultyProxy = class FacultyProxy
         @faculty.getName enrolledInProgramme, (facultyNameError, facultyNameObj) =>
             callback facultyNameError, facultyNameObj
 
+    _getProgrammeList = (facultyID, callback) ->
+        @faculty.getProgrammeList facultyID, (programmeListError, programmeList) =>
+            callback programmeListError, programmeList
+
     constructor: (appEnv) ->
         @faculty = new FacultyModel appEnv
 
@@ -22,3 +26,7 @@ exports.FacultyProxy = class FacultyProxy
     getName: (enrolledInProgramme, callback) =>
         _getName.call @, enrolledInProgramme, (facultyNameError, facultyNameObj) =>
             callback facultyNameError, facultyNameObj
+
+    getProgrammeList: (facultyID, callback) =>
+        _getProgrammeList.call @, facultyID, (programmeListError, programmeList) =>
+            callback programmeListError, programmeList
