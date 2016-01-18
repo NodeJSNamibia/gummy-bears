@@ -260,3 +260,7 @@ exports.DataManager = class DataManager
         findAllLocations: (callback) =>
             _findAllLocations.call @, (findAllError, allLocations) =>
                 callback findAllError, allLocations
+
+        findlocation: (locationID, callback) =>
+            _findLocation.call @, locationID, (findLocationError, locationDetails) =>
+                callback findLocationError, locationDetails

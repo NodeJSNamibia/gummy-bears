@@ -7,6 +7,10 @@ validator                  = require('validator')
 
 exports.LocationModel = class LocationModel
 
+    _checkAndSanitizeLocationID = (locationID, callback) ->
+        @sanitizationHelper.checkAndSanitizeID locationID, "Error! Null location ID", "Invalid location ID", true, validator, (locationIDError, validLocationID) =>
+            callback locationIDError, validLocationID
+
     _findAll = (callback) ->
         ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
             if urlError?
@@ -16,20 +20,19 @@ exports.LocationModel = class LocationModel
                     callback findAllError, allLocations
 
     _findOne = (locationID, callback) ->
-
-        _checkAndSanitizeFAQID.call @, faqID, (faqIDError, validFAQID) =>
-            if faqIDError?
-                callback faqIDError, null
+        _checkAndSanitizeLocationID.call @, locationID, (locationIDError, validLocationID) =>
+            if locationIDError?
+                callback locationIDError, null
             else
                 ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
                     if urlError?
                         callback urlError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findFAQ validFAQID, (findError, findResult) =>
+                        DataManager.getDBManagerInstance(dbURL).findlocation validLocationID, (findError, findResult) =>
                             callback findError, findResult
 
-
     constructor: (@appEnv) ->
+        @sanitizationHelper = new CheckAndSanitizationHelper()
 
     findAll: (callback) =>
         _findAll.call @, (findError, allLocations) =>
