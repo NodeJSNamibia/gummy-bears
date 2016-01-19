@@ -30,7 +30,6 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         # more parameters
         oneDay = 8640000
 
-
         # define session options
         owSessionOptions =
             resave: false
@@ -42,7 +41,6 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
             cookie: {
                 maxAge: new Date(Date.now() + oneDay)
             }
-
 
         # create the express application
         app = express()
@@ -67,7 +65,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         poolManager.setExecutionEnvironment app.settings.env
 
 
-        # insert routes
+        # insert api routes
         require('app/server/routes/students')(app, poolManager, queueManager)
         require('app/server/routes/login-records')(app, poolManager, queueManager)
         require('app/server/routes/faculties')(app, poolManager, queueManager)
@@ -76,6 +74,8 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         require('app/server/routes/technical-users')(app, poolManager, queueManager)
         require('app/server/routes/quick-notes')(app, poolManager, queueManager)
         require('app/server/routes/locations')(app, poolManager, queueManager)
+
+        # insert view routes
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?
