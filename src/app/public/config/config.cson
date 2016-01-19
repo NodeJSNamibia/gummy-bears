@@ -8,7 +8,7 @@
         sslKey: "oweek-test.key"
         sskCert: "oweek-test.crt"
     production:
-        dbURL: "10.100.253.150"
+        dbURL: "196.216.167.210"
         sslKey: "oweek-prod.key"
         sskCert: "oweek-prod.crt"
 }
