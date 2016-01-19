@@ -13,7 +13,7 @@ exports.LocationsController = class LocationsController extends AbstractControll
                 else
                     callback findError, allLocations
 
-    _getLocation = (locationID, callback) ->
+    _getLocation = (locationID, poolManager, queueManager, callback) ->
         @location.findOne locationID, (getLocationError, locationDetails) =>
             @release 'locations', poolManager, queueManager, (releaseError, releaseResult) =>
                 if releaseError?
@@ -29,5 +29,5 @@ exports.LocationsController = class LocationsController extends AbstractControll
             callback allLocationError, allLocations
 
     getLocation: (locationID, callback) =>
-        _getLocation.call 2, locationID, (getLocationError, locationDetails) =>
+        _getLocation.call @, locationID, poolManager, queueManager, (getLocationError, locationDetails) =>
             callback getLocationError, locationDetails
