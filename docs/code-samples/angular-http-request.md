@@ -22,7 +22,7 @@ The **sayHi** can then be called from any controller, provided the service name 
 Another alternative is to inject the **$http** service in the controller directly. The following example shows
 
 ```javascript
-app.controller("ControllerName", function($http){
+app.controller("ControllerName", function($http, $scope){
     // normal instructions
     $http.post('/api/students/authenticate', JSON.stringify(content)).
         success(function(data){
