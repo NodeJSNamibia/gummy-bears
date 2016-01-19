@@ -1,0 +1,38 @@
+<section id="video-section">
+	<div layout="row" layout-align="center center">
+		<md-content layout-padding >
+			<video width="860" height="" >
+			</video>
+		</md-content>
+	</div>
+</section>
+<section id="calendar-section">
+    <div  ng-controller="Calendar as month" ng-cloak>
+	<md-toolbar class="tall">
+	    <div class="md-toolbar-tools">
+		<md-button class="md-icon-button" aria-label="Previous" ng-click="month.previous()">
+		    <md-icon><i class="fa fa-chevron-left fa-2x"></i> </md-icon>
+		</md-button>
+		<span flex></span>
+		<h1>{{month.month_name + " " + month.year}}</h1>
+		<span flex></span>
+		<md-button class="md-icon-button" aria-label="Next" ng-click="month.next()">
+		    <md-icon><i class="fa fa-chevron-right fa-2x"></i> </md-icon>
+		</md-button>
+	    </div>
+	</md-toolbar>
+	<md-grid-list md-cols-sm="7" md-cols-md="7" md-cols="7" md-cols-gt-md="7"
+		      md-row-height-gt-md="1:1" md-row-height="4:3"
+		      md-gutter="8px" md-gutter-gt-sm="4px">
+	    <md-grid-tile ng-repeat="weekday in month.wdays">
+		<h2>{{weekday}}</h2>
+	    </md-grid-tile>
+	    <md-grid-tile ng-repeat="day in month.days track by $index">
+		<h3>{{day}}</h3>
+		<md-grid-tile-footer>
+
+		</md-grid-tile-footer>
+	    </md-grid-tile>
+	</md-grid-list>
+    </div>
+</section>
