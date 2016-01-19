@@ -196,3 +196,21 @@ In order to offer a place where students can find answers to usual questions, we
     "answer": "a smart subtle response"
 }
 ```
+
+### Location
+
+Places of interest (venues where classes or key events are taking place) will be identified and recorded into the system. These places are commonly referred to **locations**. A location is represented as follows
+
+```json
+{
+    "id": "loc3",
+    "coordinates": {
+        "latitude": "35.8989832323",
+        "longitude": "75.9899089889"
+    },
+    "image": {
+        "src": "/path/to/location-image-file",
+        "caption": "Any additional description of the location"
+    }
+}
+```

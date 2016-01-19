@@ -65,6 +65,9 @@ exports.StudentModel = class StudentModel
             lastName: (lastNamePartialCallback) =>
                 @sanitizationHelper.checkAndSanitizePersonName studentData.lastName, "Invalid Student Last Name", validator, (lastNameError, validLastName) =>
                     lastNamePartialCallback lastNameError, validLastName
+            title: (titlePartialCallback) =>
+                _checkAndSanitizeTitle.call @, studentData.title, (studentTitleError, validStudentTitle) =>
+                    titlePartialCallback studentTitleError, validStudentTitle
             nationality: (nationalityPartialCallback) =>
                 @sanitizationHelper.checkAndSanitizeString studentData.nationality, "Invalid Nationality", validator, (nationalityError, validNationality) =>
                     nationalityPartialCallback nationalityError, validNationality

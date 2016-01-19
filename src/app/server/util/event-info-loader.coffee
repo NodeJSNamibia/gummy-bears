@@ -14,7 +14,7 @@ exports.EventInfoLoader = class EventInfoLoader
 
         loadEvents: (callback) =>
             convConfig =
-                input: __dirname + '/../../../opt/events.xls'
+                input: __dirname + '/../../../opt/events.xlsx'
                 output: null
                 sheet: "Sheet 1"
             xlsxj convConfig, callback

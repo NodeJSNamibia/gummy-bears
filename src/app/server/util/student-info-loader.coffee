@@ -14,7 +14,7 @@ exports.StudentInfoLoader = class StudentInfoLoader
 
         loadStudents: (callback) =>
             convConfig =
-                input: __dirname + '/../../../opt/students.xls'
+                input: __dirname + '/../../../opt/students.xlsx'
                 output: null
                 sheet: "Sheet 1"
             xlsxj convConfig, callback
