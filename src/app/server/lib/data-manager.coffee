@@ -168,6 +168,20 @@ exports.DataManager = class DataManager
                             allEvents = (curEvent.value for curEvent in eventCol)
                             callback null, allEvents
 
+        _findAllLocations = (callback) ->
+            _getDataBucket.call @, 'location', (bucketError, bucket) =>
+                if bucketError?
+                    callback bucketError, null
+                else
+                    ViewQuery = CouchBase.ViewQuery
+                    allLocationsQuery = ViewQuery.from @locationDesignDoc, @locationView
+                    bucket.query allLocationsQuery, (multiLocationError, locationCol) =>
+                        if multiLocationError?
+                            callback multiLocationError, null
+                        else
+                            allLocations = (curLocation.value for curLocation in locationCol)
+                            callback null, allLocations
+
         constructor: (@dbURL) ->
             @allBuckets = {}
             @studentDesignDoc = 'student_dd'
@@ -178,6 +192,8 @@ exports.DataManager = class DataManager
             @facultyView = 'faculty'
             @eventDesignDoc = 'event_dd'
             @eventView = 'event'
+            @locationDesignDoc = 'location_dd'
+            @locationView = 'location'
 
         findStudent: (studentNumber, callback) =>
             _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>
@@ -242,3 +258,11 @@ exports.DataManager = class DataManager
         findAllEvents: (callback) =>
             _findAllEvents.call @, (findAllError, allEvents) =>
                 callback findAllError, allEvents
+
+        findAllLocations: (callback) =>
+            _findAllLocations.call @, (findAllError, allLocations) =>
+                callback findAllError, allLocations
+
+        findlocation: (locationID, callback) =>
+            _findDocument.call @, 'location', locationID, (findLocationError, locationDetails) =>
+                callback findLocationError, locationDetails

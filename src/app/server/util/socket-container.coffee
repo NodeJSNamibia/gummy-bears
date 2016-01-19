@@ -48,7 +48,7 @@ exports.SocketContainer = class SocketContainer
                                             targetPartialCallback null, false
                         async.parallel targetedStudents, (connectError, connectResult) =>
                             if connectError?
-                                callback connectError null
+                                callback connectError, null
                             else
                                 for studentNumber, shouldEmit of connectResult
                                     do (studentNumber, shouldEmit) =>
