@@ -16,4 +16,4 @@ In line with the design document we cerated **8** buckets. These are:
 
 ## Map-Reduce Views
 
-In Couchbase a Map-Reduce view is an index that provides a faster access to a collection of documents. In order to create an MR view, one needs to create a design document, where the view will be stored. Our views generally have the same name as the bucket. As for the design documents, we add a _dd suffix.
+In Couchbase a Map-Reduce view is an index that provides a faster access to a collection of documents. In order to create an MR view, one needs to create a design document, where the view will be stored. Our views generally have the same name as the bucket. As for the design documents, we add a \_dd suffix.
