@@ -76,6 +76,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         require('app/server/routes/locations')(app, poolManager, queueManager)
 
         # insert view routes
+        require('app/server/routes/views')(app)
 
         ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
             if sslFileNameError?
