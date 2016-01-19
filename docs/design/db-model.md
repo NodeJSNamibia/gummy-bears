@@ -1,4 +1,4 @@
-# Data Base Model
+# DataBase Model
 
 ## Introduction
 
