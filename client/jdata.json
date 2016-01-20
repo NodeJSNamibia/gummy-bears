@@ -1,0 +1,53 @@
+{
+  "locations": [
+    {
+      "id": "loc1",
+      "name": "Small Gate",
+      "coordinates": [
+        {
+          "lat": -22.564750,
+          "long": 17.076893
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Small Gate.jpg",
+          "caption": "This is the small gate"
+        }
+      ]
+    },
+    {
+      "id": "loc2",
+      "name": "Main Gate",
+      "coordinates": [
+        {
+          "lat": -22.566571,
+          "long": 17.077736
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Main Gate.jpg",
+          "caption": "This is the Main gate"
+        }
+      ]
+    }
+  ,
+    {
+      "id": "loc3",
+      "name": "Polly Heights",
+      "coordinates": [
+        {
+          "lat": -22.566196,
+          "long": 17.078181
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Poly Heights.jpg",
+          "caption": "This is Poly Heights"
+        }
+      ]
+    }
+  ]
+}
