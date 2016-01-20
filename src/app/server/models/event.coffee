@@ -14,7 +14,7 @@ exports.EventModel = class EventModel
             if technicalUserProfileError?
                 callback technicalUserProfileError, null
             else
-                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                AuthorizationManager.getInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
                     callback authorizationError, authorizationResult
 
     _checkAndSanitizeEventID = (eventID, callback) ->

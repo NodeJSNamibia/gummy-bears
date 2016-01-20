@@ -45,11 +45,11 @@ exports.TechnicalUserModel = class TechnicalUserModel
             if usernameError?
                 callback usernameError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBConfig @appEnv, (dbConfigError, dbConfig) =>
-                    if dbConfigError?
-                        callback dbConfigError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbConfig).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                        dbInstance.findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
                             if findTechnicalUserError?
                                 callback findTechnicalUserError, null
                             else
@@ -62,11 +62,11 @@ exports.TechnicalUserModel = class TechnicalUserModel
             if checkError?
                 callback checkError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBConfig @appEnv, (dbConfigError, dbConfig) =>
-                    if dbConfigError?
-                        callback dbConfigError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbConfig).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                        dbInstance.findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
                             if findTechnicalUserError?
                                 callback findTechnicalUserError, null
                             else

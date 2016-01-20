@@ -23,7 +23,7 @@ PoolManager          = require('app/server/lib/pool-manager').PoolManager
 QueueManager         = require('app/server/lib/queue-manager').QueueManager
 SocketContainer      = require('../util/socket-container').SocketContainer
 
-ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult) =>
+ConfigurationManager.getInstance().loadConfig (loadError, loadResult) =>
     if loadError?
         console.log "oops! there was an error loading the configurations..."
     else
@@ -60,8 +60,8 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
 
         evtEmitter = new EventEmitter
 
-        poolManager = PoolManager.getPoolManagerInstance evtEmitter
-        queueManager = QueueManager.getQueueManagerInstance evtEmitter
+        poolManager = PoolManager.getInstance evtEmitter
+        queueManager = QueueManager.getInstance evtEmitter
         poolManager.setExecutionEnvironment app.settings.env
 
 
@@ -78,7 +78,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         # insert view routes
         require('app/server/routes/views')(app)
 
-        ConfigurationManager.getConfigurationManager().getSSLConfig app.settings.env, (sslOptionsError, sslOptions) =>
+        ConfigurationManager.getInstance().getSSLConfig app.settings.env, (sslOptionsError, sslOptions) =>
             if sslOptionsError?
                 console.log "There was an error loading the ssl key or cetrtificate..."
                 console.log sslOptionsError.message
@@ -96,7 +96,7 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
                 portNumber = 5480
 
                 io = require('socket.io').listen server
-                SocketContainer.getSocketContainer().setSocket io
+                SocketContainer.getInstance().setSocket io
 
                 server.listen portNumber, () ->
                     console.log "Welcome to orientation week application at nust now running -- server listening on port %d in mode %s", portNumber, app.settings.env

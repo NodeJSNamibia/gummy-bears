@@ -7,7 +7,7 @@ async        = require 'async'
 exports.SocketContainer = class SocketContainer
     _socketContainerInstance = undefined
 
-    @getSocketContainer: ->
+    @getInstance: ->
         _socketContainerInstance ?= new _LocalSocketContainer
 
     class _LocalSocketContainer

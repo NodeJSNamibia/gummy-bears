@@ -10,7 +10,7 @@ exports.QueueManager = class QueueManager
 
     _qmInstance = undefined
 
-    @getQueueManagerInstance: (evtEmitter) ->
+    @getInstance: (evtEmitter) ->
         _qmInstance ?= new _LocalQueueManager evtEmitter
 
     class _LocalQueueManager

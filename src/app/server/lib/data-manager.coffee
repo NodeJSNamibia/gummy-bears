@@ -8,7 +8,6 @@ exports.DataManager = class DataManager
 
     _dbManagerInstance = undefined
 
-    # should pass a callback here
     @getInstance: (appEnv, callback) ->
         if _dbManagerInstance?
             callback null, _dbManagerInstance
@@ -22,21 +21,23 @@ exports.DataManager = class DataManager
 
     class _LocalDBManager
 
-        # generalize view extraction information in a method
-
-        _findAllStudents = (callback) ->
-            _getDataBucket.call @, 'student', (bucketError, bucket) =>
+        _extractFromView = (viewFamilyName, callback) ->
+            _getDataBucket.call @, viewFamilyName, (bucketError, bucket) =>
                 if bucketError?
                     callback bucketError, null
                 else
                     ViewQuery = Couchbase.ViewQuery
-                    allStudentsQuery = ViewQuery.from @studentDesignDoc, @studentView
-                    bucket.query allStudentsQuery, (multiStudentError, studentCol) =>
-                        if multiStudentError?
-                            callback multiStudentError, null
-                        else
-                            allStudents = (curStudent.value for curStudent in studentCol)
-                            callback null, allStudents
+                    currentQuery = ViewQuery.from @dbConfig["db"]["mrViewComponents"][viewFamilyName]
+                    bucket.query currentQuery, (queryError, objCol) =>
+                        callback queryError, objCol
+
+        _findAllStudents = (callback) ->
+            _extractFromView.call @, 'student', (studentViewError, studentCol) =>
+                if studentViewError?
+                    callback studentViewError, null
+                else
+                    allStudents = (curStudent.value for curStudent in studentCol)
+                    callback null, allStudents
 
         _findAllFaculties = (callback) ->
             _findRawFacultyCollection.call @, (rawFacultyError, facultyCol) =>
@@ -47,14 +48,8 @@ exports.DataManager = class DataManager
                     callback null, allFaculties
 
         _findRawFacultyCollection = (callback) ->
-            _getDataBucket.call @, 'faculty', (bucketError, bucket) =>
-                if bucketError?
-                    callback bucketError, null
-                else
-                    ViewQuery = Couchbase.ViewQuery
-                    allFacultiesQuery = ViewQuery.from @facultyDesignDoc, @facultyView
-                    bucket.query allFacultiesQuery, (multiFacultyError, facultyCol) =>
-                        callback multiFacultyError, facultyCol
+            _extractFromView.call @, 'faculty', (facultyViewError, facultyCol) =>
+                callback facultyViewError, facultyCol
 
         _findDocument = (bucketName, docID, callback) ->
             _getDataBucket.call @, bucketName, (bucketError, bucket) =>
@@ -121,7 +116,7 @@ exports.DataManager = class DataManager
         _getDataBucket = (bucketName, callback) ->
             currentBucket = @allBuckets[bucketName]
             if not currentBucket?
-                urlString = "couchbase://" + "#{@dbURL}"
+                urlString = "couchbase://" + "#{@dbConfig.db.url}"
                 aBucket = new CouchBase.Cluster(urlString).openBucket(bucketName)
                 @allBuckets[bucketName] = aBucket
                 currentBucket = aBucket
@@ -153,46 +148,28 @@ exports.DataManager = class DataManager
                                 callback updateError, updateResult
 
         _findAllFAQs = (callback) ->
-            _getDataBucket.call @, 'faq', (bucketError, bucket) =>
-                if bucketError?
-                    callback bucketError, null
+            _extractFromView.call @, 'faq', (faqViewError, faqCol) =>
+                if faqViewError?
+                    callback faqViewError, null
                 else
-                    ViewQuery = Couchbase.ViewQuery
-                    allFAQsQuery = ViewQuery.from @faqDesignDoc, @faqView
-                    bucket.query allFAQsQuery, (multiFAQError, faqCol) =>
-                        if multiFAQError?
-                            callback multiFAQError, null
-                        else
-                            allFAQs = (curFAQ.value for curFAQ in faqCol)
-                            callback null, allFAQs
+                    allFAQs = (curFAQ.value for curFAQ in faqCol)
+                    callback null, allFAQs
 
         _findAllEvents = (callback) ->
-            _getDataBucket.call @, 'event', (bucketError, bucket) =>
-                if bucketError?
-                    callback bucketError, null
+            _extractFromView.call @, 'event', (eventViewError, eventCol) =>
+                if eventViewError?
+                    callback eventViewError, null
                 else
-                    ViewQuery = Couchbase.ViewQuery
-                    allEventsQuery = ViewQuery.from @eventDesignDoc, @eventView
-                    bucket.query allEventsQuery, (multiEventError, eventCol) =>
-                        if multiEventError?
-                            callback multiEventError, null
-                        else
-                            allEvents = (curEvent.value for curEvent in eventCol)
-                            callback null, allEvents
+                    allEvents = (curEvent.value for curEvent in eventCol)
+                    callback null, allEvents
 
         _findAllLocations = (callback) ->
-            _getDataBucket.call @, 'location', (bucketError, bucket) =>
-                if bucketError?
-                    callback bucketError, null
+            _extractFromView.call @, 'location', (locationViewError, locationCol) =>
+                if locationViewError?
+                    callback locationViewError, null
                 else
-                    ViewQuery = CouchBase.ViewQuery
-                    allLocationsQuery = ViewQuery.from @locationDesignDoc, @locationView
-                    bucket.query allLocationsQuery, (multiLocationError, locationCol) =>
-                        if multiLocationError?
-                            callback multiLocationError, null
-                        else
-                            allLocations = (curLocation.value for curLocation in locationCol)
-                            callback null, allLocations
+                    allLocations = (curLocation.value for curLocation in locationCol)
+                    callback null, allLocations
 
         constructor: (@dbConfig) ->
             @allBuckets = {}

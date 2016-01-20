@@ -146,7 +146,7 @@ exports.StudentModel = class StudentModel
             if technicalUserProfileError?
                 callback technicalUserProfileError, null
             else
-                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                AuthorizationManager.getInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
                     callback authorizationError, authorizationResult
 
     _createPassword = (studentNumber, passwordData, callback) ->

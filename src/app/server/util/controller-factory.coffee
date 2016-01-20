@@ -14,7 +14,7 @@ LocationsController      = require('../controllers/locations').LocationsControll
 exports.ControllerFactory = class ControllerFactory
     _cfInstance = undefined
 
-    @getFactoryInstance = ->
+    @getInstance = ->
         _cfInstance ?= new _LocalControllerFactory
 
     class _LocalControllerFactory

@@ -8,7 +8,7 @@ exports.PoolManager = class PoolManager
 
     _pmInstance = undefined
 
-    @getPoolManagerInstance: (evtEmitter) ->
+    @getInstance: (evtEmitter) ->
         _pmInstance ?= new _LocalPoolManager evtEmitter
 
     class _LocalPoolManager
@@ -25,7 +25,7 @@ exports.PoolManager = class PoolManager
                     currentController = availableControllers.splice 0, 1
                     callback null, currentController
                 else if controllerContainer.count < @MAX_SIZE
-                    ControllerFactory.getFactoryInstance().createControllerInstance controllerFamilyName, @appEnv, (controllerInstanceError, controllerInstance) =>
+                    ControllerFactory.getInstance().createControllerInstance controllerFamilyName, @appEnv, (controllerInstanceError, controllerInstance) =>
                         if controllerInstanceError?
                             callback controllerInstanceError, null
                         else

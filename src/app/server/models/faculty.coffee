@@ -200,7 +200,7 @@ exports.FacultyModel = class FacultyModel
             if technicalUserProfileError?
                 callback technicalUserProfileError, null
             else
-                AuthorizationManager.getAuthorizationManagerInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
+                AuthorizationManager.getInstance().checkAuthorization technicalUserProfile, mthName, (authorizationError, authorizationResult) =>
                     callback authorizationError, authorizationResult
 
     _findAll = (callback) ->
