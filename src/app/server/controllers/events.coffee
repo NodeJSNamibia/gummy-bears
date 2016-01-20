@@ -48,10 +48,18 @@ exports.EventsController = class EventsController extends AbstractController
     _insertAllEvents = (username, poolManager, queueManager, callback) ->
         @event.checkAuthorization username, 'insertAllEvents', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
-                callback authorizationError, null
+                @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback authorizationError, null
             else if not authorizationResult
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to load all events"
-                callback unauthorizedInsertionError, null
+                @release 'events', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback unauthorizedInsertionError, null
             else
                 EventInfoLoader.getInfoLoader().loadEvents (loadError, rawEvents) =>
                     if loadError?
