@@ -2,7 +2,6 @@
 
 # This class represents a login record model
 
-ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
 uuid                 = require 'uuid4'
 moment               = require 'moment'
@@ -10,9 +9,9 @@ moment               = require 'moment'
 exports.LoginRecordModel = class LoginRecordModel
 
     _save = (validStudentNumber, callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
                 now = moment()
                 recordID = uuid()
@@ -21,7 +20,7 @@ exports.LoginRecordModel = class LoginRecordModel
                     studentNumber: validStudentNumber
                     date: now.format('YYYY-MM-DD')
                     time: now.format('HH:mm')
-                DataManager.getDBManagerInstance(dbURL).insertLoginRecord recordID, studentLR, (saveError, saveResult) =>
+                dbInstance.insertLoginRecord recordID, studentLR, (saveError, saveResult) =>
                     callback saveError, saveResult
 
     constructor: (@appEnv) ->

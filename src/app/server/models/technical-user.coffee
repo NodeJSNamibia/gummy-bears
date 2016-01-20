@@ -1,6 +1,5 @@
 'use strict'
 
-ConfigurationManager = require('../lib/config-manager').ConfigurationManager
 DataManager          = require('../lib/data-manager').DataManager
 PasswordHandler      = require('../util/password-handler').PasswordHandler
 validator            = require('validator')
@@ -13,11 +12,11 @@ exports.TechnicalUserModel = class TechnicalUserModel
             if usernameError?
                 callback usernameError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                        dbInstance.findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
                             if findTechnicalUserError?
                                 callback findTechnicalUserError, null
                             else
@@ -46,11 +45,11 @@ exports.TechnicalUserModel = class TechnicalUserModel
             if usernameError?
                 callback usernameError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                ConfigurationManager.getConfigurationManager().getDBConfig @appEnv, (dbConfigError, dbConfig) =>
+                    if dbConfigError?
+                        callback dbConfigError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                        DataManager.getDBManagerInstance(dbConfig).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
                             if findTechnicalUserError?
                                 callback findTechnicalUserError, null
                             else
@@ -63,11 +62,15 @@ exports.TechnicalUserModel = class TechnicalUserModel
             if checkError?
                 callback checkError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
-                    if findTechnicalUserError?
-                        callback findTechnicalUserError, null
+                ConfigurationManager.getConfigurationManager().getDBConfig @appEnv, (dbConfigError, dbConfig) =>
+                    if dbConfigError?
+                        callback dbConfigError, null
                     else
-                        callback null, technicalUserDoc.profile
+                        DataManager.getDBManagerInstance(dbConfig).findTechnicalUser validUsername, (findTechnicalUserError, technicalUserDoc) =>
+                            if findTechnicalUserError?
+                                callback findTechnicalUserError, null
+                            else
+                                callback null, technicalUserDoc.profile
 
     constructor: (@appEnv) ->
 

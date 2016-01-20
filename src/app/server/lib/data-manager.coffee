@@ -1,16 +1,28 @@
 'use strict'
 
-async     = require 'async'
-Couchbase = require 'couchbase'
+async                = require 'async'
+Couchbase            = require 'couchbase'
+ConfigurationManager = require('./config-manager').ConfigurationManager
 
 exports.DataManager = class DataManager
 
     _dbManagerInstance = undefined
 
-    @getDBManagerInstance: (dbURL) ->
-        _dbManagerInstance ?= new _LocalDBManager
+    # should pass a callback here
+    @getInstance: (appEnv, callback) ->
+        if _dbManagerInstance?
+            callback null, _dbManagerInstance
+        else
+            ConfigurationManager.getInstance().getDBConfig appEnv, (dbConfigError, dbOptions) =>
+                if dbConfigError?
+                    callback dbConfigError, null
+                else
+                    _dbManagerInstance = new _LocalDBManager dbOptions
+                    callback null, _dbManagerInstance
 
     class _LocalDBManager
+
+        # generalize view extraction information in a method
 
         _findAllStudents = (callback) ->
             _getDataBucket.call @, 'student', (bucketError, bucket) =>
@@ -182,18 +194,8 @@ exports.DataManager = class DataManager
                             allLocations = (curLocation.value for curLocation in locationCol)
                             callback null, allLocations
 
-        constructor: (@dbURL) ->
+        constructor: (@dbConfig) ->
             @allBuckets = {}
-            @studentDesignDoc = 'student_dd'
-            @studentView = 'student'
-            @faqDesignDoc = 'faq_dd'
-            @faqView = 'faq'
-            @facultyDesignDoc = 'faculty_dd'
-            @facultyView = 'faculty'
-            @eventDesignDoc = 'event_dd'
-            @eventView = 'event'
-            @locationDesignDoc = 'location_dd'
-            @locationView = 'location'
 
         findStudent: (studentNumber, callback) =>
             _findDocument.call @, 'student', studentNumber, (findStudentError, studentDoc) =>

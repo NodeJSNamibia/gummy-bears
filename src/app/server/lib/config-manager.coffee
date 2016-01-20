@@ -3,35 +3,28 @@
 cson = require 'cson'
 
 exports.ConfigurationManager = class ConfigurationManager
-    _managerInstance = undefined
+    _cmInstance = undefined
 
-    @getConfigurationManager: ->
-        _managerInstance ?= new _LocalConfigurationManager
+    @getInstance: ->
+        _cmInstance ?= new _LocalConfigurationManager
 
     class _LocalConfigurationManager
-        _getDBURL = (appEnv, callback) ->
-            dbURL = @configs?[appEnv]["dbURL"]
-            if not dbURL?
-                urlError = new Error "No DB URL configuration"
-                callback urlError, null
-            else
-                callback null, dbURL
 
-        _getSSLFileNames = (appEnv, callback) ->
-            sslFileNames = []
-            keyFileName = @configs?[appEnv]["sslKey"]
-            certFileName = @configs?[appEnv]["sslCert"]
-            if not keyFileName?
-                keyFileNameError = new Error "Missing SSL key file name for #{appEnv}"
-                callback keyFileNameError, null
+        _getDBConfig = (appEnv, callback) ->
+            dbConfig = @configs?[appEnv]["db"]
+            if not dbConfig?
+                dbConfigError = new Error "No DB configuration for #{appEnv}"
+                callback dbConfigError, null
             else
-                if not certFileName?
-                    certFileNameError = new Error "Missing SSL certificate file name for #{appEnv}"
-                    callback certFileNameError, null
-                else
-                    sslFileNames.push keyFileName
-                    sslFileNames.push certFileName
-                    callback null, sslFileNames
+                callback null, dbConfig
+
+        _getSSLConfig = (appEnv, callback) ->
+            sslOptions = @configs?[appEnv]["ssl"]
+            if not sslOptions?
+                sslOptionsError = new Error "Missing SSL details for #{appEnv}"
+                callback sslOptionsError, null
+            else
+                callback null, sslOptions
 
         _loadConfig = (callback) ->
             configFilePath = __dirname + "/../../public/config.cson"
@@ -54,10 +47,10 @@ exports.ConfigurationManager = class ConfigurationManager
             _loadConfig.call @, (loadError, loadResult) =>
                 callback loadError, loadResult
 
-        getDBURL: (appEnv, callback) =>
-            _getDBURL.call @, appEnv, (dbURLError, dbURL) =>
-                callback dbURLError, dbURL
+        getDBConfig: (appEnv, callback) =>
+            _getDBConfig.call @, appEnv, (dbConfigError, dbConfig) =>
+                callback dbConfigError, dbConfig
 
-        getSSLFileNames: (appEnv, callback) =>
-            _getSSLFileNames.call @, appEnv, (sslFileNameError, sslFileNames) =>
+        getSSLConfig: (appEnv, callback) =>
+            _getSSLConfig.call @, appEnv, (sslFileNameError, sslFileNames) =>
                 callback sslFileNameError, sslFileNames

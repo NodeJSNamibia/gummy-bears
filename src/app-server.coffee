@@ -78,16 +78,16 @@ ConfigurationManager.getConfigurationManager().loadConfig (loadError, loadResult
         # insert view routes
         require('app/server/routes/views')(app)
 
-        ConfigurationManager.getConfigurationManager().getSSLFileNames app.settings.env, (sslFileNameError, sslFileNames) =>
-            if sslFileNameError?
+        ConfigurationManager.getConfigurationManager().getSSLConfig app.settings.env, (sslOptionsError, sslOptions) =>
+            if sslOptionsError?
                 console.log "There was an error loading the ssl key or cetrtificate..."
-                console.log sslFileNameError.message
+                console.log sslOptionsError.message
             else
                 # define the security parameters for http2
                 securityKeyFileName =
                 serverOptions =
-                    key: fs.readFileSync __dirname + '/../ssl/' + sslFileNames[0]
-                    cert: fs.readFileSync __dirname + '/../ssl/' + sslFileNames[1]
+                    key: fs.readFileSync __dirname + '/../ssl/' + sslOptions.key
+                    cert: fs.readFileSync __dirname + '/../ssl/' + sslOptions.cert
                     requestCert: true
                     passphrase: 'first oweek at nust'
 

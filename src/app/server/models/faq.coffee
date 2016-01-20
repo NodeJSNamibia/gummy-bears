@@ -2,7 +2,6 @@
 
 AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
-ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
 DataManager                = require('../lib/data-manager').DataManager
 validator                  = require('validator')
 async                      = require 'async'
@@ -50,11 +49,11 @@ exports.FAQModel = class FAQModel
                     if checkError?
                         callback checkError, null
                     else
-                        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                            if urlError?
-                                callback urlError, null
+                        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                            if dbInstanceError?
+                                callback dbInstanceError, null
                             else
-                                DataManager.getDBManagerInstance(dbURL).insertFAQ validFAQID, validFAQObject, (saveError, saveResult) =>
+                                dbInstance.insertFAQ validFAQID, validFAQObject, (saveError, saveResult) =>
                                     callback saveError, saveResult
 
     _findOne = (faqID, callback) ->
@@ -62,19 +61,19 @@ exports.FAQModel = class FAQModel
             if faqIDError?
                 callback faqIDError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findFAQ validFAQID, (findError, findResult) =>
+                        dbInstance.findFAQ validFAQID, (findError, findResult) =>
                             callback findError, findResult
 
     _findAll = (callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findAllFAQs (findAllError, allFAQs) =>
+                dbInstance.findAllFAQs (findAllError, allFAQs) =>
                     callback findAllError, allFAQs
 
     constructor: (@appEnv) ->

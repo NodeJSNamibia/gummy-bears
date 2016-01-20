@@ -1,7 +1,6 @@
 'use strict'
 
 AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
 DataManager                = require('../lib/data-manager').DataManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
 validator                  = require('validator')
@@ -107,12 +106,13 @@ exports.EventModel = class EventModel
                     if checkError?
                         callback checkError, null
                     else
-                        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                            if urlError?
-                                callback urlError, null
+                        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                            if dbInstanceError?
+                                callback dbInstanceError, null
                             else
-                                DataManager.getDBManagerInstance(dbURL).insertEvent validEventID, validEventObj, (saveError, saveResult) =>
+                                dbInstance.insertEvent validEventID, validEventObj, (saveError, saveResult) =>
                                     callback saveError, saveResult
+
 
     _findAllTimeFiltered = (studentNumber, studentProxy, facultyProxy, callback) =>
         if not studentNumber?
@@ -131,11 +131,11 @@ exports.EventModel = class EventModel
                                 callback eventsError, facultyTimeFilteredEvents
 
     _findAllTimeFilteredForAllFaculties = (callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findAllEvents (allEventsError, allEvents) =>
+                dbInstance.findAllEvents (allEventsError, allEvents) =>
                     if allEventsError?
                         callback allEventsError, null
                     else
@@ -143,11 +143,11 @@ exports.EventModel = class EventModel
                             callback filterError, timeFilteredEvents
 
     _findAllTimeFilteredForSingleFaculty = (facultyID, callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findAllEvents (allEventsError, allEvents) =>
+                dbInstance.findAllEvents (allEventsError, allEvents) =>
                     if allEventsError?
                         callback allEventsError, null
                     else
@@ -166,11 +166,11 @@ exports.EventModel = class EventModel
         callback null, eventsToCome
 
     _findAll = (callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findAllEvents (allEventsError, allEvents) =>
+                dbInstance.findAllEvents (allEventsError, allEvents) =>
                     callback allEventsError, allEvents
 
     constructor: (@appEnv) ->

@@ -1,7 +1,6 @@
 'use strict'
 
 AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
 DataManager                = require('../lib/data-manager').DataManager
 PasswordHandler            = require('../util/password-handler').PasswordHandler
@@ -92,11 +91,11 @@ exports.StudentModel = class StudentModel
             if studentNumberError?
                 callback studentNumberError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findStudentError, studentDoc) =>
+                        dbInstance.findStudent validUsername, (findStudentError, studentDoc) =>
                             if findStudentError?
                                 callback findStudentError, null
                             else
@@ -135,11 +134,11 @@ exports.StudentModel = class StudentModel
                 if studentData["address line 4"]?
                     homeAddress[addressLine4] = studentData["address line 4"]
                 studentInfo["homeAddress"] = homeAddress
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                ConfigurationManager.getConfigurationManager().getDBConfig @appEnv, (dbConfigError, dbConfig) =>
+                    if dbConfigError?
+                        callback dbConfigError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).insertStudent studentInfo, (saveError, saveResult) =>
+                        DataManager.getDBManagerInstance(dbConfig).insertStudent studentInfo, (saveError, saveResult) =>
                             callback saveError, saveResult
 
     _checkAuthorization = (username, mthName, technicalUserProxy, callback) ->
@@ -163,11 +162,11 @@ exports.StudentModel = class StudentModel
                         if hashError?
                             callback hashError, null
                         else
-                            ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                                if urlError?
-                                    callback urlError, null
+                            DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                                if dbInstanceError?
+                                    callback dbInstanceError, null
                                 else
-                                    DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {password: hashedPassword}, (updateError, updateResult) =>
+                                    dbInstance.updateStudent validStudentNumber, {password: hashedPassword}, (updateError, updateResult) =>
                                         callback updateError, updateResult
 
     _updateCourses = (studentNumber, courseData, callback) ->
@@ -176,11 +175,11 @@ exports.StudentModel = class StudentModel
                 callback studentNumberError, null
             else
                 _checkAndSanitizeCourses.call @, courseData.courses, (courseError, validCourses) =>
-                    ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                        if urlError?
-                            callback urlError, null
+                    DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                        if dbInstanceError?
+                            callback dbInstanceError, null
                         else
-                            DataManager.getDBManagerInstance(dbURL).updateStudent validStudentNumber, {courses: validCoursess}, (updateError, updateResult) =>
+                            dbInstance.updateStudent validStudentNumber, {courses: validCoursess}, (updateError, updateResult) =>
                                 callback updateError, updateResult
 
     _findOne = (studentNumber, callback) ->
@@ -188,11 +187,11 @@ exports.StudentModel = class StudentModel
             if studentNumberError?
                 callback studentNumberError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
+                        dbInstance.findStudent validStudentNumber, (findError, findResult) =>
                             if findError?
                                 callback findError, null
                             else
@@ -201,11 +200,11 @@ exports.StudentModel = class StudentModel
                                 callback null, studentRes
 
     _findAll = (callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findAllStudents (findAllError, allStudents) =>
+                dbInstance.findAllStudents (findAllError, allStudents) =>
                     if findAllError?
                         callback findAllError, null
                     else
@@ -222,11 +221,11 @@ exports.StudentModel = class StudentModel
             if studentNumberError?
                 callback studentNumberError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findStudent validStudentNumber, (findError, findResult) =>
+                        dbInstance.findStudent validStudentNumber, (findError, findResult) =>
                             if findError?
                                 callback findError, null
                             else

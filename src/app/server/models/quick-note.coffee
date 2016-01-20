@@ -2,7 +2,6 @@
 
 AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
-ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
 DataManager                = require('../lib/data-manager').DataManager
 SocketContainer            = require('../util/socket-container').SocketContainer
 validator                  = require('validator')
@@ -50,11 +49,11 @@ exports.QuickNoteModel = class QuickNoteModel
                     if checkError?
                         callback checkError, null
                     else
-                        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                            if urlError?
-                                callback urlError, null
+                        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                            if dbInstanceError?
+                                callback dbInstanceError, null
                             else
-                                DataManager.getDBManagerInstance(dbURL).insertNotification validNotificationID, validNotificationData, (saveError, saveResult) =>
+                                dbInstance.insertNotification validNotificationID, validNotificationData, (saveError, saveResult) =>
                                     if saveError?
                                         callback saveError, null
                                     else

@@ -1,7 +1,6 @@
 'use strict'
 
 AuthorizationManager       = require('../lib/authorization-manager').AuthorizationManager
-ConfigurationManager       = require('../lib/config-manager').ConfigurationManager
 CheckAndSanitizationHelper = require('../util/sanitization-helper').CheckAndSanitizationHelper
 DataManager                = require('../lib/data-manager').DataManager
 validator                  = require('validator')
@@ -205,11 +204,11 @@ exports.FacultyModel = class FacultyModel
                     callback authorizationError, authorizationResult
 
     _findAll = (callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findAllFaculties (findAllError, allFaculties) =>
+                dbInstance.findAllFaculties (findAllError, allFaculties) =>
                     callback findAllError, allFaculties
 
     _findOne = (facultyId, callback) ->
@@ -217,11 +216,11 @@ exports.FacultyModel = class FacultyModel
             if facultyIdError?
                 callback facultyIdError, null
             else
-                ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                    if urlError?
-                        callback urlError, null
+                DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                    if dbInstanceError?
+                        callback dbInstanceError, null
                     else
-                        DataManager.getDBManagerInstance(dbURL).findFaculty validFacultyID, (findError, findResult) =>
+                        dbInstance.findFaculty validFacultyID, (findError, findResult) =>
                             callback findError, findResult
 
     _insertFaculty = (facultyId, facultyData, callback) ->
@@ -233,27 +232,27 @@ exports.FacultyModel = class FacultyModel
                     if facultyDataError?
                         callback facultyDataError, null
                     else
-                        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-                            if urlError?
-                                callback urlError, null
+                        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+                            if dbInstanceError?
+                                callback dbInstanceError, null
                             else
-                                DataManager.getDBManagerInstance(dbURL).insertFaculty validFacultyID, validFacultyData, (saveError, saveResult) =>
+                                dbInstance.insertFaculty validFacultyID, validFacultyData, (saveError, saveResult) =>
                                     callback saveError, saveResult
 
     _getID = (enrolledInProgramme, callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findFacultyIDByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
+                dbInstance.findFacultyIDByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
                     callback facultyIDError, facultyID
 
     _getName = (enrolledInProgramme, callback) ->
-        ConfigurationManager.getConfigurationManager().getDBURL @appEnv, (urlError, dbURL) =>
-            if urlError?
-                callback urlError, null
+        DataManager.getInstance @appEnv, (dbInstanceError, dbInstance) =>
+            if dbInstanceError?
+                callback dbInstanceError, null
             else
-                DataManager.getDBManagerInstance(dbURL).findFacultyNameByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
+                dbInstance.findFacultyNameByProgrammeCode enrolledInProgramme, (facultyIDError, facultyID) =>
                     callback facultyIDError, facultyID
 
     _getProgrammeList = (facultyID, callback) ->
