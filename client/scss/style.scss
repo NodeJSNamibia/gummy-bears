@@ -8,7 +8,7 @@ and open the template in the editor.
     Author     : Celleb
 */
 @import "compass";
-$em-base: 20 !default;
+$em-base: 16 !default;
 
 // It strips the unit of measure and returns it
 @function strip-unit($num) {
@@ -38,7 +38,7 @@ $em-base: 20 !default;
     @return $emValues;
 }
 #logo {
-    height: emCalc(65);
+    height: emCalc(40);
 }
 #calendar-section {
     md-grid-tile {
@@ -50,4 +50,24 @@ $em-base: 20 !default;
     max-width: emCalc(960);
     margin: auto;
 }
+.menu-bottons {
+    width:100%;
+    margin: 0;
+    margin-top: 5px;
+    text-align: left;
+    padding: 5px;
+}
+.main-tools {
+    padding: emCalc(3);
+}
+#video {
+    max-width: emCalc(960);
+}
 
+.calendar-tile {
+    border-bottom: 1px solid #DDD;
+}
+
+.active-tile {
+    border: 1px solid #3F51B5;
+}
