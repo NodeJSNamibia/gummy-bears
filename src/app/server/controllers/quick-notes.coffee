@@ -10,10 +10,18 @@ exports.QuickNotesController = class QuickNotesController extends AbstractContro
     _notify = (username, notificationData, poolManager, queueManager, callback) ->
         @quickNote.checkAuthorization username, 'notify', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
-                callback authorizationError, null
+                @release 'quickNotes', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback authorizationError, null
             else if not authorizationResult
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to submit quick notification"
-                callback unauthorizedInsertionError, null
+                @release 'quickNotes', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback unauthorizedInsertionError, null
             else
                 @quickNote.notify uuid(), notificationData, (saveError, saveResult) =>
                     if saveError?

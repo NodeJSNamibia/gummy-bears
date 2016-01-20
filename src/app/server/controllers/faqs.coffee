@@ -15,10 +15,18 @@ exports.FAQsController = class FAQsController extends AbstractController
     _insertAllFAQs = (username, poolManager, queueManager, callback) ->
         @faq.checkAuthorization username, 'insertAllFAQs', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
-                callback authorizationError, null
+                @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback authorizationError, null
             else if not authorizationResult
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to load all frequently asked questions"
-                callback unauthorizedInsertionError, null
+                @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback unauthorizedInsertionError, null
             else
                 faqSampleFilePath = __dirname + '/../../var/faqs.cson'
                 parseOptions =
@@ -54,10 +62,18 @@ exports.FAQsController = class FAQsController extends AbstractController
     _insertFAQ = (username, singleFAQData, poolManager, queueManager, callback) ->
         @faq.checkAuthorization username, 'insertFAQ', @technicalUserProxy, (authorizationError, authorizationResult) =>
             if authorizationError?
-                callback authorizationError, null
+                @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback authorizationError, null
             else if not authorizationResult
                 unauthorizedInsertionError = new Error "Authorization Error! User #{username} is not authorized to add a frequently asked question"
-                callback unauthorizedInsertionError, null
+                @release 'faqs', poolManager, queueManager, (releaseError, releaseResult) =>
+                    if releaseError?
+                        callback releaseError, null
+                    else
+                        callback unauthorizedInsertionError, null
             else
                 faqInfo =
                     question: singleFAQData.question
