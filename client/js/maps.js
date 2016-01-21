@@ -2,28 +2,16 @@
  * Created by Bertie on 1/14/2016.
  */
 
-//Angular App Module and Controller
-var app = angular.module('mapsApp', []);
-
-app.controller('loadCity',function($scope, $http, $log) {
-    $http.get('jdata.json')
-        .success(function (responce) {
-            var cities = responce.locations;
-            cities = responce.locations;
-            $log.info("calling inside");
-            $log.info(cities);
-            return cities;
-        });
-});
+// Map Controller
 app.controller('MapCtrl', function ($scope, $http, $log) {
 
     var imgSize = 'height="200px" width="300px"';
 
-    $http.get('jdata.json')
+    $http.get('jdata.json') //URL to be changes to address at server
         .success(function (responce) {
-            var cities = responce.locations;
-            var myCity = cities[0];
-            $log.info(myCity);
+            var mapLocations = responce.locations;
+            var location = mapLocations[0];
+            $log.info(location);
 
             var mapOptions = {
                 zoom: 17,
@@ -39,16 +27,15 @@ app.controller('MapCtrl', function ($scope, $http, $log) {
 
             var infoWindow = new google.maps.InfoWindow();
 
-            var createMarker = function (myCity){
+            var createMarker = function (location){
 
                 var marker = new google.maps.Marker({
                     map: $scope.map,
-                    position: new google.maps.LatLng(myCity.coordinates[0].lat, myCity.coordinates[0].long),
-                    title: myCity.name,
-                    icon: 'img/mapImg/mapMarker.png'
-                    /*icon: info.icon*/
+                    position: new google.maps.LatLng(location.coordinates[0].lat, location.coordinates[0].long),
+                    title: location.name,
+                    icon: 'img/mapMarker.png'
                 });
-                marker.content = '<div class="infoWindowContent">' + '<img src="' +  myCity.image[0].src+ '"' + imgSize +'">' + '<br>' + myCity.image[0].caption + '</div>';
+                marker.content = '<div class="infoWindowContent">' + '<img src="' +  location.image[0].src+ '"' + imgSize +'">' + '<br>' + location.image[0].caption + '</div>';
 
                 google.maps.event.addListener(marker, 'click', function(){
                     infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
@@ -59,8 +46,8 @@ app.controller('MapCtrl', function ($scope, $http, $log) {
 
             };
 
-            for (i = 0; i < cities.length; i++){
-                createMarker(cities[i]);
+            for (i = 0; i < mapLocations.length; i++){
+                createMarker(mapLocations[i]);
             }
 
             $scope.openInfoWindow = function(e, selectedMarker){
