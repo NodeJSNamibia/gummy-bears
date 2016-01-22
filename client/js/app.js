@@ -4,7 +4,7 @@
  * @description text
  * @contributors:
  */
-var wdays = ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"];
+var wdays = ["M", "T", "W", "T", "F", "S", "S"];
 var date = new Date();
 var month = date.getMonth();
 var year = date.getFullYear();
@@ -20,6 +20,8 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	    controller: "Calendar"
 	}).when("/user", {
 	    templateUrl: "partials/user.html"
+	}).when("/campus",{
+		templateUrl:"partials/campus.html"
 	}).otherwise({redirectTo: '/'});
     }
 ]
@@ -104,8 +106,9 @@ app.service('Api', ['$http', "$location", function ($http, $location) {
 	    userTest.details = {};
 	    userTest.authenticated = false;
 	    cookie.removeCookie('oweekSessionId');
-
+	    // TODO: Add Server session kill functionality
 	    setTimeout(function () {
+		/* force browser redirect */
 		window.location = "login";
 	    }, 1000);
 	};
@@ -125,11 +128,18 @@ app.controller('Calendar', function () {
     this.year = year;
     this.month_name = moment(ndate).format("MMMM");
     this.days = fillDays();
+    this.today = moment().format("D");
     this.next = function () {
 	monthAdd(1);
 	this.year = year;
 	ndate = new Date(year, month, 1, 0, 0, 0, 0);
 	running_day = ndate.getDay();
+	if (month + year == moment().format("MYYYY")) {
+	    this.today = moment().format("D");
+	} else {
+	    this.today = 32;
+	}
+	//this.today = running_day;
 	this.month_name = moment(ndate).format("MMMM");
 	this.days = fillDays();
 
@@ -140,6 +150,11 @@ app.controller('Calendar', function () {
 	this.year = year;
 	ndate = new Date(year, month, 1, 0, 0, 0, 0);
 	running_day = ndate.getDay();
+	if (moment(ndate).format("MYYYY") === moment().format("MYYYY")) {
+	    this.today = moment().format("D");
+	} else {
+	    this.today = 32;
+	}
 	this.month_name = moment(ndate).format("MMMM");
 	this.days = fillDays();
 
@@ -216,3 +231,90 @@ app.controller("homeController", ["$scope", 'Api', function ($scope, Api) {
 	    Api.checkOut();
 	};
     }]);
+
+<<<<<<< HEAD
+app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.toggleRight = buildToggler('right');
+    $scope.isOpenRight = function () {
+	return $mdSidenav('right').isOpen();
+    };
+
+
+    /**
+     * Supplies a function that will continue to operate until the
+     * time is up.
+     */
+    function debounce(func, wait, context) {
+	var timer;
+	return function debounced() {
+	    var context = $scope,
+		    args = Array.prototype.slice.call(arguments);
+	    $timeout.cancel(timer);
+	    timer = $timeout(function () {
+		timer = undefined;
+		func.apply(context, args);
+	    }, wait || 10);
+	};
+    }
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildDelayedToggler(navID) {
+	return debounce(function () {
+	    $mdSidenav(navID)
+		    .toggle()
+		    .then(function () {
+			$log.debug("toggle " + navID + " is done");
+		    });
+	}, 200);
+    }
+    function buildToggler(navID) {
+	return function () {
+	    $mdSidenav(navID)
+		    .toggle()
+		    .then(function () {
+			$log.debug("toggle " + navID + " is done");
+		    });
+	};
+    }
+})
+
+	.controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+	    $scope.homeLinks = [{
+		    name: "Events",
+		    link: "events"
+		}, {
+		    name: "Campus",
+		    link: "campus"
+		}, {
+		    name: "Faculties",
+		    link: "faculties"
+		}, {
+		    name: "Gallery",
+		    link: "gallery"
+		}, {
+		    name: "FAQs",
+		    link: "faq"
+		}];
+	    $scope.close = function () {
+		$mdSidenav('right').close()
+			.then(function () {
+			    $log.debug("close RIGHT is done");
+			});
+	    };
+	});
+=======
+app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
+	settings.displayLogin = false;
+	$scope.user = {
+		number: '',
+		pin: ''
+	};
+	$scope.auth = function () {
+		Api.userTest.authenticate($scope.user.number, $scope.user.pin);
+	};
+}]);
+
+
+>>>>>>> c071cf0171192c77019d0a501b86bdcfa8d3f872

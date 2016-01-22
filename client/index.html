@@ -1,5 +1,6 @@
 <html lang="en" ng-app="oweek" >
     <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<!-- Angular Material style sheet -->
 	<title>NUST O'WEEK</title>
 	<link rel="stylesheet" href="css/angular-material.min.css"/>
@@ -12,51 +13,72 @@
 	<script src="js/angular-aria.min.js"></script>
 	<script src="js/angular-messages.min.js"></script>
 	<script src="js/angular-route.js"></script>
-	<base href="//xlab/oweek/gummy-bears/client/"/>
+	<base href="//localhost:63342/AngularTest/index.html"/>
 	<!-- Angular Material Library -->
 	<script src="js/angular-material.min.js"></script>
 	<script src="js/moment.js"></script>
 	<script src="js/cookie.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/user-controller.js"></script>
+		<!-- Map Resources -->
+		<link rel="stylesheet" href="css/maps.css">
+		<script type="text/javascript" src="js/maps.js"></script>
+		<script src="js/maps.googleAPI.js"></script>
+
     </head>
     <body ng-cloak ng-controller="homeController">
-	<header layout="column" ng-cloak>
-	    <md-content>
-		<md-toolbar class="md-tall">
 
-		    <div class="md-toolbar-tools">
+	<header layout="column">
+	    <md-content>
+		<md-toolbar >
+
+		    <div class="md-toolbar-tools main-tools" layout="row" layout-align="space-between center">
 			<a href="./">
-			    <img src="img/logofinalV7.png" alt="NUST ORIENTATION WEEK APPLICATION" id="logo" />
+			    <img src="img/logo_medium.png" alt="NUST" id="logo" />
 			</a>
-			<span flex></span>
+			<!--
 			<span ng-show="api.authenticated">
 			    <i class="fa fa-user"></i>
 			    {{"Logged in as " + api.details.name + " " + api.details.surname}}
 			    | <a href="logout" ng-click="logout()"> Logout</a>
 			</span>
-			<md-button class="md-raised" aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="settings.displayLogin || api.authenticated">
+			-->
+			<span flex></span>
+			<h1>O'WEEK</h1>
+
+			<span flex></span>
+			<md-button  aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="settings.displayLogin || api.authenticated">
 			    <i class="fa fa-lock"></i>
 			    Login
 			</md-button>
+			<span ng-controller="AppCtrl">
+			    <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleRight()"
+				       ng-hide="isOpenRight()"
+				       class="md-primary">
+				<md-icon><i class="fa fa-bars fa-2x"></i></md-icon>
+			    </md-button>
+			</span>
 		    </div>
-		    <div class="md-toolbar-tools">
-			<h1>NUST O'WEEK</h1>
-			<span flex></span>
-			<nav>
-			    <a href="Home">Home</a> |
-			    <a href="events">Events</a> |
-			    <a href="campus">Campus</a> |
-			    <a href="faculties">Faculties</a> |
-			    <a href="Gallery">Gallery</a> |
-			    <a href="faqs">FAQs</a>
-			</nav>
-		    </div>
+
 		</md-toolbar>
 	    </md-content>
 	</header>
-	<div ng-view>
+	<section  layout="row" flex>
+	    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+		<md-toolbar class="md-theme-light">
+		    <h1 class="md-toolbar-tools">Menu</h1>
+		</md-toolbar>
+		<md-content ng-controller="RightCtrl" style="padding:0">
 
+		    <md-button layout-padding ng-repeat="links in homeLinks"
+			       ng-href="{{links.link}}" layout-padding class="menu-bottons">
+			<strong>{{links.name}}</strong>
+		    </md-button>
+
+		</md-content>
+	    </md-sidenav>
+	</section>
+	<div ng-view>
 	</div>
     </body>
 </html>

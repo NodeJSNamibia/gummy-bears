@@ -1,10 +1,20 @@
+
 <section id="video-section">
+<<<<<<< HEAD
     <div layout="row" layout-align="center center">
 	<md-content layout-padding >
-	    <video width="860" height="" >
+	    <video width="100%"  id="video">
 	    </video>
 	</md-content>
     </div>
+=======
+	<div layout="row" layout-align="center center">
+		<md-content layout-padding >
+			<video width="860" height="" >
+			</video>
+		</md-content>
+	</div>
+>>>>>>> c071cf0171192c77019d0a501b86bdcfa8d3f872
 </section>
 <section id="calendar-section">
     <div  ng-controller="Calendar as month" ng-cloak>
@@ -24,15 +34,17 @@
 	<md-grid-list md-cols-sm="7" md-cols-md="7" md-cols="7" md-cols-gt-md="7"
 		      md-row-height-gt-md="1:1" md-row-height="4:3"
 		      md-gutter="8px" md-gutter-gt-sm="4px">
-	    <md-grid-tile ng-repeat="weekday in month.wdays">
+	    <md-grid-tile ng-repeat="weekday in month.wdays track by $index ">
 		<h2>{{weekday}}</h2>
 	    </md-grid-tile>
-	    <md-grid-tile ng-repeat="day in month.days track by $index">
-		<h3>{{day}}</h3>
-		<md-grid-tile-footer>
-
-		</md-grid-tile-footer>
+	</md-grid-list>
+	<md-grid-list md-cols-sm="7" md-cols-md="7" md-cols="7" md-cols-gt-md="7"
+		      md-row-height-gt-md="1:1" md-row-height="4:3"
+		      md-gutter="8px" md-gutter-gt-sm="4px">
+	    <md-grid-tile ng-repeat="day in month.days track by $index" class="calendar-tile" ng-class="{'active-tile': day == month.today}">
+		<p>{{day}}</p>
 	    </md-grid-tile>
 	</md-grid-list>
     </div>
+    <br/>
 </section>
