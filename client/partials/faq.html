@@ -1,0 +1,30 @@
+<!--
+/**
+* Created by Bertie on 1/23/2016.
+*/
+ Page displays the map centered around the campus area with all markers and links pointing to said markers -->
+
+<div  ng-controller="faqCtrl">
+    <h1 align="center">FAQ's</h1>
+
+    <div id = "textBox">
+        <ul>
+            <div ng-repeat = 'questions in FAQ'>
+                <li>
+                    <a href="faq.html#{{questions.id}}" id="links">{{questions.question}}</a>
+                </li>
+            </div>
+        </ul>
+        <hr>
+        <div ng-repeat = 'faqPair in FAQ'>
+            <div id = '{{faqPair.id}}'>
+                <p> <h3>Q: {{faqPair.question}}</h3>
+                <br>A: {{faqPair.answer}}</p><br>
+                <div align="right">
+                    <a href="faq.html#links">Back to Top</a>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>

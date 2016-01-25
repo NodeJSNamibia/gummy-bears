@@ -5,7 +5,7 @@
 // Map Controller
 app.controller('MapCtrl', function ($scope, $http, $log) {
 
-    var imgSize = 'height="200px" width="300px"';
+    var imgSize = 'height="250px" width="350px"';
 
     $http.get('jdata.json') //URL to be changes to address at server
         .success(function (responce) {
@@ -35,7 +35,11 @@ app.controller('MapCtrl', function ($scope, $http, $log) {
                     title: location.name,
                     icon: 'img/mapMarker.png'
                 });
-                marker.content = '<div class="infoWindowContent">' + '<img src="' +  location.image[0].src+ '"' + imgSize +'">' + '<br>' + location.image[0].caption + '</div>';
+                marker.content = '<div class="infoWindowContent">' +
+                    '<img src="' +  location.image[0].src+ '"' + imgSize +'">' + '<br>' + location.image[0].caption +'<br><hr>'+
+                    '<a href="http://maps.google.com/maps?daddr='+location.coordinates[0].lat+',' + location.coordinates[0].long+'"> Click here to Navigate to '+  location.name +'</a>' + '<br> or scan the QR code below <br>' +
+                    '<img src="http://qrickit.com/api/qr?d=http://maps.google.com/maps?daddr='+location.coordinates[0].lat+',' + location.coordinates[0].long+'"><br>' +
+                    '<a href="http://QRickit.com">QR codes by QRickit.com</a>' + '</div>';
 
                 google.maps.event.addListener(marker, 'click', function(){
                     infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
@@ -56,3 +60,4 @@ app.controller('MapCtrl', function ($scope, $http, $log) {
             }
         });
 });
+
