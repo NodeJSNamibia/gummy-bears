@@ -1,7 +1,6 @@
 /**
  * Created by Bertie on 1/14/2016.
  */
-
 // Map Controller
 app.controller('MapCtrl', function ($scope, $http, $log) {
 
@@ -60,4 +59,3 @@ app.controller('MapCtrl', function ($scope, $http, $log) {
             }
         });
 });
-
