@@ -24,7 +24,7 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 		templateUrl:"partials/campus.html"
 	}).when("/events",{
 		templateUrl:"partials/events.html"
-	}).when("/gallery",{
+	}).when("/council",{
 		templateUrl:"partials/council.html"
 	}).otherwise({redirectTo: '/'});
     }
@@ -296,6 +296,9 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 		}, {
 		    name: "Gallery",
 		    link: "gallery"
+		},{
+			name: "SRC's",
+			link: "council"
 		}, {
 		    name: "FAQs",
 		    link: "faq"
