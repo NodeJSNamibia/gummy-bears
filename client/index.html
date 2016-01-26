@@ -13,21 +13,18 @@
 	<script src="js/angular-aria.min.js"></script>
 	<script src="js/angular-messages.min.js"></script>
 	<script src="js/angular-route.js"></script>
-<<<<<<< HEAD
-	<base href="//192.168.166.1/oweek/gummy-bears/client/"/>
-=======
-	<base href="//localhost:63342/AngularTest/index.html"/>
->>>>>>> c071cf0171192c77019d0a501b86bdcfa8d3f872
+	<base href="/"/>
+
 	<!-- Angular Material Library -->
 	<script src="js/angular-material.min.js"></script>
 	<script src="js/moment.js"></script>
 	<script src="js/cookie.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/user-controller.js"></script>
-		<!-- Map Resources -->
-		<link rel="stylesheet" href="css/maps.css">
-		<script type="text/javascript" src="js/maps.js"></script>
-		<script src="js/maps.googleAPI.js"></script>
+	<!-- Map Resources -->
+	<link rel="stylesheet" href="css/maps.css">
+	<script type="text/javascript" src="js/maps.js"></script>
+	<script src="js/maps.googleAPI.js"></script>
 
     </head>
     <body ng-cloak ng-controller="homeController">
@@ -40,18 +37,17 @@
 			<a href="./">
 			    <img src="img/logo_medium.png" alt="NUST" id="logo" />
 			</a>
-			<!--
+
 			<span ng-show="api.authenticated">
 			    <i class="fa fa-user"></i>
 			    {{"Logged in as " + api.details.name + " " + api.details.surname}}
 			    | <a href="logout" ng-click="logout()"> Logout</a>
 			</span>
-			-->
 			<span flex></span>
 			<h1>O'WEEK</h1>
 
 			<span flex></span>
-			<md-button  aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="settings.displayLogin || api.authenticated">
+			<md-button  aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="api.authenticated">
 			    <i class="fa fa-lock"></i>
 			    Login
 			</md-button>
