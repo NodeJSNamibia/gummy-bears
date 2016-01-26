@@ -2,7 +2,7 @@
  * Created by Bertie on 1/14/2016.
  */
 // Map Controller
-app.controller('MapCtrl', function ($scope, $http, $log) {
+app.controller('MapCtrl', function ($scope, $http, $log, $window) {
 
     var imgSize = 'height="250px" width="350px"';
 
@@ -43,6 +43,7 @@ app.controller('MapCtrl', function ($scope, $http, $log) {
                 google.maps.event.addListener(marker, 'click', function(){
                     infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
                     infoWindow.open($scope.map, marker);
+                    $window.scrollTo(0,0);
                 });
 
                 $scope.markers.push(marker);
