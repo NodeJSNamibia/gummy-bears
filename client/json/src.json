@@ -1,0 +1,29 @@
+{
+    "council": [{
+	    "name": "Oscar Mwandingi",
+	    "portfolio": "President",
+	    "img": "img/avatar/leo.jpg"
+	}, {
+	    "name": "Sarah Shindodola",
+	    "portfolio": "Vice President",
+	    "img": "dddd"
+	},
+	{
+	    "name": "Jackey Zambwe",
+	    "portfolio": "Secretary General",
+	    "img": "ddddd"
+	}, {
+	    "name": "Oscar Mwandingi",
+	    "portfolio": "President",
+	    "img": "img/kds"
+	}, {
+	    "name": "Sarah Shindodola",
+	    "portfolio": "Vice President",
+	    "img": "dddd"
+	},
+	{
+	    "name": "Jackey Zambwe",
+	    "portfolio": "Secretary General",
+	    "img": "ddddd"
+	}]
+}

@@ -1,10 +1,9 @@
-var myApp = angular.module('cardDemo', []);
 
-myApp.controller ('AppCtrl', function($scope, $http, $log) {
+app.controller('Council', ["$scope", "$http", "$log", function ($scope, $http, $log) {
 
-	$http.get('council.json')
-		.succes(function(response){
-			$scope.COUNCIL = response.council;
-			$log.info(response);
+	$http.get('../json/src.json')
+		.success(function (response) {
+		    $scope.members = response.council;
+		    $log.info(response);
 		});
-});
+    }]);

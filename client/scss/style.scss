@@ -60,8 +60,12 @@ $em-base: 16 !default;
 .main-tools {
     padding: emCalc(3);
 }
+
 #video {
-    max-width: emCalc(960);
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+
 }
 
 .calendar-tile {
@@ -71,3 +75,4 @@ $em-base: 16 !default;
 .active-tile {
     border: 1px solid #3F51B5;
 }
+
