@@ -33,11 +33,6 @@ and open the template in the editor.
   padding: 0.1875em;
 }
 
-/* line 63, ../scss/style.scss */
-#video {
-  max-width: 60em;
-}
-
 /* line 67, ../scss/style.scss */
 .calendar-tile {
   border-bottom: 1px solid #DDD;
@@ -47,24 +42,3 @@ and open the template in the editor.
 .active-tile {
   border: 1px solid #3F51B5;
 }
-
-
-.carddemoBasicUsage .card-media {
-  background-color: #999999; }
-.md-headline{
-   font-size: 1.25vw;
-}
-.md-subhead{
-   font-size: 0.90vw;
-}
-#content{
-  width: 85%;
-  margin-left: 7.5%;
-  margin-right: 7.5%;
-}
-
-#xx{
- width: 33%;
-  
-}
-
