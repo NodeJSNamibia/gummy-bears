@@ -20,8 +20,8 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	    controller: "Calendar"
 	}).when("/user", {
 	    templateUrl: "partials/user.html"
-	}).when("/campus",{
-		templateUrl:"partials/campus.html"
+	}).when("/campus", {
+	    templateUrl: "partials/campus.html"
 	}).otherwise({redirectTo: '/'});
     }
 ]
@@ -232,7 +232,6 @@ app.controller("homeController", ["$scope", 'Api', function ($scope, Api) {
 	};
     }]);
 
-<<<<<<< HEAD
 app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
     $scope.toggleRight = buildToggler('right');
     $scope.isOpenRight = function () {
@@ -304,17 +303,14 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 			});
 	    };
 	});
-=======
 app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	settings.displayLogin = false;
 	$scope.user = {
-		number: '',
-		pin: ''
+	    number: '',
+	    pin: ''
 	};
 	$scope.auth = function () {
-		Api.userTest.authenticate($scope.user.number, $scope.user.pin);
+	    Api.userTest.authenticate($scope.user.number, $scope.user.pin);
 	};
-}]);
+    }]);
 
-
->>>>>>> c071cf0171192c77019d0a501b86bdcfa8d3f872
