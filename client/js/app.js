@@ -20,7 +20,6 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	    controller: "Calendar"
 	}).when("/user", {
 	    templateUrl: "partials/user.html"
-<<<<<<< HEAD
 	}).when("/campus",{
 		templateUrl:"partials/campus.html"
 	}).when("/faq",{
@@ -31,16 +30,6 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 		templateUrl:"partials/council.html"
 		}).when("/gallery",{
 		templateUrl:"partials/gallery.html"
-=======
-	}).when("/campus", {
-	    templateUrl: "partials/campus.html"
-	}).when("/faq", {
-	    templateUrl: "partials/faq.html"
-	}).when("/events", {
-	    templateUrl: "partials/events.html"
-	}).when("/council", {
-	    templateUrl: "partials/council.html"
->>>>>>> aed844d0cef7a18399174e6bff15a47f69f2288f
 	}).otherwise({redirectTo: '/'});
     }
 ]
