@@ -33,12 +33,19 @@ and open the template in the editor.
   padding: 0.1875em;
 }
 
-/* line 67, ../scss/style.scss */
+/* line 64, ../scss/style.scss */
+#video {
+  width: 100%;
+  max-width: 1000px;
+  height: 400px;
+}
+
+/* line 71, ../scss/style.scss */
 .calendar-tile {
   border-bottom: 1px solid #DDD;
 }
 
-/* line 71, ../scss/style.scss */
+/* line 75, ../scss/style.scss */
 .active-tile {
   border: 1px solid #3F51B5;
 }

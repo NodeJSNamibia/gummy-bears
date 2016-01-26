@@ -14,7 +14,6 @@
 	<script src="js/angular-messages.min.js"></script>
 	<script src="js/angular-route.js"></script>
 	<base href="/"/>
-
 	<!-- Angular Material Library -->
 	<script src="js/angular-material.min.js"></script>
 	<script src="js/moment.js"></script>
@@ -28,58 +27,61 @@
 	<!-- FAQ Resources -->
 	<script src="js/faq.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/faq.css">
+	<script src="js/srcs.js"></script>
     </head>
     <body ng-cloak ng-controller="homeController">
+	<div ng-controller="AppCtrl">
+	    <header layout="column">
+		<md-content>
+		    <md-toolbar >
 
-	<header layout="column">
-	    <md-content>
-		<md-toolbar >
+			<div class="md-toolbar-tools main-tools" layout="row" layout-align="space-between center">
+			    <a href="./">
+				<img src="img/logo_medium.png" alt="NUST" id="logo" />
+			    </a>
 
-		    <div class="md-toolbar-tools main-tools" layout="row" layout-align="space-between center">
-			<a href="./">
-			    <img src="img/logo_medium.png" alt="NUST" id="logo" />
-			</a>
+			    <span ng-show="api.authenticated">
+				<i class="fa fa-user"></i>
+				{{"Logged in as " + api.details.name + " " + api.details.surname}}
+				| <a href="logout" ng-click="logout()"> Logout</a>
+			    </span>
+			    <span flex></span>
+			    <h1>O'WEEK</h1>
 
-			<span ng-show="api.authenticated">
-			    <i class="fa fa-user"></i>
-			    {{"Logged in as " + api.details.name + " " + api.details.surname}}
-			    | <a href="logout" ng-click="logout()"> Logout</a>
-			</span>
-			<span flex></span>
-			<h1>O'WEEK</h1>
-
-			<span flex></span>
-			<md-button  aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="api.authenticated">
-			    <i class="fa fa-lock"></i>
-			    Login
-			</md-button>
-			<span ng-controller="AppCtrl">
-			    <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleRight()"
-				       ng-hide="isOpenRight()"
-				       class="md-primary">
-				<md-icon><i class="fa fa-bars fa-2x"></i></md-icon>
+			    <span flex></span>
+			    <md-button  aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="api.authenticated">
+				<i class="fa fa-lock"></i>
+				Login
 			    </md-button>
-			</span>
-		    </div>
+			    <span>
+				<md-button class="md-icon-button" aria-label="Settings" ng-click="toggleRight()"
+					   ng-hide="isOpenRight()"
+					   >
+				    <md-icon><i class="fa fa-bars fa-2x"></i></md-icon>
+				</md-button>
+			    </span>
+			</div>
 
-		</md-toolbar>
-	    </md-content>
-	</header>
-	<section  layout="row" flex>
-	    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
-		<md-toolbar class="md-theme-light">
-		    <h1 class="md-toolbar-tools">Menu</h1>
-		</md-toolbar>
-		<md-content ng-controller="RightCtrl" style="padding:0">
-
-		    <md-button layout-padding ng-repeat="links in homeLinks"
-			       ng-href="{{links.link}}" layout-padding class="menu-bottons">
-			<strong>{{links.name}}</strong>
-		    </md-button>
-
+		    </md-toolbar>
 		</md-content>
-	    </md-sidenav>
-	</section>
+	    </header>
+	    <section  layout="row" flex>
+		<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+		    <md-toolbar class="md-theme-light">
+			<h1 class="md-toolbar-tools">Menu</h1>
+		    </md-toolbar>
+		    <md-content ng-controller="RightCtrl" style="padding:0">
+
+			<md-button layout-padding ng-repeat="links in homeLinks"
+				   ng-href="{{links.link}}"  class="menu-bottons"
+				   ng-click="toggleRight()">
+			    <strong>{{links.name}}</strong>
+			</md-button>
+
+		    </md-content>
+		</md-sidenav>
+	    </section>
+	</div>
 	<div ng-view>
 	</div>
     </body>
