@@ -1,0 +1,31 @@
+﻿Merge branch 'student-client-feature' of https://github.com/NodeNamibia/gummy-bears into student-client-feature
+
+# Conflicts:
+#	client/.idea/workspace.xml
+#	client/index.html
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch student-client-feature
+# Your branch is ahead of 'origin/student-client-feature' by 12 commits.
+#   (use "git push" to publish your local commits)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   client/.idea/workspace.xml
+#	new file:   client/css/faq.css
+#	new file:   client/faq.json
+#	modified:   client/index.html
+#	new file:   client/js/faq.js
+#	modified:   client/js/maps.js
+#	new file:   client/partials/faq.html
+#	new file:   resources/mockups/web/Thumbs.db
+#
+

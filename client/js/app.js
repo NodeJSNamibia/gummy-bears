@@ -20,6 +20,7 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	    controller: "Calendar"
 	}).when("/user", {
 	    templateUrl: "partials/user.html"
+<<<<<<< HEAD
 	}).when("/campus",{
 		templateUrl:"partials/campus.html"
 	}).when("/faq",{
@@ -28,6 +29,18 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 		templateUrl:"partials/events.html"
 	}).when("/council",{
 		templateUrl:"partials/council.html"
+		}).when("/gallery",{
+		templateUrl:"partials/gallery.html"
+=======
+	}).when("/campus", {
+	    templateUrl: "partials/campus.html"
+	}).when("/faq", {
+	    templateUrl: "partials/faq.html"
+	}).when("/events", {
+	    templateUrl: "partials/events.html"
+	}).when("/council", {
+	    templateUrl: "partials/council.html"
+>>>>>>> aed844d0cef7a18399174e6bff15a47f69f2288f
 	}).otherwise({redirectTo: '/'});
     }
 ]
@@ -270,7 +283,7 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 	    $mdSidenav(navID)
 		    .toggle()
 		    .then(function () {
-			$log.debug("toggle " + navID + " is done");
+			//$log.debug("toggle " + navID + " is done");
 		    });
 	}, 200);
     }
@@ -279,7 +292,7 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 	    $mdSidenav(navID)
 		    .toggle()
 		    .then(function () {
-			$log.debug("toggle " + navID + " is done");
+			//$log.debug("toggle " + navID + " is done");
 		    });
 	};
     }
@@ -298,9 +311,9 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 		}, {
 		    name: "Gallery",
 		    link: "gallery"
-		},{
-			name: "SRC's",
-			link: "council"
+		}, {
+		    name: "SRC's",
+		    link: "council"
 		}, {
 		    name: "FAQs",
 		    link: "faq"
@@ -315,25 +328,25 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	settings.displayLogin = false;
 	$scope.user = {
-		number: '',
-		pin: ''
+	    number: '',
+	    pin: ''
 	};
 	$scope.auth = function () {
-		Api.userTest.authenticate($scope.user.number, $scope.user.pin);
+	    Api.userTest.authenticate($scope.user.number, $scope.user.pin);
 	};
-}]).directive('scrollTo', function ($location, $anchorScroll) {
-  return function(scope, element, attrs) {
+    }]).directive('scrollTo', function ($location, $anchorScroll) {
+    return function (scope, element, attrs) {
 
-    element.bind('click', function(event) {
-        event.stopPropagation();
-        var off = scope.$on('$locationChangeStart', function(ev) {
-            off();
-            ev.preventDefault();
-        });
-        var location = attrs.scrollTo;
-        $location.hash(location);
-        $anchorScroll();
-    });
+	element.bind('click', function (event) {
+	    event.stopPropagation();
+	    var off = scope.$on('$locationChangeStart', function (ev) {
+		off();
+		ev.preventDefault();
+	    });
+	    var location = attrs.scrollTo;
+	    $location.hash(location);
+	    $anchorScroll();
+	});
 
-  };
+    };
 });
