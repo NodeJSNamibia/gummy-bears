@@ -22,7 +22,9 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	    templateUrl: "partials/user.html"
 	}).when("/campus",{
 		templateUrl:"partials/campus.html"
-	}).otherwise({redirectTo: '/'});
+	}).when("/faq",{
+		templateUrl:"partials/faq.html"
+	})//.otherwise({redirectTo: '/'});
     }
 ]
 	);
@@ -232,7 +234,6 @@ app.controller("homeController", ["$scope", 'Api', function ($scope, Api) {
 	};
     }]);
 
-<<<<<<< HEAD
 app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
     $scope.toggleRight = buildToggler('right');
     $scope.isOpenRight = function () {
@@ -304,7 +305,6 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 			});
 	    };
 	});
-=======
 app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	settings.displayLogin = false;
 	$scope.user = {
@@ -314,7 +314,19 @@ app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	$scope.auth = function () {
 		Api.userTest.authenticate($scope.user.number, $scope.user.pin);
 	};
-}]);
+}]).directive('scrollTo', function ($location, $anchorScroll) {
+  return function(scope, element, attrs) {
 
+    element.bind('click', function(event) {
+        event.stopPropagation();
+        var off = scope.$on('$locationChangeStart', function(ev) {
+            off();
+            ev.preventDefault();
+        });
+        var location = attrs.scrollTo;
+        $location.hash(location);
+        $anchorScroll();
+    });
 
->>>>>>> c071cf0171192c77019d0a501b86bdcfa8d3f872
+  };
+});
