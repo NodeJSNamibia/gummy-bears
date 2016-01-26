@@ -1,0 +1,18 @@
+{"events": [
+	{
+	    "id": "Welcoming Ceremony",
+	    "description": "Nust Welcomes Everyone for the year 2016",
+	    "date": "12/12/2015",
+	    "start": "11:00",
+	    "ends": "13:00",
+	    "location": "Lecture Building",
+	    "faculty": "fci",
+	    "organizer": {
+          "firstName": "Tellus",
+          "lastName": "Normand",
+          "title": "Mr",
+          "emailAddress": "telNormand@gmail.com"
+        }
+    }
+]
+}

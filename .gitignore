@@ -2,3 +2,4 @@
 src/node_modules
 src/app/public/bower_components
 /nbproject/private/
+client/.idea/workspace.xml
