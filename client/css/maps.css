@@ -9,6 +9,8 @@ a {
     width:100%;
     max-width: 1000px;
     border-radius: 5px;
+    margin-left: 7.5%;
+    margin-right: 7.5%;
 }
 #repeat{
     display: inline-table;
@@ -23,6 +25,7 @@ a {
     padding: 2px 2px 2px 2px;
     border-radius: 5px;
     width: 220px;
+
 }
 #country_container:hover {
     color: #efa909;
@@ -36,6 +39,8 @@ a {
 #linkBox {
     margin-top: 10px;
     background-color: rgb(63,81,181);
-    width: 1134px;
+    width: 85%;
     border-radius: 5px;
+    margin-left: 7.5%;
+    margin-right: 7.5%;
 }

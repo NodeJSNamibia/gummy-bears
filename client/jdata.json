@@ -1,0 +1,693 @@
+{
+  "locations": [
+    {
+      "id": "loc1",
+      "name": "Small Gate",
+      "coordinates": [
+        {
+          "lat": -22.564750,
+          "long": 17.076893
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Small Gate.jpg",
+          "caption": "This is the small gate"
+        }
+      ]
+    },
+    {
+      "id": "loc2",
+      "name": "Main Gate",
+      "coordinates": [
+        {
+          "lat": -22.566571,
+          "long": 17.077736
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Main Gate.jpg",
+          "caption": "This is the Main gate"
+        }
+      ]
+    }
+  ,
+    {
+      "id": "loc3",
+      "name": "Poly Heights",
+      "coordinates": [
+        {
+          "lat": -22.566196,
+          "long": 17.078181
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Poly Heights.jpg",
+          "caption": "This is Poly Heights"
+        }
+      ]
+    },
+    {
+      "id": "loc4",
+      "name": "Elisabeth Haus (Rectorate)",
+      "coordinates": [
+        {
+          "lat": -22.565836,
+          "long": 17.077285
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Elisabeth Haus.jpg",
+          "caption": "This is Elisabeth Haus"
+        }
+      ]
+    },
+    {
+      "id": "loc5",
+      "name": "Sander Haus",
+      "coordinates": [
+        {
+          "lat": -22.565836,
+          "long": 17.077285
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Sander Haus.jpg",
+          "caption": "This is Sander Haus"
+        }
+      ]
+    },
+    {
+      "id": "loc6",
+      "name": "Administration Building",
+      "coordinates": [
+        {
+          "lat": -22.566362,
+          "long": 17.077594
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Administration Building.jpg",
+          "caption": "This is Administration Building"
+        }
+      ]
+    },
+    {
+      "id": "loc7",
+      "name": "Land Management Building",
+      "coordinates": [
+        {
+          "lat": -22.566384,
+          "long": 17.077132
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Department of Land Management.jpg",
+          "caption": "This is Department of Land Management Building"
+        }
+      ]
+    },
+    {
+      "id": "loc8",
+      "name": "Center for Life Long Learning (COLL)",
+      "coordinates": [
+        {
+          "lat": -22.566028,
+          "long": 17.076931
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/COLL.jpg",
+          "caption": "This is Center for Life Long Learning (COLL)"
+        }
+      ]
+    },
+    {
+      "id": "loc9",
+      "name": "Dean of Students",
+      "coordinates": [
+        {
+          "lat": -22.566013,
+          "long": 17.076677
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Dean of Students.jpg",
+          "caption": "This is Dean of Students"
+        }
+      ]
+    },
+    {
+      "id": "loc10",
+      "name": "Monresa Residence",
+      "coordinates": [
+        {
+          "lat": -22.566013,
+          "long": 17.076677
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Monresa Residence.jpg",
+          "caption": "This is Monresa Residence"
+        }
+      ]
+    },
+    {
+      "id": "loc11",
+      "name": "Hopker Residence",
+      "coordinates": [
+        {
+          "lat": -22.566254,
+          "long": 17.076388
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Hopker Residence.jpg",
+          "caption": "This is Hopker Residence"
+        }
+      ]
+    },
+    {
+      "id": "loc12",
+      "name": "Shangri-La Residence",
+      "coordinates": [
+        {
+          "lat": -22.565300,
+          "long": 17.076159
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Shangri-La Residence.jpg",
+          "caption": "This is Shangri-La Residence"
+        }
+      ]
+    },
+    {
+      "id": "loc13",
+      "name": "Clinic",
+      "coordinates": [
+        {
+          "lat": -22.564942,
+          "long": 17.076562
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Clinic.jpg",
+          "caption": "This is Clinic"
+        }
+      ]
+    },
+    {
+      "id": "loc14",
+      "name": "Vocational Training",
+      "coordinates": [
+        {
+          "lat": -22.564905,
+          "long": 17.076790
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Vocational Training.jpg",
+          "caption": "This is Vocational Training"
+        }
+      ]
+    },
+    {
+      "id": "loc15",
+      "name": "Oppenheimer House",
+      "coordinates": [
+        {
+          "lat": -22.564873,
+          "long": 17.077130
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Oppenheimer House.jpg",
+          "caption": "This is Oppenheimer House"
+        }
+      ]
+    },
+    {
+      "id": "loc16",
+      "name": "Dawakos House",
+      "coordinates": [
+        {
+          "lat": -22.564822,
+          "long": 17.077347
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Dawakos House.jpg",
+          "caption": "This is Dawakos House"
+        }
+      ]
+    },
+    {
+      "id": "loc17",
+      "name": "Centre for Enterprise Development",
+      "coordinates": [
+        {
+          "lat": -22.564743,
+          "long": 17.077657
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Centre For Enterprise Development.jpg",
+          "caption": "This is Centre for Enterprise Development"
+        }
+      ]
+    },
+    {
+      "id": "loc18",
+      "name": "Lecture Building",
+      "coordinates": [
+        {
+          "lat": -22.565119,
+          "long": 17.077756
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Lecture Building.jpg",
+          "caption": "This is Lecture Building"
+        }
+      ]
+    },
+    {
+      "id": "loc19",
+      "name": "Info Center and Kiosk",
+      "coordinates": [
+        {
+          "lat": -22.565314,
+          "long": 17.077374
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Kiosk.jpg",
+          "caption": "This is Info Center and Kiosk"
+        }
+      ]
+    },
+    {
+      "id": "loc20",
+      "name": "Office Building",
+      "coordinates": [
+        {
+          "lat": -22.565268,
+          "long": 17.077106
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Office Building.jpg",
+          "caption": "This is Office Building"
+        }
+      ]
+    },
+    {
+      "id": "loc21",
+      "name": "Quality Assurance Unit",
+      "coordinates": [
+        {
+          "lat": -22.564156,
+          "long": 17.076929
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/No Image.jpg",
+          "caption": "This is Quality Assurance Unit"
+        }
+      ]
+    },
+    {
+      "id": "loc22",
+      "name": "Foundation House",
+      "coordinates": [
+        {
+          "lat": -22.564507,
+          "long": 17.076592
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Foundation House.jpg",
+          "caption": "This is Foundation House"
+        }
+      ]
+    },
+    {
+      "id": "loc23",
+      "name": "Library",
+      "coordinates": [
+        {
+          "lat": -22.564356,
+          "long": 17.075340
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Library.jpg",
+          "caption": "This is Library"
+        }
+      ]
+    },
+    {
+      "id": "loc24",
+      "name": "Engineering Building",
+      "coordinates": [
+        {
+          "lat":-22.565027,
+          "long": 17.074515
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Engineering Building.jpg",
+          "caption": "This is Engineering Building"
+        }
+      ]
+    },
+    {
+      "id": "loc25",
+      "name": "Auditorium Building",
+      "coordinates": [
+        {
+          "lat":-22.565280,
+          "long": 17.074969
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Engineering Building.jpg",
+          "caption": "This is Auditorium Building"
+        }
+      ]
+    },
+    {
+      "id": "loc26",
+      "name": "Science and Technology Building",
+      "coordinates": [
+        {
+          "lat": -22.565703,
+          "long": 17.074561
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Science and Technology Building.jpg",
+          "caption": "This is Science and Technology Building"
+        }
+      ]
+    },
+    {
+      "id": "loc27",
+      "name": "School of Health and Applied Sciences",
+      "coordinates": [
+        {
+          "lat": -22.566150,
+          "long": 17.073797
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/School of Health and Applied Science.jpg",
+          "caption": "This is School of Health and Applied Sciences"
+        }
+      ]
+    },
+    {
+      "id": "loc28",
+      "name": "Mechanical Engineering Building",
+      "coordinates": [
+        {
+          "lat": -22.565675,
+          "long": 17.073580
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Mechanical Engineering Building.jpg",
+          "caption": "This is Mechanical Engineering Building"
+        }
+      ]
+    },
+    {
+      "id": "loc29",
+      "name": "Civil Engineering Building",
+      "coordinates": [
+        {
+          "lat": -22.565749,
+          "long": 17.073354
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Civil Engineering Building.jpg",
+          "caption": "This is Civil Engineering Building"
+        }
+      ]
+    },
+    {
+      "id": "loc30",
+      "name": "Architecture Building",
+      "coordinates": [
+        {
+          "lat": -22.565956,
+          "long": 17.073084
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Architecture Building.jpg",
+          "caption": "This is Architecture Building"
+        }
+      ]
+    },
+    {
+      "id": "loc31",
+      "name": "Hotel School",
+      "coordinates": [
+        {
+          "lat": -22.566503,
+          "long": 17.072268
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Hotel School.jpg",
+          "caption": "This is Hotel School"
+        }
+      ]
+    },
+    {
+      "id": "loc32",
+      "name": "Pre-Fabricated Classrooms",
+      "coordinates": [
+        {
+          "lat": -22.567008,
+          "long": 17.071749
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Pre-Fabricated Classrooms.jpg",
+          "caption": "This is Pre-Fabricated Classrooms"
+        }
+      ]
+    },
+    {
+      "id": "loc33",
+      "name": "New Energy Efficient House",
+      "coordinates": [
+        {
+          "lat": -22.567208,
+          "long": 17.071518
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/New Energy Effecient House.jpg",
+          "caption": "This is New Energy Efficient House"
+        }
+      ]
+    },
+    {
+      "id": "loc34",
+      "name": "Teaching and Learning Unit",
+      "coordinates": [
+        {
+          "lat": -22.565177,
+          "long": 17.075662
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Teaching and Learning Unit.jpg",
+          "caption": "This is Teaching and Learning Unit"
+        }
+      ]
+    },
+    {
+      "id": "loc35",
+      "name": "Hyden Street No.9",
+      "coordinates": [
+        {
+          "lat": -22.565477,
+          "long": 17.075688
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Hyden Street No 9.jpg",
+          "caption": "This is Hyden Street No.9"
+        }
+      ]
+    },
+    {
+      "id": "loc36",
+      "name": "Daniel's Guest House",
+      "coordinates": [
+        {
+          "lat": -22.565850,
+          "long": 17.075615
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Daniels Guest House.jpg",
+          "caption": "This is Daniel's Guest House"
+        }
+      ]
+    },
+    {
+      "id": "loc37",
+      "name": "REEI House",
+      "coordinates": [
+        {
+          "lat": -22.565923,
+          "long": 17.075076
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Reei House.jpg",
+          "caption": "This is REEI House"
+        }
+      ]
+    },
+    {
+      "id": "loc38",
+      "name": "NBIC",
+      "coordinates": [
+        {
+          "lat": -22.566280,
+          "long": 17.074577
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/NBIC.jpg",
+          "caption": "This is NBIC"
+        }
+      ]
+    },
+    {
+      "id": "loc39",
+      "name": "Namibia German Center for Logistics",
+      "coordinates": [
+        {
+          "lat": -22.566507,
+          "long": 17.075179
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Namibia-German Center for Logistics.jpg",
+          "caption": "This is Namibia German Center for Logistics"
+        }
+      ]
+    },
+    {
+      "id": "loc40",
+      "name": "Gluck Street No.5",
+      "coordinates": [
+        {
+          "lat": -22.566745,
+          "long": 17.074911
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Gluck Street No 5.jpg",
+          "caption": "This is Gluck Street No.5"
+        }
+      ]
+    },
+    {
+      "id": "loc41",
+      "name": "Architecture House",
+      "coordinates": [
+        {
+          "lat": -22.566658,
+          "long": 17.075645
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Architecture House.jpg",
+          "caption": "This is Architecture House"
+        }
+      ]
+    },
+    {
+      "id": "loc42",
+      "name": "Information Technology House",
+      "coordinates": [
+        {
+          "lat": -22.567067,
+          "long": 17.077560
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/IT House.jpg",
+          "caption": "This is Information Technology House"
+        }
+      ]
+    },
+    {
+      "id": "loc43",
+      "name": "Hotel Pension Kleines Heim",
+      "coordinates": [
+        {
+          "lat": -22.568226,
+          "long": 17.070541
+        }
+      ],
+      "image": [
+        {
+          "src": "img/mapImg/Hotel Pension.jpg",
+          "caption": "This is Hotel Pension Kleines Heim"
+        }
+      ]
+    }
+  ]
+}

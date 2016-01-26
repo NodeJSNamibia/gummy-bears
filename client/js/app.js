@@ -20,8 +20,14 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 	    controller: "Calendar"
 	}).when("/user", {
 	    templateUrl: "partials/user.html"
-	}).when("/campus", {
-	    templateUrl: "partials/campus.html"
+	}).when("/campus",{
+		templateUrl:"partials/campus.html"
+	}).when("/faq",{
+		templateUrl:"partials/faq.html"
+	}).when("/events",{
+		templateUrl:"partials/events.html"
+	}).when("/council",{
+		templateUrl:"partials/council.html"
 	}).otherwise({redirectTo: '/'});
     }
 ]
@@ -292,6 +298,9 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log) {
 		}, {
 		    name: "Gallery",
 		    link: "gallery"
+		},{
+			name: "SRC's",
+			link: "council"
 		}, {
 		    name: "FAQs",
 		    link: "faq"
@@ -312,5 +321,19 @@ app.controller('loginController', ['$scope', 'Api', function ($scope, Api) {
 	$scope.auth = function () {
 	    Api.userTest.authenticate($scope.user.number, $scope.user.pin);
 	};
-    }]);
+}]).directive('scrollTo', function ($location, $anchorScroll) {
+  return function(scope, element, attrs) {
 
+    element.bind('click', function(event) {
+        event.stopPropagation();
+        var off = scope.$on('$locationChangeStart', function(ev) {
+            off();
+            ev.preventDefault();
+        });
+        var location = attrs.scrollTo;
+        $location.hash(location);
+        $anchorScroll();
+    });
+
+  };
+});
