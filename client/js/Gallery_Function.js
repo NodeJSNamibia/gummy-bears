@@ -9,7 +9,7 @@
             {
 
                 breed: "Motivational",
-                image: "Gallery Images/100_0116.JPG",
+                image: "img/Gallery Images/100_0116.JPG",
 
 
             },

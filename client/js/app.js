@@ -28,6 +28,8 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 		templateUrl:"partials/events.html"
 	}).when("/council",{
 		templateUrl:"partials/council.html"
+		}).when("/gallery",{
+		templateUrl:"partials/gallery.html"
 	}).otherwise({redirectTo: '/'});
     }
 ]
