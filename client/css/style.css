@@ -7,7 +7,43 @@ and open the template in the editor.
     Created on : 09-Jan-2016, 20:35:59
     Author     : Celleb
 */
-/* line 11, ../scss/style.scss */
+/* line 40, ../scss/style.scss */
 #logo {
-  height: 65px;
+  height: 2.5em;
+}
+
+/* line 48, ../scss/style.scss */
+#loginContainer {
+  width: 100%;
+  max-width: 60em;
+  margin: auto;
+}
+
+/* line 53, ../scss/style.scss */
+.menu-bottons {
+  width: 100%;
+  margin: 0;
+  margin-top: 5px;
+  text-align: left;
+  padding: 5px;
+}
+
+/* line 60, ../scss/style.scss */
+.main-tools {
+  padding: 0.1875em;
+}
+
+/* line 63, ../scss/style.scss */
+#video {
+  max-width: 60em;
+}
+
+/* line 67, ../scss/style.scss */
+.calendar-tile {
+  border-bottom: 1px solid #DDD;
+}
+
+/* line 71, ../scss/style.scss */
+.active-tile {
+  border: 1px solid #3F51B5;
 }

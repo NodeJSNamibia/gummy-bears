@@ -1,8 +1,68 @@
 {
     development:
-        dbURL: "196.168.10.26"
+        db:
+            url: "10.100.253.150"
+            mrViewComponents:
+                student:
+                    design_doc: 'student_dd'
+                    view: 'student'
+                faq:
+                    design_doc: 'faq_dd'
+                    view: 'faq'
+                faculty:
+                    design_doc: 'faculty_dd'
+                    view: 'faculty'
+                event:
+                    design_doc: 'event_dd'
+                    view: 'event'
+                location:
+                    design_doc: 'location_dd'
+                    view: 'location'
+        ssl:
+            key: 'oweek-dev.key'
+            cert: 'oweek-dev.crt'
     test:
-        dbURL: "196.168.10.26"
+        db:
+            url: "10.100.253.150"
+            mrViewComponents:
+                student:
+                    design_doc: 'student_dd'
+                    view: 'student'
+                faq:
+                    design_doc: 'faq_dd'
+                    view: 'faq'
+                faculty:
+                    design_doc: 'faculty_dd'
+                    view: 'faculty'
+                event:
+                    design_doc: 'event_dd'
+                    view: 'event'
+                location:
+                    design_doc: 'location_dd'
+                    view: 'location'
+        ssl:
+            key: 'oweek-test.key'
+            cert: 'oweek-test.crt'
     production:
-        dbURL: "196.168.10.26"
+        db:
+            url: "10.100.253.150"
+            mrViewComponents:
+                student:
+                    design_doc: 'student_dd'
+                    view: 'student'
+                faq:
+                    design_doc: 'faq_dd'
+                    view: 'faq'
+                faculty:
+                    design_doc: 'faculty_dd'
+                    view: 'faculty'
+                event:
+                    design_doc: 'event_dd'
+                    view: 'event'
+                location:
+                    design_doc: 'location_dd'
+                    view: 'location'
+        ssl:
+            key: 'oweek-prod.key'
+            cert: 'oweek-prod.crt'
 }

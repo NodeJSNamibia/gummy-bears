@@ -1,4 +1,4 @@
-# Data Base Model
+# DataBase Model
 
 ## Introduction
 
@@ -145,9 +145,8 @@ A event organized during the orientation week can be represented as follows:
 {
     "id": "evt01",
     "description": "event description",
-    "date": "12/12/2015",
-    "start": "11:00",
-    "ends": "13:00",
+    "start": "2015-12-12 11:00",
+    "end": "2015-12-12 13:00",
     "location": "location3",
     "faculty": "fci",
     "organizer": {
@@ -195,5 +194,23 @@ In order to offer a place where students can find answers to usual questions, we
     "id": "faq001",
     "question": "A stupid questid",
     "answer": "a smart subtle response"
+}
+```
+
+### Location
+
+Places of interest (venues where classes or key events are taking place) will be identified and recorded into the system. These places are commonly referred to **locations**. A location is represented as follows
+
+```json
+{
+    "id": "loc3",
+    "coordinates": {
+        "latitude": "35.8989832323",
+        "longitude": "75.9899089889"
+    },
+    "image": {
+        "src": "/path/to/location-image-file",
+        "caption": "Any additional description of the location"
+    }
 }
 ```

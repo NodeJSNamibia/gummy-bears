@@ -1,36 +1,88 @@
-<html lang="en" >
+<html lang="en" ng-app="oweek" >
     <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<!-- Angular Material style sheet -->
-	<title>NUST O-WEEK</title>
+	<title>NUST O'WEEK</title>
 	<link rel="stylesheet" href="css/angular-material.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="icon" type="image/png" href="favicon.png"/>
 	<!-- Angular Material requires Angular.js Libraries -->
 	<script src="js/angular.min.js"></script>
 	<script src="js/angular-animate.min.js"></script>
 	<script src="js/angular-aria.min.js"></script>
 	<script src="js/angular-messages.min.js"></script>
-
+	<script src="js/angular-route.js"></script>
+<<<<<<< HEAD
+	<base href="//192.168.166.1/oweek/gummy-bears/client/"/>
+=======
+	<base href="//localhost:63342/AngularTest/index.html"/>
+>>>>>>> c071cf0171192c77019d0a501b86bdcfa8d3f872
 	<!-- Angular Material Library -->
 	<script src="js/angular-material.min.js"></script>
+	<script src="js/moment.js"></script>
+	<script src="js/cookie.js"></script>
+	<script src="js/app.js"></script>
+	<script src="js/user-controller.js"></script>
+		<!-- Map Resources -->
+		<link rel="stylesheet" href="css/maps.css">
+		<script type="text/javascript" src="js/maps.js"></script>
+		<script src="js/maps.googleAPI.js"></script>
+
     </head>
-    <body ng-app="oweek" ng-cloak>
-	<div ng-cloak>
+    <body ng-cloak ng-controller="homeController">
+
+	<header layout="column">
 	    <md-content>
-		<md-toolbar>
-		    <div class="md-toolbar-tools">
-			<img src="img/logofinalV7.png" alt="NUST ORIENTATION WEEK APPLICATION" id="logo"/>
+		<md-toolbar >
+
+		    <div class="md-toolbar-tools main-tools" layout="row" layout-align="space-between center">
+			<a href="./">
+			    <img src="img/logo_medium.png" alt="NUST" id="logo" />
+			</a>
+			<!--
+			<span ng-show="api.authenticated">
+			    <i class="fa fa-user"></i>
+			    {{"Logged in as " + api.details.name + " " + api.details.surname}}
+			    | <a href="logout" ng-click="logout()"> Logout</a>
+			</span>
+			-->
 			<span flex></span>
-			<md-button class="md-raised" aria-label="Login">
+			<h1>O'WEEK</h1>
+
+			<span flex></span>
+			<md-button  aria-label="Login" a href="login" ng-click="settings.displayLogin = true" ng-hide="settings.displayLogin || api.authenticated">
+			    <i class="fa fa-lock"></i>
 			    Login
 			</md-button>
-			<md-button class="md-fab md-mini" aria-label="Favorite">
-			    <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
-			</md-button>
+			<span ng-controller="AppCtrl">
+			    <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleRight()"
+				       ng-hide="isOpenRight()"
+				       class="md-primary">
+				<md-icon><i class="fa fa-bars fa-2x"></i></md-icon>
+			    </md-button>
+			</span>
 		    </div>
-		</md-toolbar>
 
+		</md-toolbar>
 	    </md-content>
+	</header>
+	<section  layout="row" flex>
+	    <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+		<md-toolbar class="md-theme-light">
+		    <h1 class="md-toolbar-tools">Menu</h1>
+		</md-toolbar>
+		<md-content ng-controller="RightCtrl" style="padding:0">
+
+		    <md-button layout-padding ng-repeat="links in homeLinks"
+			       ng-href="{{links.link}}" layout-padding class="menu-bottons">
+			<strong>{{links.name}}</strong>
+		    </md-button>
+
+		</md-content>
+	    </md-sidenav>
+	</section>
+	<div ng-view>
 	</div>
-	<script src="js/app.js"></script>
     </body>
 </html>
