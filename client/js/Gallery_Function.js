@@ -102,6 +102,7 @@
             $scope.image[5] = getRandomImage($scope.medium);
             $scope.image[6] = getRandomImage($scope.medium);
             $scope.image[7] = getRandomImage($scope.large);
+			$scope.image[8] = getRandomImage($scope.large);
         }
 
         function changeImgRan(){
@@ -110,7 +111,7 @@
                 ranImg = getRandomImage($scope.small);
             } else if ( index == 3 || index == 5 || index == 6 ) {
                 ranImg = getRandomImage($scope.medium);
-            } else if( index == 4 || index == 7){
+            } else if( index == 4 || index == 7 || index == 8){
                 ranImg = getRandomImage($scope.large);
             }
             $scope.image[index] = ranImg;

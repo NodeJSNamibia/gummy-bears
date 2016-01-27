@@ -22,7 +22,9 @@ ul#image-wall {
     padding: 4px;
     text-decoration: none;
     list-style: none;
-    width: 450px; }
+    width: 450px; 
+	
+	}
 
 .two {
     position: relative;
@@ -30,7 +32,7 @@ ul#image-wall {
     padding:4px ;
     text-decoration: none;
     list-style: none ;
-   margin: 0 10px 0 0 ; }
+ }
 
 .three {
     position: relative;
@@ -62,34 +64,36 @@ ul#image-wall {
 
 
 .med-img {
-    margin: 0 0 px 0; }
+    margin: 0 05px 10px 0; }
 
 .img-wall-03 {
     border: inset;
 
     display: inline-flex;
     width: 425px;
-    height: 275px; }
+    height: 275px;
+   margin: 0 05px 10px 0;	}
 
 .img-wall-04 {
     border: inset;
     display: inline-flex;
     width: 425px;
     height: 275px;
-    margin: 0 10px 0 0; }
+    margin: 0 05px 10px 0; }
 
 .img-wall-05 {
     border: inset;
     display: inline-flex;
     width: 425px;
     height: 275px;
-    margin: 0 0 10px 0; }
+    margin: 0 05px 10px 0; }
 
 .img-wall-06 {
     border: inset;
     display: inline-flex;
     width: 425px;
-    height: 275px; }
+    height: 275px;
+  margin: 0 05px 10px 0;	}
 	
 
 
