@@ -1,24 +1,6 @@
 <!-- /**
 * Created by erassy on 1/14/2016.
 */-->
-<html ng-app="oweek" flex>
-    <head>
-        <link rel="stylesheet" href="../css/angular-material.min.css"/>
-        <link rel="stylesheet" href="../css/style.css"/>
-        <link rel="icon" type="image/png" href="favicon.png"/>
-        <!-- Angular Material requires Angular.js Libraries -->
-        <script src="../js/angular.min.js"></script>
-        <script src="../js/angular-animate.min.js"></script>
-        <script src="../js/angular-aria.min.js"></script>
-        <script src="../js/angular-messages.min.js"></script>
-        <script src="../js/angular-route.js"></script>
-        <!-- Angular Material Library -->
-        <script src="../js/angular-material.min.js"></script>
-        <script src="../js/moment.js"></script>
-        <script src="../js/cookie.js"></script>
-        <!-- events resources -->
-        <script src="../js/EventsController.js"></script>
-        <link rel="stylesheet" href="../css/eventsStyle.css"/>
 
 
         <style>
@@ -58,32 +40,38 @@
 
             tr td:hover { background: #666; color: #FFF; } /* Hover cell effect! */
 
+            #wrap{
+                min-height: 100%; width: 90%; margin: 0 auto; padding: 0 20px;
+                border-width: 0 1px;
+                box-shadow: 0px 0px 5px 5px #888;
+            }
+
 
         </style>
+<div id="wrap">
 
-    </head>
-    <body>
 
-        <div ng-controller="eventsController" >
+    <div ng-controller="eventsController" flex>
 
-            <table ng-repeat="event in eventsArray">
+        <table ng-repeat="event in eventsArray">
+            <tr>
+                <h1>Daily Events</h1>
+            </tr>
 
-                <tr>
-                    <th><h1>Day 1</h1></th>
-                    <th><h1>Day 2</h1></th>
-                    <th><h1>Day 3</h1></th>
-                </tr>
-                <td>
-                    Event Name: {{event.id}}</br>Location: {{event.location}}</br> Organiser: {{event.organizer.firstName}}
-                </td>
-                <td>
-                    Event Name: {{event.id}}</br>Location: {{event.location}}</br> Organiser: {{event.organizer.firstName}}
-                </td>
-                <td>
-                    Event Name: {{event.id}}</br>Location: {{event.location}}</br> Organiser: {{event.organizer.firstName}}
-                </td>
-            </table>
-        </div>
-    </body>
-
-</html>
+            <tr>
+                <th><h2>Day 1</h2></th>
+                <th><h2>Day 2</h2></th>
+                <th><h2>Day 3</h2></th>
+            </tr>
+            <td>
+                Event Name: {{event.id}}</br>Location: {{event.location}}</br> Organiser: {{event.organizer.firstName}}
+            </td>
+            <td>
+                Event Name: {{event.id}}</br>Location: {{event.location}}</br> Organiser: {{event.organizer.firstName}}
+            </td>
+            <td>
+                Event Name: {{event.id}}</br>Location: {{event.location}}</br> Organiser: {{event.organizer.firstName}}
+            </td>
+        </table>
+    </div>
+</div>
