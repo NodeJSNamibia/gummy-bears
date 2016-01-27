@@ -2,28 +2,61 @@
     "council": [{
 	    "name": "Oscar Mwandingi",
 	    "portfolio": "President",
-	    "img": "img/avatar/leo.jpg"
+		"office":"Office No. 206",
+	    "img": "img/avatar/1.jpg"
 	}, {
 	    "name": "Sarah Shindodola",
 	    "portfolio": "Vice President",
-	    "img": "dddd"
+		"office":"Office No. 206",
+	    "img": "img/avatar/2.jpg"
 	},
 	{
 	    "name": "Jackey Zambwe",
 	    "portfolio": "Secretary General",
-	    "img": "ddddd"
+		"office":"Office No. 206",
+	    "img": "img/avatar/3.jpg"
 	}, {
-	    "name": "Oscar Mwandingi",
-	    "portfolio": "President",
-	    "img": "img/kds"
+	    "name": "Kem Sakaria",
+	    "portfolio": "Finance",
+	    "img": "img/avatar/4.jpg"
 	}, {
-	    "name": "Sarah Shindodola",
-	    "portfolio": "Vice President",
-	    "img": "dddd"
+	    "name": "Ervin Haipumbu",
+	    "portfolio": "External Affairs",
+		"office":"Office No. 206",
+	    "img": "img/avatar/5.jpg"
 	},
 	{
-	    "name": "Jackey Zambwe",
-	    "portfolio": "Secretary General",
-	    "img": "ddddd"
+	    "name": "Haikali Ndatulumukwa",
+	    "portfolio": "Internal Affairs",
+		"office":"Office No. 206",
+	    "img": "img/avatar/6.jpg"
+	}, {
+	    "name": "Hosea Hashili",
+	    "portfolio": "Information and Publicity",
+		"office":"Office No. 206",
+	    "img": "img/avatar/7.jpg"
+	},
+	{
+	    "name": "Shoopala P. Shoopala",
+	    "portfolio": "Academic Affairs",
+		"office":"Office No. 206",
+	    "img": "img/avatar/8.jpg"
+	},
+	{
+	    "name": "Philemon F. Haufiku",
+	    "portfolio": "Sports",
+		"office":"Office No. 206",
+	    "img": "img/avatar/9.jpg"
+	}, {
+	    "name": "Olga Kandjumbwa",
+	    "portfolio": "Culture",
+		"office":"Office No. 206",
+	    "img": "img/avatar/10.jpg"
+	},
+	{
+	    "name": "Imelda M. Manga",
+	    "portfolio": "Gender Affairs",
+		"office":"Office No. 206",
+	    "img": "img/avatar/11.jpg"
 	}]
 }
