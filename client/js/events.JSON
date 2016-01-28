@@ -1,3 +1,5 @@
+
+
 {"events": [
 	{
 	    "id": "Welcoming Ceremony",
@@ -6,13 +8,27 @@
 	    "start": "11:00",
 	    "ends": "13:00",
 	    "location": "Lecture Building",
-	    "faculty": "fci",
+	    "faculty": "FCI",
 	    "organizer": {
           "firstName": "Tellus",
           "lastName": "Normand",
           "title": "Mr",
           "emailAddress": "telNormand@gmail.com"
         }
+    },{
+    "id": "Pre Selection",
+    "description": "Engineering students are selected",
+    "date": "12/13/2015",
+    "start": "11:00",
+    "ends": "13:00",
+    "location": "Office Building",
+    "faculty": "FENG",
+    "organizer": {
+      "firstName": "Erassy",
+      "lastName": "Nathingo",
+      "title": "Mr",
+      "emailAddress": "erassywap@gmail.com"
     }
+  }
 ]
 }
