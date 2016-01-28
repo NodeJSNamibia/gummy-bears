@@ -30,7 +30,9 @@ app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $lo
 		templateUrl:"partials/council.html"
 		}).when("/gallery",{
 		templateUrl:"partials/gallery.html"
-	}).otherwise({redirectTo: '/'});
+	}).when("/faculties",{
+        templateUrl:"partials/faculties.html"
+    }).otherwise({redirectTo: '/'});
     }
 ]
 	);

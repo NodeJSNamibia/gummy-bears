@@ -1,0 +1,138 @@
+
+
+
+{"Faculty":[
+  {
+    "id": "FCI",
+    "name": "Faculty of Computing and Informatics",
+    "contact": {
+      "email": "secretary.fci@nust.na",
+      "telephone": "+264612071189"
+    },
+    "depart":
+          {"code": "CS",
+          "name": "Computer Science",
+          "contact": {
+            "emailAddress": "secretary.csdpt@nust.na",
+            "telephone": "+264612070011"
+          }
+          },"program":
+            {
+              "code": "80BHSE",
+              "name": "Bachelor Degree Computer Science, Strand Software Engineering"
+             },
+              "courses":
+                {"code": "DSP620S",
+                "title": "Distributed Systems Programming",
+                "description": "provide a general description of the course",
+                "semester": 4,
+                "contact": {
+                  "emailAddress": "dsp@nust.na",
+                  "telephone": "+264612070011",
+                  "firstName": "Alek",
+                  "lastName": "Kourov"},
+                "timetable": {
+                  "dayOfWeek": "Monday",
+                  "time": "11:00-12:00",
+                  "mode": "FM",
+                  "tag": "Theory",
+                  "venue": "Auditorium 3"
+                }
+
+            }
+  },
+  {
+    "id": "ECN",
+    "name": "Economics",
+    "contact": {
+      "email": "secretary.fci@nust.na",
+      "telephone": "+264612071189"
+    },
+    "depart":
+    {"code": "CS",
+      "name": "Computer Science",
+      "contact": {
+        "emailAddress": "secretary.csdpt@nust.na",
+        "telephone": "+264612070011"
+      }
+    },"program":
+  {
+    "code": "80BHSE",
+    "name": "Bachelor Degree Computer Science, Strand Software Engineering"
+  },
+    "courses":
+    {"code": "DSP620S",
+      "title": "Distributed Systems Programming",
+      "description": "provide a general description of the course",
+      "semester": 4,
+      "contact": {
+        "emailAddress": "dsp@nust.na",
+        "telephone": "+264612070011",
+        "firstName": "Alek",
+        "lastName": "Kourov"},
+      "timetable": {
+        "dayOfWeek": "Monday",
+        "time": "11:00-12:00",
+        "mode": "FM",
+        "tag": "Theory",
+        "venue": "Auditorium 3"
+      }
+
+    }
+
+  },
+  {
+    "id": "ENG",
+    "name": "Engineering",
+    "contact": {
+      "email": "secretary.fci@nust.na",
+      "telephone": "+264612071189"
+    },
+    "depart":
+    {"code": "CS",
+      "name": "Computer Science",
+      "contact": {
+        "emailAddress": "secretary.csdpt@nust.na",
+        "telephone": "+264612070011"
+      }
+    },"program":
+  {
+    "code": "80BHSE",
+    "name": "Bachelor Degree Computer Science, Strand Software Engineering"
+  },
+    "courses":
+    {"code": "DSP620S",
+      "title": "Distributed Systems Programming",
+      "description": "provide a general description of the course",
+      "semester": 4,
+      "contact": {
+        "emailAddress": "dsp@nust.na",
+        "telephone": "+264612070011",
+        "firstName": "Alek",
+        "lastName": "Kourov"},
+      "timetable": {
+        "dayOfWeek": "Monday",
+        "time": "11:00-12:00",
+        "mode": "FM",
+        "tag": "Theory",
+        "venue": "Auditorium 3"
+      }
+
+    }
+
+  }
+
+
+
+]
+
+}
+
+
+
+
+
+
+
+
+

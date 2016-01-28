@@ -1,0 +1,55 @@
+<!-- Created BY Omagano -->
+<!-- 22/01/16-->
+
+
+
+        <div id="wrapper" align="center" ng-controller="facultyCtrl" >
+            <h1 align="center">NUST Faculties</h1>
+            <div ng-repeat="Boom in facultyArray">
+                <div  class="grid grid-pad"  >
+                    <div class="col-1-3">
+                        <div class="content">
+                            <h3>Faculty</h3>
+
+                     </div>
+                        {{Boom.id}}   &nbsp;{{Boom.name}}<br>
+                        {{Boom.contact.email}} <br>
+                        {{Boom.contact.telephone}}
+                 </div>
+                    <div class="col-1-3">
+                    <div class="content">
+                        <h3>Department</h3>
+                        {{Boom.depart.code}} &nbsp;{{Boom.depart.name}}<br>
+                        {{ Boom.depart.contact.emailAddress}}<br>
+                        {{Boom.depart.contact.telephone}}
+                    </div>
+                </div>
+                <div class="col-1-3">
+                    <div class="content">
+                        <h3>Program</h3>
+
+                    </div>
+                    {{Boom.program.code}} &nbsp;{{Boom.program.name}}
+                </div>
+
+                <div class="col-1-3">
+                    <div class="content">
+                        <h3>Course</h3>
+
+                    </div>
+                    {{Boom.courses.code}}&nbsp;{{ Boom.courses.title}}<br>
+                    {{Boom.courses.description}}<br>{{Boom.courses.semester}}
+                </div>
+                <div class="col-1-3">
+                    <div class="content">
+                        <h3>Contact</h3>
+                    </div>
+                    {{Boom.courses.contact.firstName}}&nbsp;{{Boom.courses.contact.lastName}}<br>
+                    {{Boom.courses.contact.emailAddress}}<br>{{Boom.courses.contact.telephone}}
+                </div>
+
+            </div>
+</div>
+
+
+        </div>
