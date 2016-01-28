@@ -116,9 +116,12 @@
             }
             $scope.image[index] = ranImg;
         }
+		
+		
+		
 
         loadImages();
-        $interval( changeImgRan, 1500 );
+        $interval( changeImgRan, 1000 );
 
     }]);
 

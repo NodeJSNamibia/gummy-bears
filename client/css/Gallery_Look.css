@@ -7,51 +7,73 @@ h1 {
     text-align: center;
     text-transform: uppercase; }
 
-ul#image-wall {
-	
+#image-wall {
+	 box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+  border-radius: 10px;
     border: 10px inset black;
     padding: 0;
     
     width:1355px;
     height: 855px;
-    background-color:  rgb(63,81,181); }
+    background-color: black;  }
+	
 
 .one {
     position: relative;
     float: left;
-    padding: 4px;
+    padding: 2px;
     text-decoration: none;
     list-style: none;
-    width: 450px; 
+    width: auto; 
+	
+	}
+	.one:hover{
+		
+		 box-shadow: 10px 10px 10px rgb(63,81,181);
+  border-radius: 20px;
+
+  
+	}
 	
 	}
 
 .two {
     position: relative;
     float: left;
-    padding:4px ;
+    padding:2px ;
     text-decoration: none;
     list-style: none ;
+	width:auto;
  }
+ 
+ .two:hover{
+		
+		 box-shadow: 10px 10px 10px rgb(63,81,181);
+ border-radius: 20px;}
 
 .three {
     position: relative;
     float: left;
-    padding: 4px;
+    padding: 2px;
     text-decoration: none;
     list-style: none;
-    display: inline-block;
-    width: 450px; }
+    margin-bottom:1%;
+    width: auto; }
+	
+	.three:hover{
+		
+		 box-shadow: 10px 10px 10px rgb(63,81,181);
+	border-radius: 20px;}
 
 #image-wall {
-   box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
-  border-radius: 10px;
+  
   padding-right: 15px;
     position: relative;
     float: center;
-    padding: 4px;
+    padding: 2px;
     text-decoration: none;
-    list-style: none; }
+    list-style: none; 
+	margin-bottom: 2.5%}
 
 .sm-img {
     position: relative;
@@ -59,8 +81,14 @@ ul#image-wall {
     padding: 0;
     text-decoration: none;
     list-style: none;
-    display: inline-flex;
+    
     margin: 0 05px 10px 0; }
+	
+	.sm-img:hover{
+			 box-shadow: 10px 10px 10px rgb(63,81,181);
+	border-radius: 20px;
+		
+	}
 
 
 .med-img {
@@ -70,30 +98,32 @@ ul#image-wall {
     border: inset;
 
     display: inline-flex;
-    width: 425px;
-    height: 275px;
+    width: auto;
+    height: auto;
    margin: 0 05px 10px 0;	}
 
 .img-wall-04 {
     border: inset;
     display: inline-flex;
-    width: 425px;
-    height: 275px;
+    width: auto;
+    height: auto;
     margin: 0 05px 10px 0; }
 
 .img-wall-05 {
     border: inset;
     display: inline-flex;
-    width: 425px;
-    height: 275px;
+    width:auto;
+    height: auto;
     margin: 0 05px 10px 0; }
 
 .img-wall-06 {
     border: inset;
     display: inline-flex;
-    width: 425px;
-    height: 275px;
+    width: auto;
+    height: auto;
   margin: 0 05px 10px 0;	}
+  
+  .two:hover{}}
 	
 
 
