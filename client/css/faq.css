@@ -39,8 +39,9 @@ hr{
 #listAnswers {
   margin-top: 15px;
   overflow-y: hidden;
-  height: 180px;
+  height: 40%;
   box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
   border-radius: 10px;
   padding-right: 15px;
+  margin-bottom: 2.5%;
 }
