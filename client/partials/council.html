@@ -1,19 +1,21 @@
-<div ng-controller="Council">
+<div ng-controller="Council" id="wrap">
     <div id="content">
 	<md-content layout="column" tabindex="-1" role="main" flex="" class="layout-column flex">
+	<h1>
+		SRC's
+	</h1>
 	    <div class="buckets layout-wrap layout-align-center-center layout-row" layout="" layout-align="center center" layout-wrap="">
 		<div flex-xs flex-sm="50" flex-lg="30" ng-repeat="src in members">
-		    <md-card>
+		    <md-card id="card">
 			<md-card-title>
 			    <md-card-title-media>
 				<div class="md-media-md card-media">
-				    <img ng-src="{{src.img}}"/>
+				    <img ng-src="{{src.img}}">
 				</div>
 			    </md-card-title-media>
 			    <md-card-title-text>
 				<span class="md-headline" flex>{{src.name}}</span>
 				<span class="md-subhead">{{src.portfolio}}</span>
-				<span class="office">{{src.office}}</span>
 			    </md-card-title-text>
 			</md-card-title>
 		    </md-card>
@@ -22,3 +24,26 @@
 	</md-content>
     </div>
 </div>
+<style>
+  #card img{
+    height: 100%;
+    width:100%;
+    margin-bottom: 5px;
+	  display: inline-block;
+	  padding-right: 15px;
+  }
+  #wrap{
+	  min-height: 100%; width: 90%; margin: 0 auto; padding: 0 20px;
+	  border-width: 0 1px;
+	  box-shadow: 0px 0px 5px 5px #888;
+	  border-radius: 10px;
+	  margin-bottom: 2.5%;
+	  margin-top: 1.5%;
+  }
+
+h1{
+	text-align : center;
+}
+
+
+</style>
